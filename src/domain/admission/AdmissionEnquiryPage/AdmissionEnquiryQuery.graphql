@@ -1,0 +1,11 @@
+#import "../../gqlfragments/admission.graphql"
+
+fragment admissionSummary on Admission {
+  ...admission
+}
+
+query admissionEnquiry {
+  admissions {
+    ...admissionSummary
+  }
+}

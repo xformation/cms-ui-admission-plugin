@@ -1,0 +1,20 @@
+fragment admission on Admission {
+  id
+  studentName
+  mobileNumber
+  alternateMobileNumber
+  email
+  courseApplyingFor
+  modeOfEnquiry
+  status
+  description
+  enquiryDate
+  updatedOn
+  updatedBy
+  branch {
+    branchName
+  }
+  admissionApplication {
+    admissionStatus
+  }
+}

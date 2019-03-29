@@ -1,1 +1,2 @@
-# cms-ui-admission-plugin
+# cms-ui-plugin
+Plugin for Attendance functionality 

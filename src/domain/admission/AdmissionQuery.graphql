@@ -1,0 +1,7 @@
+#import "../gqlfragments/admissionDetails.graphql"
+
+query admission($admissionId: Long!) {
+  admission(id: $admissionId){
+  ...admissionDetails
+  }
+}
