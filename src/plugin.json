@@ -12,15 +12,12 @@
       "name": "Synectiks",
       "url": "https://xformation.com"
     },
-    "keywords": [
-      "cms",
-      "panel"
-    ],
+    "keywords": ["cms", "panel"],
     "version": "1.0",
     "updated": "2018-10-12",
     "logos": {
-      "small": "img/students.png",
-      "large": "img/students.png"
+      "small": "img/backpack.png",
+      "large": "img/backpack.png"
     }
   },
   "includes": [
