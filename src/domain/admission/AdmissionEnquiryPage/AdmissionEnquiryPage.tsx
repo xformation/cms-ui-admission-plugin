@@ -3,8 +3,8 @@ import * as React from 'react';
 import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import { graphql, QueryProps } from 'react-apollo';
 
-import * as AdmissionEnquiryQueryGql from './AdmissionEnquiryQuery.graphql';
-import { AdmissionEnquiryQuery, AdmissionSummaryFragment } from '../../types';
+import * as AdmissionEnquiryListQueryGql from './AdmissionEnquiryQuery.graphql';
+import { AdmissionEnquiryQuery, AdmissionEnquirySummaryFragment } from '../../types';
 import withLoadingHandler from '../../../components/withLoadingHandler';
 
 const w180 = {
@@ -12,19 +12,21 @@ const w180 = {
   marginRight: '10px',
 };
 
-const AdmissionRow = ({ admission }: { admission: AdmissionSummaryFragment }) => (
-  <tr key={admission.id}>
-    <td>{admission.studentName}</td>
-    <td>{admission.status}</td>
-    <td>{admission.studentName}</td>
-    <td>{admission.mobileNumber}</td>
-    <td>{admission.status}</td>
-    <td>{admission.enquiryDate}</td>
-    <td>{admission.enquiryDate}</td>
+const AdmissionRow = ({ admissionEnquiry }: { admissionEnquiry: AdmissionEnquirySummaryFragment }) => (
+  <tr key={admissionEnquiry.id}>
+    <td>
+      <input type="checkbox" name="" id="" />
+    </td>
+    <td>{admissionEnquiry.id}</td>
+    <td>{admissionEnquiry.studentName}</td>
+    <td>{admissionEnquiry.mobileNumber}</td>
+    <td>{admissionEnquiry.status}</td>
+    <td>{admissionEnquiry.enquiryDate}</td>
+    <td><span className="btn btn-primary">Details</span></td>
   </tr>
 );
 
-const AdmissionsTable = ({ admissions }: { admissions: AdmissionSummaryFragment[] }) => (
+const AdmissionsTable = ({ admissionEnquiries }: { admissionEnquiries: AdmissionEnquirySummaryFragment[] }) => (
   <section className="border">
     <div className="inDashboard p-1">
       <div className="invoiceDashboard">
@@ -65,29 +67,22 @@ const AdmissionsTable = ({ admissions }: { admissions: AdmissionSummaryFragment[
       </div>
     </div>
     <h5 className="bg-heading p-1 m-0">Received Info</h5>
-    <table className="adminListPage striped-table fwidth bg-white p-2">
+    <table id="admissionlistpage" className="striped-table fwidth bg-white p-2">
       <thead>
         <tr>
-          <th>S.No</th>
+          <th>
+            <input type="checkbox" value="checkedall" name="" id="" />
+          </th>
           <th>Enquiry ID</th>
           <th>Name</th>
           <th>Contact</th>
           <th>Status</th>
           <th>Date</th>
-          <th></th>
+          <th>Details</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>01</td>
-          <td>A2PF2</td>
-          <td>Warner</td>
-          <td>8925364798</td>
-          <td>Follow Up</td>
-          <td>1-2-19</td>
-          <td><span className="btn btn-primary">Details</span></td>
-        </tr>
-        {/* {admissions.map(admission => <AdmissionRow key={admission.id} admission={admission} />)} */}
+        {admissionEnquiries.map(admissionEnquiry => <AdmissionRow key={admissionEnquiry.id} admissionEnquiry={admissionEnquiry} />)}
       </tbody>
     </table>
   </section>
@@ -98,7 +93,7 @@ type AdmissionEnquiryPageProps = {
   data: QueryProps & AdmissionEnquiryQuery;
 };
 
-const AdmissionEnquiryPage = ({ data: { admissions } }: AdmissionEnquiryPageProps) => (
+const AdmissionEnquiryPage = ({ data: { admissionEnquiries } }: AdmissionEnquiryPageProps) => (
   <section className="customCss">
     <h3 className="bg-heading p-1">
       <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true"></i> Admin - Admission
@@ -112,11 +107,11 @@ const AdmissionEnquiryPage = ({ data: { admissions } }: AdmissionEnquiryPageProp
         {/* <a className="btn btn-primary">Save</a> */}
       </div>
     </div>
-    <AdmissionsTable admissions={admissions} />
+    <AdmissionsTable admissionEnquiries={admissionEnquiries} />
     {/* <AdmissionsTable admissions={admissions} /> */}
   </section>
 );
 
 export default graphql<AdmissionEnquiryQuery, AdmissionEnquiryPageOwnProps, AdmissionEnquiryPageProps>(
-  AdmissionEnquiryQueryGql
+  AdmissionEnquiryListQueryGql
 )(withLoadingHandler(AdmissionEnquiryPage));

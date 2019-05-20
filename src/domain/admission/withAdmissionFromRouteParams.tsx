@@ -3,14 +3,14 @@ import { RouteComponentProps } from "react-router";
 import { gql, graphql, QueryProps } from "react-apollo";
 
 import * as AdmissionQueryGql from "./AdmissionQuery.graphql";
-import { ReactFunctionOrComponentClass, AdmissionQuery, AdmissionDetailsFragment } from "../types";
+import { ReactFunctionOrComponentClass, AdmissionQuery, AdmissionEnquiryDetailsFragment } from "../types";
 import withLoadingHandler from "../../components/withLoadingHandler";
 
 var queryString = require('query-string');
 
 // Specifies the parameters taken from the route definition (/.../:admissionId)
 type AdmissionPageRouteParams = {
-  admissionId: any
+  admissionEnquiryId: any
 };
 
 // Specifies the Properties that are passed to
@@ -20,7 +20,7 @@ type AdmissionPageProps = RouteComponentProps<AdmissionPageRouteParams>;
 // (that is with the properties from GraphQL including the loaded admission)
 type AdmissionPageFullProps = AdmissionPageProps & {
   data: QueryProps & AdmissionQuery;
-  admission: AdmissionDetailsFragment;
+  admission: AdmissionEnquiryDetailsFragment;
 };
 
 // this function takes a Component, that must have AdmissionPageProps-compatible properties.
@@ -28,15 +28,15 @@ type AdmissionPageFullProps = AdmissionPageProps & {
 // and passes the loaded admission to the specified Component
 const withAdmissionFromRouteParams = (
   TheAdmissionComponent: ReactFunctionOrComponentClass<{
-    admission: AdmissionDetailsFragment;
+    admissionEnquiry: AdmissionEnquiryDetailsFragment;
   }>
 ) => {
-  const withAdmissionFromRouteParamsWrapper = (props: AdmissionPageFullProps) => <TheAdmissionComponent admission={props.data.admission} />;
+  const withAdmissionFromRouteParamsWrapper = (props: AdmissionPageFullProps) => <TheAdmissionComponent admissionEnquiry={props.data.admissionEnquiry} />;
   return graphql<AdmissionQuery, AdmissionPageProps, AdmissionPageFullProps>(AdmissionQueryGql, {
     options: ({ match }) => (
       {
         variables: {
-          admissionId: queryString.parse(location.search).id
+          admissionEnquiryId: queryString.parse(location.search).id
         }
       })
   })(withLoadingHandler(withAdmissionFromRouteParamsWrapper));

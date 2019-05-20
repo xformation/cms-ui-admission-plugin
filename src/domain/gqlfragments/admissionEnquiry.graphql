@@ -1,4 +1,4 @@
-fragment admission on Admission {
+fragment admissionEnquiry on AdmissionEnquiry {
   id
   studentName
   mobileNumber

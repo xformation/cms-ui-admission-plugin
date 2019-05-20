@@ -1,6 +1,0 @@
-#import "./admission.graphql"
-
-
-fragment admissionDetails on Admission {
-  ...admission
-}

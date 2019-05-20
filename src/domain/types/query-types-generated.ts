@@ -1,49 +1,5 @@
-/* tslint:disable */
-//  This file was automatically generated and should not be edited.
-
-/* Location */
-
-export type locationListQuery = {
-  locations: Array<{
-    id: string;
-    name: string;
-    address: string;
-    appliesTo: string;
-  }>;
-};
-
-export type locationQueryVariables = {
-  locationId: any;
-};
-
-export type locationQuery = {
-  location: {
-    id: any;
-    name: string;
-    address: string;
-    appliesTo: string;
-  };
-};
-
-export type locationDetailsFragment = {
-  id: any;
-  name: string;
-  address: string;
-  appliesTo: string;
-};
-
-export type locationSummaryFragment = {
-  id: any;
-  name: string;
-  address: string;
-  appliesTo: string;
-};
-
-/* Student */
-
 export type AdmissionEnquiryQuery = {
-  // Return all known Pet Institutes
-  admissions: Array<{
+  admissionEnquiries: Array<{
     id: any;
     studentName: string;
     mobileNumber: string;
@@ -66,11 +22,11 @@ export type AdmissionEnquiryQuery = {
 };
 
 export type AdmissionQueryVariables = {
-  admissionId: number;
+  admissionEnquiryId: number;
 };
 
 export type AdmissionQuery = {
-  admission: {
+  admissionEnquiry: {
     id: any;
     studentName: string;
     mobileNumber: string;
@@ -92,7 +48,7 @@ export type AdmissionQuery = {
   };
 };
 
-export type AdmissionFragment = {
+export type AdmissionEnquiryFragment = {
   id: any;
   studentName: string;
   mobileNumber: string;
@@ -113,7 +69,7 @@ export type AdmissionFragment = {
   };
 };
 
-export type AdmissionDetailsFragment = {
+export type AdmissionEnquiryDetailsFragment = {
   id: any;
   studentName: string;
   mobileNumber: string;
@@ -134,7 +90,7 @@ export type AdmissionDetailsFragment = {
   };
 };
 
-export type AdmissionSummaryFragment = {
+export type AdmissionEnquirySummaryFragment = {
   id: any;
   studentName: string;
   mobileNumber: string;

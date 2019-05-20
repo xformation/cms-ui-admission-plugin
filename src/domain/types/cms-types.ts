@@ -5,7 +5,7 @@ export type ReactFunctionOrComponentClass<P> =
 
 // --------------------------------------
 
-export type AdmissionData = {
+export type AdmissionEnquiryData = {
   // id: any;
   studentName: string;
   mobileNumber: string;
@@ -20,8 +20,8 @@ export type AdmissionData = {
   updatedBy: string;
   branch: {
     branchName: string;
-  },
+  };
   admissionApplication: {
     admissionStatus: string;
-  },
+  };
 };

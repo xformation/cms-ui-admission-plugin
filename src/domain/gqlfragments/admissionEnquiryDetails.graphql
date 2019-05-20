@@ -1,0 +1,6 @@
+#import "./admissionEnquiry.graphql"
+
+
+fragment admissionEnquiryDetails on AdmissionEnquiry {
+  ...admissionEnquiry
+}

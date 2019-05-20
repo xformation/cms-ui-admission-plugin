@@ -1,8 +1,8 @@
-import init from '../domain/admission/AdmissionEnquiryPage/AdmissionsApp';
+import init from '../domain/Admission/AdmissionEnquiryPage/AdmissionsApp';
 
 export class AdmissionsPage {
-    static templateUrl = '/partials/admissions.html';
-    constructor() {
-        init();
-    }
+  static templateUrl = '/partials/admissions.html';
+  constructor() {
+    init();
+  }
 }

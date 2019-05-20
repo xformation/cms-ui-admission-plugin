@@ -871,7 +871,7 @@ define(['react', 'react-dom'], function(
             '',
             {
               version: 3,
-              sources: ['C:/MyCode/plugins/cms-ui-admission-plugin/src/css/dark.css'],
+              sources: ['e:/MyCode/plugins/cms-ui-admission-plugin/src/css/dark.css'],
               names: [],
               mappings:
                 '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ACtB;AACD;EACE,kBAAkB;CACnB;AACD;EACE,uBAAuB;EACvB,mBAAmB;CACpB;AACD;EACE,mBAAmB;CACpB;AACD;EACE,mBAAmB;CACpB;AACD;EACE,kBAAkB;CACnB;AACD;EACE,6BAA6B;CAC9B;AACD;EACE,6BAA6B;CAC9B;AACD;EACE,4BAA4B;EAC5B,+BAA+B;CAChC;AACD;EACE,6BAA6B;EAC7B,gCAAgC;CACjC;AACD;EACE,aAAa;CACd;AACD;EACE,mBAAmB;CACpB;AACD;EACE,eAAe;CAChB;AACD;EACE,cAAc;EACd,+BAA+B;EAC/B,cAAc;EACd,cAAc;CACf;AACD;EACE,aAAa;CACd;AACD;EACE,iBAAiB;CAClB;AACD;EACE,0BAA0B;CAC3B;AACD;EACE,0BAA0B;EAC1B,mBAAmB;EACnB,aAAa;CACd;AACD;EACE,cAAc;EACd,sCAAsC;EACtC,eAAe;EACf,aAAa;CACd;AACD;EACE,aAAa;EACb,aAAa;EACb,iBAAiB;CAClB;AACD;EACE,cAAc;EACd,+BAA+B;CAChC;;AAED;EACE,0BAA0B;CAC3B;;AAED;EACE,mBAAmB;EACnB,kBAAkB;CACnB;AACD;EACE,mBAAmB;EACnB,wBAAwB;CACzB;AACD;EACE,cAAc;EACd,mBAAmB;EACnB,0BAA0B;EAC1B,aAAa;EACb,iCAAiC;EACjC,+BAA+B;EAC/B,oBAAoB;EACpB,iBAAiB;EACjB,0BAA0B;CAC3B;AACD;EACE,cAAc;EACd,+BAA+B;EAC/B,eAAe;CAChB;AACD;EACE,cAAc;EACd,4BAA4B;CAC7B;;AAED;EACE,0BAA0B;CAC3B;AACD;EACE,eAAe;EACf,+BAA+B;EAC/B,gCAAgC;EAChC,mBAAmB;EACnB,oBAAoB;EACpB,kBAAkB;EAClB,qBAAqB;CACtB;;AAED;;;;;;;;;;;;;;;IAeI;AACJ;EACE,cAAc;EACd,sCAAsC;CACvC;AACD;EACE,iBAAiB;EACjB,oBAAoB;EACpB,oCAAoC;CACrC;AACD;EACE,iBAAiB;EACjB,oBAAoB;EACpB,wBAAwB;CACzB;AACD;EACE,iBAAiB;CAClB;AACD;;;EAGE,cAAc;EACd,sCAAsC;CACvC;AACD;EACE,oCAAoC;CACrC;AACD;EACE,oCAAoC;CACrC;AACD;EACE,oCAAoC;CACrC;AACD;EACE,oCAAoC;CACrC;AACD;EACE,8BAA8B;EAC9B,iCAAiC;EACjC,kBAAkB;EAClB,qBAAqB;EACrB,iBAAiB;EACjB,oBAAoB;CACrB;AACD;EACE,cAAc;EACd,+BAA+B;EAC/B,mBAAmB;CACpB;AACD;EACE,oBAAoB;CACrB;AACD;;IAEI;AACJ;EACE,0BAA0B;CAC3B;AACD;EACE,aAAa;CACd;;AAED;EACE,qDAAqD;EACrD,YAAY;CACb;AACD;EACE,qDAAqD;EACrD,YAAY;CACb;AACD;EACE,kBAAkB;EAClB,aAAa;EACb,aAAa;CACd;AACD;EACE,gBAAgB;EAChB,aAAa;EACb,aAAa;CACd;AACD;EACE,YAAY;CACb;AACD;EACE,YAAY;CACb;AACD;;EAEE,8BAA8B;CAC/B;AACD;EACE,eAAe;CAChB;AACD;EACE,eAAe;CAChB;AACD;EACE,eAAe;CAChB;;AAED;EACE,YAAY;EACZ,oBAAoB;CACrB;AACD;EACE,cAAc;EACd,+BAA+B;EAC/B,oBAAoB;CACrB;;AAED;EACE,aAAa;EACb,iBAAiB;CAClB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,cAAc;EACd,oBAAoB;EACpB,4BAA4B;CAC7B;AACD;EACE,aAAa;CACd;AACD;EACE,aAAa;EACb,mBAAmB;CACpB;;AAED,eAAe;AACf;EACE,cAAc;EACd,+BAA+B;CAChC;AACD;EACE,2BAA2B;EAC3B,mBAAmB;CACpB;AACD;EACE,uBAAuB;EACvB,mBAAmB;EACnB,aAAa;EACb,cAAc;EACd,uBAAuB;EACvB,oBAAoB;EACpB,4BAA4B;CAC7B;AACD;EACE,cAAc;CACf;AACD;EACE,oBAAoB;EACpB,cAAc;EACd,+BAA+B;EAC/B,iBAAiB;EACjB,iBAAiB;EACjB,YAAY;CACb;AACD;EACE,aAAa;EACb,aAAa;CACd;AACD;EACE,cAAc;EACd,eAAe;EACf,gBAAgB;EAChB,iCAAiC;CAClC;AACD;EACE,0BAA0B;EAC1B,eAAe;CAChB;;AAED;EACE,wBAAwB;CACzB;AACD;;EAEE,cAAc;EACd,8BAA8B;CAC/B;AACD;EACE,cAAc;EACd,+BAA+B;EAC/B,iBAAiB;CAClB;AACD;EACE,WAAW;CACZ;AACD;EACE,aAAa;CACd;AACD;EACE,8BAA8B;CAC/B;AACD;EACE,eAAe;CAChB;AACD;EACE,eAAe;CAChB;AACD;EACE,eAAe;CAChB;AACD;EACE,eAAe;CAChB;AACD;EACE,oBAAoB;CACrB;;AAED;EACE,cAAc;EACd,oBAAoB;EACpB,2BAA2B;EAC3B,aAAa;CACd;AACD;EACE,iBAAiB;EACjB,YAAY;CACb;AACD;EACE,iBAAiB;EACjB,YAAY;CACb;AACD;EACE,cAAc;EACd,+BAA+B;EAC/B,oBAAoB;CACrB;AACD;EACE,aAAa;EACb,qBAAqB;CACtB;AACD;EACE,iBAAiB;EACjB,qBAAqB;CACtB;AACD;EACE,WAAW;CACZ;AACD;EACE,WAAW;CACZ;AACD;EACE,WAAW;CACZ;AACD;EACE,aAAa;CACd;AACD;EACE,cAAc;EACd,+BAA+B;EAC/B,oBAAoB;CACrB;AACD;EACE,gBAAgB;CACjB;AACD;EACE,0BAA0B;CAC3B;AACD;EACE,gBAAgB;CACjB;AACD;EACE,cAAc;CACf;AACD;EACE,iBAAiB;CAClB;AACD;EACE,kBAAkB;EAClB,oBAAoB;CACrB;AACD;EACE,cAAc;EACd,sCAAsC;EACtC,sBAAsB;CACvB;AACD;EACE,0BAA0B;CAC3B;AACD;EACE,iBAAiB;CAClB;AACD;;;EAGE,iBAAiB;CAClB;AACD;EACE,cAAc;EACd,4BAA4B;EAC5B,oBAAoB;CACrB;AACD;CACC;AACD;CACC;AACD;EACE,cAAc;EACd,uCAAuC;CACxC;;AAED;EACE,cAAc;EACd,2BAA2B;CAC5B;AACD;EACE,qBAAqB;CACtB;AACD;EACE,qBAAqB;CACtB;AACD;EACE,mBAAmB;EACnB,kBAAkB;CACnB;AACD;EACE,mBAAmB;CACpB;AACD;EACE,iBAAiB;EACjB,oBAAoB;CACrB;AACD;EACE,cAAc;EACd,0BAA0B;CAC3B;AACD;EACE,8BAA8B;CAC/B;;AAED;EACE,wBAAwB;EACxB,qCAAqC;CACtC;AACD;;EAEE,4BAA4B;CAC7B;AACD;EACE,mCAAmC;EACnC,wBAAwB;CACzB;AACD;EACE,aAAa;EACb,aAAa;CACd;AACD;EACE,0BAA0B;EAC1B,wBAAwB;EACxB,mBAAmB;CACpB;AACD;EACE,cAAc;EACd,+BAA+B;CAChC;AACD;EACE,YAAY;EACZ,mBAAmB;CACpB;;AAED,eAAe',
@@ -23518,9 +23518,9 @@ object-assign
           /***/
         },
 
-      /***/ './domain/admission/AdmissionEnquiryPage/AdmissionEnquiryPage.tsx':
+      /***/ './domain/Admission/AdmissionEnquiryPage/AdmissionEnquiryPage.tsx':
         /*!************************************************************************!*\
-  !*** ./domain/admission/AdmissionEnquiryPage/AdmissionEnquiryPage.tsx ***!
+  !*** ./domain/Admission/AdmissionEnquiryPage/AdmissionEnquiryPage.tsx ***!
   \************************************************************************/
         /*! no static exports found */
         /***/ function(module, exports, __webpack_require__) {
@@ -23531,8 +23531,8 @@ object-assign
           var react_apollo_1 = __webpack_require__(
             /*! react-apollo */ '../node_modules/react-apollo/react-apollo.browser.umd.js'
           );
-          var AdmissionEnquiryQueryGql = __webpack_require__(
-            /*! ./AdmissionEnquiryQuery.graphql */ './domain/admission/AdmissionEnquiryPage/AdmissionEnquiryQuery.graphql'
+          var AdmissionEnquiryListQueryGql = __webpack_require__(
+            /*! ./AdmissionEnquiryQuery.graphql */ './domain/Admission/AdmissionEnquiryPage/AdmissionEnquiryQuery.graphql'
           );
           var withLoadingHandler_1 = __webpack_require__(
             /*! ../../../components/withLoadingHandler */ './components/withLoadingHandler.tsx'
@@ -23542,21 +23542,29 @@ object-assign
             marginRight: '10px',
           };
           var AdmissionRow = function AdmissionRow(_a) {
-            var admission = _a.admission;
+            var admissionEnquiry = _a.admissionEnquiry;
             return React.createElement(
               'tr',
-              {key: admission.id},
-              React.createElement('td', null, admission.studentName),
-              React.createElement('td', null, admission.status),
-              React.createElement('td', null, admission.studentName),
-              React.createElement('td', null, admission.mobileNumber),
-              React.createElement('td', null, admission.status),
-              React.createElement('td', null, admission.enquiryDate),
-              React.createElement('td', null, admission.enquiryDate)
+              {key: admissionEnquiry.id},
+              React.createElement(
+                'td',
+                null,
+                React.createElement('input', {type: 'checkbox', name: '', id: ''})
+              ),
+              React.createElement('td', null, admissionEnquiry.id),
+              React.createElement('td', null, admissionEnquiry.studentName),
+              React.createElement('td', null, admissionEnquiry.mobileNumber),
+              React.createElement('td', null, admissionEnquiry.status),
+              React.createElement('td', null, admissionEnquiry.enquiryDate),
+              React.createElement(
+                'td',
+                null,
+                React.createElement('span', {className: 'btn btn-primary'}, 'Details')
+              )
             );
           };
           var AdmissionsTable = function AdmissionsTable(_a) {
-            var admissions = _a.admissions;
+            var admissionEnquiries = _a.admissionEnquiries;
             return React.createElement(
               'section',
               {className: 'border'},
@@ -23687,50 +23695,46 @@ object-assign
               ),
               React.createElement(
                 'table',
-                {className: 'adminListPage striped-table fwidth bg-white p-2'},
+                {id: 'admissionlistpage', className: 'striped-table fwidth bg-white p-2'},
                 React.createElement(
                   'thead',
                   null,
                   React.createElement(
                     'tr',
                     null,
-                    React.createElement('th', null, 'S.No'),
+                    React.createElement(
+                      'th',
+                      null,
+                      React.createElement('input', {
+                        type: 'checkbox',
+                        value: 'checkedall',
+                        name: '',
+                        id: '',
+                      })
+                    ),
                     React.createElement('th', null, 'Enquiry ID'),
                     React.createElement('th', null, 'Name'),
                     React.createElement('th', null, 'Contact'),
                     React.createElement('th', null, 'Status'),
                     React.createElement('th', null, 'Date'),
-                    React.createElement('th', null)
+                    React.createElement('th', null, 'Details')
                   )
                 ),
                 React.createElement(
                   'tbody',
                   null,
-                  React.createElement(
-                    'tr',
-                    null,
-                    React.createElement('td', null, '01'),
-                    React.createElement('td', null, 'A2PF2'),
-                    React.createElement('td', null, 'Warner'),
-                    React.createElement('td', null, '8925364798'),
-                    React.createElement('td', null, 'Follow Up'),
-                    React.createElement('td', null, '1-2-19'),
-                    React.createElement(
-                      'td',
-                      null,
-                      React.createElement(
-                        'span',
-                        {className: 'btn btn-primary'},
-                        'Details'
-                      )
-                    )
-                  )
+                  admissionEnquiries.map(function(admissionEnquiry) {
+                    return React.createElement(AdmissionRow, {
+                      key: admissionEnquiry.id,
+                      admissionEnquiry: admissionEnquiry,
+                    });
+                  })
                 )
               )
             );
           };
           var AdmissionEnquiryPage = function AdmissionEnquiryPage(_a) {
-            var admissions = _a.data.admissions;
+            var admissionEnquiries = _a.data.admissionEnquiries;
             return React.createElement(
               'section',
               {className: 'customCss'},
@@ -23757,19 +23761,21 @@ object-assign
                   )
                 )
               ),
-              React.createElement(AdmissionsTable, {admissions: admissions})
+              React.createElement(AdmissionsTable, {
+                admissionEnquiries: admissionEnquiries,
+              })
             );
           };
-          exports.default = react_apollo_1.graphql(AdmissionEnquiryQueryGql)(
+          exports.default = react_apollo_1.graphql(AdmissionEnquiryListQueryGql)(
             withLoadingHandler_1.default(AdmissionEnquiryPage)
           );
 
           /***/
         },
 
-      /***/ './domain/admission/AdmissionEnquiryPage/AdmissionEnquiryQuery.graphql':
+      /***/ './domain/Admission/AdmissionEnquiryPage/AdmissionEnquiryQuery.graphql':
         /*!*****************************************************************************!*\
-  !*** ./domain/admission/AdmissionEnquiryPage/AdmissionEnquiryQuery.graphql ***!
+  !*** ./domain/Admission/AdmissionEnquiryPage/AdmissionEnquiryQuery.graphql ***!
   \*****************************************************************************/
         /*! no static exports found */
         /***/ function(module, exports, __webpack_require__) {
@@ -23778,10 +23784,10 @@ object-assign
             definitions: [
               {
                 kind: 'FragmentDefinition',
-                name: {kind: 'Name', value: 'admissionSummary'},
+                name: {kind: 'Name', value: 'admissionEnquirySummary'},
                 typeCondition: {
                   kind: 'NamedType',
-                  name: {kind: 'Name', value: 'Admission'},
+                  name: {kind: 'Name', value: 'AdmissionEnquiry'},
                 },
                 directives: [],
                 selectionSet: {
@@ -23789,7 +23795,7 @@ object-assign
                   selections: [
                     {
                       kind: 'FragmentSpread',
-                      name: {kind: 'Name', value: 'admission'},
+                      name: {kind: 'Name', value: 'admissionEnquiry'},
                       directives: [],
                     },
                   ],
@@ -23806,7 +23812,7 @@ object-assign
                   selections: [
                     {
                       kind: 'Field',
-                      name: {kind: 'Name', value: 'admissions'},
+                      name: {kind: 'Name', value: 'admissionEnquiries'},
                       arguments: [],
                       directives: [],
                       selectionSet: {
@@ -23814,7 +23820,7 @@ object-assign
                         selections: [
                           {
                             kind: 'FragmentSpread',
-                            name: {kind: 'Name', value: 'admissionSummary'},
+                            name: {kind: 'Name', value: 'admissionEnquirySummary'},
                             directives: [],
                           },
                         ],
@@ -23824,11 +23830,11 @@ object-assign
                 },
               },
             ],
-            loc: {start: 0, end: 188},
+            loc: {start: 0, end: 231},
           };
           doc.loc.source = {
             body:
-              '#import "../../gqlfragments/admission.graphql"\r\n\r\nfragment admissionSummary on Admission {\r\n  ...admission\r\n}\r\n\r\nquery admissionEnquiry {\r\n  admissions {\r\n    ...admissionSummary\r\n  }\r\n}\r\n',
+              '#import "../../gqlfragments/admissionEnquiry.graphql"\r\n\r\nfragment admissionEnquirySummary on AdmissionEnquiry {\r\n  ...admissionEnquiry\r\n}\r\n\r\nquery admissionEnquiry {\r\n  admissionEnquiries {\r\n    ...admissionEnquirySummary\r\n  }\r\n}\r\n',
             name: 'GraphQL request',
             locationOffset: {line: 1, column: 1},
           };
@@ -23849,7 +23855,7 @@ object-assign
           doc.definitions = doc.definitions.concat(
             unique(
               __webpack_require__(
-                /*! ../../gqlfragments/admission.graphql */ './domain/gqlfragments/admission.graphql'
+                /*! ../../gqlfragments/admissionEnquiry.graphql */ './domain/gqlfragments/admissionEnquiry.graphql'
               ).definitions
             )
           );
@@ -23951,9 +23957,9 @@ object-assign
           /***/
         },
 
-      /***/ './domain/admission/AdmissionEnquiryPage/AdmissionsApp.tsx':
+      /***/ './domain/Admission/AdmissionEnquiryPage/AdmissionsApp.tsx':
         /*!*****************************************************************!*\
-  !*** ./domain/admission/AdmissionEnquiryPage/AdmissionsApp.tsx ***!
+  !*** ./domain/Admission/AdmissionEnquiryPage/AdmissionsApp.tsx ***!
   \*****************************************************************/
         /*! no static exports found */
         /***/ function(module, exports, __webpack_require__) {
@@ -23972,7 +23978,7 @@ object-assign
             /*! ../../../createGraphQLClient */ './createGraphQLClient.tsx'
           );
           var AdmissionEnquiryPage_1 = __webpack_require__(
-            /*! ./AdmissionEnquiryPage */ './domain/admission/AdmissionEnquiryPage/AdmissionEnquiryPage.tsx'
+            /*! ./AdmissionEnquiryPage */ './domain/Admission/AdmissionEnquiryPage/AdmissionEnquiryPage.tsx'
           );
           __webpack_require__(/*! ../../../css/dark.css */ './css/dark.css');
           var graphQLClient = createGraphQLClient_1.createGraphQLClient();
@@ -24004,10 +24010,10 @@ object-assign
           /***/
         },
 
-      /***/ './domain/gqlfragments/admission.graphql':
-        /*!***********************************************!*\
-  !*** ./domain/gqlfragments/admission.graphql ***!
-  \***********************************************/
+      /***/ './domain/gqlfragments/admissionEnquiry.graphql':
+        /*!******************************************************!*\
+  !*** ./domain/gqlfragments/admissionEnquiry.graphql ***!
+  \******************************************************/
         /*! no static exports found */
         /***/ function(module, exports) {
           var doc = {
@@ -24015,10 +24021,10 @@ object-assign
             definitions: [
               {
                 kind: 'FragmentDefinition',
-                name: {kind: 'Name', value: 'admission'},
+                name: {kind: 'Name', value: 'admissionEnquiry'},
                 typeCondition: {
                   kind: 'NamedType',
-                  name: {kind: 'Name', value: 'Admission'},
+                  name: {kind: 'Name', value: 'AdmissionEnquiry'},
                 },
                 directives: [],
                 selectionSet: {
@@ -24134,11 +24140,11 @@ object-assign
                 },
               },
             ],
-            loc: {start: 0, end: 298},
+            loc: {start: 0, end: 312},
           };
           doc.loc.source = {
             body:
-              'fragment admission on Admission {\r\n  id\r\n  studentName\r\n  mobileNumber\r\n  alternateMobileNumber\r\n  email\r\n  courseApplyingFor\r\n  modeOfEnquiry\r\n  status\r\n  description\r\n  enquiryDate\r\n  updatedOn\r\n  updatedBy\r\n  branch {\r\n    branchName\r\n  }\r\n  admissionApplication {\r\n    admissionStatus\r\n  }\r\n}\r\n',
+              'fragment admissionEnquiry on AdmissionEnquiry {\r\n  id\r\n  studentName\r\n  mobileNumber\r\n  alternateMobileNumber\r\n  email\r\n  courseApplyingFor\r\n  modeOfEnquiry\r\n  status\r\n  description\r\n  enquiryDate\r\n  updatedOn\r\n  updatedBy\r\n  branch {\r\n    branchName\r\n  }\r\n  admissionApplication {\r\n    admissionStatus\r\n  }\r\n}\r\n',
             name: 'GraphQL request',
             locationOffset: {line: 1, column: 1},
           };
@@ -24195,7 +24201,7 @@ object-assign
 
           Object.defineProperty(exports, '__esModule', {value: true});
           var AdmissionsApp_1 = __webpack_require__(
-            /*! ../domain/admission/AdmissionEnquiryPage/AdmissionsApp */ './domain/admission/AdmissionEnquiryPage/AdmissionsApp.tsx'
+            /*! ../domain/Admission/AdmissionEnquiryPage/AdmissionsApp */ './domain/Admission/AdmissionEnquiryPage/AdmissionsApp.tsx'
           );
           var AdmissionsPage = /** @class */ (function() {
             function AdmissionsPage() {
