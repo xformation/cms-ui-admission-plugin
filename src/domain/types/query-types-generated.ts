@@ -111,4 +111,42 @@ export type AdmissionEnquirySummaryFragment = {
   };
 };
 
+export type getAdmissionDataQuery = {
+  getadmissiondata: {
+    totalAdmissions: any;
+    totalFollowup: any;
+    totalDeclined: any;
+    totalConverted: any;
+  };
+};
+
+export type getAdmissionDataSummaryFragment = {
+  totalAdmissions: any;
+  totalFollowup: any;
+  totalDeclined: any;
+  totalConverted: any;
+};
+
+export type getAdmissionDataDetailsFragment = {
+  totalAdmissions: any;
+  totalFollowup: any;
+  totalDeclined: any;
+  totalConverted: any;
+};
+export type getAdmissionDataFragment = {
+  totalAdmissions: any;
+  totalFollowup: any;
+  totalDeclined: any;
+  totalConverted: any;
+};
+
+export type AdmissionEnquiryCountQueryType = {
+  getAdmissionData: {
+    totalAdmissions: number;
+    totalFollowup: number;
+    totalDeclined: number;
+    totalConverted: number;
+  };
+};
+
 /* tslint:enable */

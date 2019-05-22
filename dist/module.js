@@ -23526,301 +23526,391 @@ object-assign
         /***/ function(module, exports, __webpack_require__) {
           'use strict';
 
+          var __extends =
+            (undefined && undefined.__extends) ||
+            (function() {
+              var extendStatics =
+                Object.setPrototypeOf ||
+                ({__proto__: []} instanceof Array &&
+                  function(d, b) {
+                    d.__proto__ = b;
+                  }) ||
+                function(d, b) {
+                  for (var p in b) {
+                    if (b.hasOwnProperty(p)) d[p] = b[p];
+                  }
+                };
+              return function(d, b) {
+                extendStatics(d, b);
+                function __() {
+                  this.constructor = d;
+                }
+                d.prototype =
+                  b === null
+                    ? Object.create(b)
+                    : ((__.prototype = b.prototype), new __());
+              };
+            })();
           Object.defineProperty(exports, '__esModule', {value: true});
           var React = __webpack_require__(/*! react */ 'react');
-          var react_apollo_1 = __webpack_require__(
-            /*! react-apollo */ '../node_modules/react-apollo/react-apollo.browser.umd.js'
-          );
-          var AdmissionEnquiryListQueryGql = __webpack_require__(
-            /*! ./AdmissionEnquiryQuery.graphql */ './domain/Admission/AdmissionEnquiryPage/AdmissionEnquiryQuery.graphql'
-          );
-          var withLoadingHandler_1 = __webpack_require__(
-            /*! ../../../components/withLoadingHandler */ './components/withLoadingHandler.tsx'
+          var withAdmissionDataloader_1 = __webpack_require__(
+            /*! ./withAdmissionDataloader */ './domain/Admission/AdmissionEnquiryPage/withAdmissionDataloader.tsx'
           );
           var w180 = {
             width: '180px',
             marginRight: '10px',
           };
-          var AdmissionRow = function AdmissionRow(_a) {
-            var admissionEnquiry = _a.admissionEnquiry;
-            return React.createElement(
-              'tr',
-              {key: admissionEnquiry.id},
-              React.createElement(
-                'td',
+          /*const AdmissionRow = ({ admissionEnquiry }: { admissionEnquiry: AdmissionEnquirySummaryFragment }) => (
+  <tr key={admissionEnquiry.id}>
+    <td>
+      <input type="checkbox" name="" id="" />
+    </td>
+    <td>{admissionEnquiry.id}</td>
+    <td>{admissionEnquiry.studentName}</td>
+    <td>{admissionEnquiry.mobileNumber}</td>
+    <td>{admissionEnquiry.status}</td>
+    <td>{admissionEnquiry.enquiryDate}</td>
+    <td><span className="btn btn-primary">Details</span></td>
+  </tr>
+);
+*/
+          /*const AdmissionsTable = ({ admissionEnquiries }: { admissionEnquiries: AdmissionEnquirySummaryFragment[] }) => (*/
+          var AdmissionEnquiryPage = /** @class */ (function(_super) {
+            __extends(AdmissionEnquiryPage, _super);
+            function AdmissionEnquiryPage(props) {
+              var _this = _super.call(this, props) || this;
+              _this.state = {
+                admissionGetData: {
+                  branch: {
+                    id: 1851, //1001
+                  },
+                  admissionApplication: {
+                    id: 4501, //1051
+                  },
+                },
+                branches: [],
+                admissionApplications: [],
+              };
+              return _this;
+            }
+            AdmissionEnquiryPage.prototype.render = function() {
+              var _a = this.state,
+                branches = _a.branches,
+                admissionApplications = _a.admissionApplications;
+              return React.createElement(
+                React.Fragment,
                 null,
-                React.createElement('input', {type: 'checkbox', name: '', id: ''})
-              ),
-              React.createElement('td', null, admissionEnquiry.id),
-              React.createElement('td', null, admissionEnquiry.studentName),
-              React.createElement('td', null, admissionEnquiry.mobileNumber),
-              React.createElement('td', null, admissionEnquiry.status),
-              React.createElement('td', null, admissionEnquiry.enquiryDate),
-              React.createElement(
-                'td',
-                null,
-                React.createElement('span', {className: 'btn btn-primary'}, 'Details')
-              )
-            );
-          };
-          var AdmissionsTable = function AdmissionsTable(_a) {
-            var admissionEnquiries = _a.admissionEnquiries;
-            return React.createElement(
-              'section',
-              {className: 'border'},
-              React.createElement(
-                'div',
-                {className: 'inDashboard p-1'},
                 React.createElement(
-                  'div',
-                  {className: 'invoiceDashboard'},
+                  'section',
+                  {className: 'border'},
                   React.createElement(
                     'div',
-                    {className: 'invoiceHeader'},
-                    React.createElement('h6', {className: 'center'}, 'Total Enquiry'),
+                    {className: 'inDashboard p-1'},
                     React.createElement(
-                      'a',
-                      {href: ''},
-                      React.createElement('span', {className: 'ti-close m-r-1'})
+                      'div',
+                      {className: 'invoiceDashboard'},
+                      React.createElement(
+                        'div',
+                        {className: 'invoiceHeader'},
+                        React.createElement('h6', {className: 'center'}, 'Total Enquiry'),
+                        React.createElement(
+                          'a',
+                          {href: ''},
+                          React.createElement('span', {className: 'ti-close m-r-1'})
+                        ),
+                        React.createElement(
+                          'a',
+                          {href: ''},
+                          React.createElement('span', {className: 'ti-download'})
+                        )
+                      ),
+                      React.createElement(
+                        'h2',
+                        {className: 'fee-red'},
+                        React.createElement(
+                          'strong',
+                          null,
+                          this.props.data.getAdmissionData.totalAdmissions
+                        )
+                      ),
+                      React.createElement(
+                        'h6',
+                        {className: 'btn btn-primary w50 p05 remainder'},
+                        'View Info'
+                      )
                     ),
                     React.createElement(
-                      'a',
-                      {href: ''},
-                      React.createElement('span', {className: 'ti-download'})
-                    )
-                  ),
-                  React.createElement(
-                    'h2',
-                    {className: 'fee-red'},
-                    React.createElement('strong', null, '20')
-                  ),
-                  React.createElement(
-                    'h6',
-                    {className: 'btn btn-primary w50 p05 remainder'},
-                    'View Info'
-                  )
-                ),
-                React.createElement(
-                  'div',
-                  {className: 'invoiceDashboard'},
-                  React.createElement(
-                    'div',
-                    {className: 'invoiceHeader'},
-                    React.createElement('h6', {className: 'center'}, 'Follow Up'),
-                    React.createElement(
-                      'a',
-                      {href: ''},
-                      React.createElement('span', {className: 'ti-close m-r-1'})
+                      'div',
+                      {className: 'invoiceDashboard'},
+                      React.createElement(
+                        'div',
+                        {className: 'invoiceHeader'},
+                        React.createElement('h6', {className: 'center'}, 'Follow Up'),
+                        React.createElement(
+                          'a',
+                          {href: ''},
+                          React.createElement('span', {className: 'ti-close m-r-1'})
+                        ),
+                        React.createElement(
+                          'a',
+                          {href: ''},
+                          React.createElement('span', {className: 'ti-download'})
+                        )
+                      ),
+                      React.createElement(
+                        'h2',
+                        {className: 'fee-red'},
+                        React.createElement(
+                          'strong',
+                          null,
+                          this.props.data.getAdmissionData.totalFollowup
+                        )
+                      ),
+                      React.createElement(
+                        'h6',
+                        {className: 'btn btn-primary w50 p05 remainder'},
+                        'View Info'
+                      )
                     ),
                     React.createElement(
-                      'a',
-                      {href: ''},
-                      React.createElement('span', {className: 'ti-download'})
-                    )
-                  ),
-                  React.createElement(
-                    'h2',
-                    {className: 'fee-red'},
-                    React.createElement('strong', null, '15')
-                  ),
-                  React.createElement(
-                    'h6',
-                    {className: 'btn btn-primary w50 p05 remainder'},
-                    'View Info'
-                  )
-                ),
-                React.createElement(
-                  'div',
-                  {className: 'invoiceDashboard'},
-                  React.createElement(
-                    'div',
-                    {className: 'invoiceHeader'},
-                    React.createElement('h6', {className: 'center'}, 'Declined'),
-                    React.createElement(
-                      'a',
-                      {href: ''},
-                      React.createElement('span', {className: 'ti-close m-r-1 '})
+                      'div',
+                      {className: 'invoiceDashboard'},
+                      React.createElement(
+                        'div',
+                        {className: 'invoiceHeader'},
+                        React.createElement('h6', {className: 'center'}, 'Declined'),
+                        React.createElement(
+                          'a',
+                          {href: ''},
+                          React.createElement('span', {className: 'ti-close m-r-1 '})
+                        ),
+                        React.createElement(
+                          'a',
+                          {href: ''},
+                          React.createElement('span', {className: 'ti-download'})
+                        )
+                      ),
+                      React.createElement(
+                        'h2',
+                        {className: 'fee-orange'},
+                        React.createElement(
+                          'strong',
+                          null,
+                          this.props.data.getAdmissionData.totalDeclined
+                        )
+                      ),
+                      React.createElement(
+                        'h6',
+                        {className: 'center btn btn-primary w50 p05 remainder'},
+                        'View Info'
+                      )
                     ),
                     React.createElement(
-                      'a',
-                      {href: ''},
-                      React.createElement('span', {className: 'ti-download'})
+                      'div',
+                      {className: 'invoiceDashboard'},
+                      React.createElement(
+                        'div',
+                        {className: 'invoiceHeader'},
+                        React.createElement('h6', {className: 'center'}, 'Converted'),
+                        React.createElement(
+                          'a',
+                          {href: ''},
+                          React.createElement('span', {className: 'ti-close m-r-1'})
+                        ),
+                        React.createElement(
+                          'a',
+                          {href: ''},
+                          React.createElement('span', {className: 'ti-download'})
+                        )
+                      ),
+                      React.createElement(
+                        'h2',
+                        {className: 'fee-red'},
+                        React.createElement(
+                          'strong',
+                          null,
+                          this.props.data.getAdmissionData.totalConverted
+                        )
+                      ),
+                      React.createElement(
+                        'h6',
+                        {className: 'btn btn-primary w50 p05 remainder'},
+                        'View Info'
+                      )
                     )
-                  ),
-                  React.createElement(
-                    'h2',
-                    {className: 'fee-orange'},
-                    React.createElement('strong', null, '20')
-                  ),
-                  React.createElement(
-                    'h6',
-                    {className: 'center btn btn-primary w50 p05 remainder'},
-                    'View Info'
-                  )
-                ),
-                React.createElement(
-                  'div',
-                  {className: 'invoiceDashboard'},
-                  React.createElement(
-                    'div',
-                    {className: 'invoiceHeader'},
-                    React.createElement('h6', {className: 'center'}, 'Converted'),
-                    React.createElement(
-                      'a',
-                      {href: ''},
-                      React.createElement('span', {className: 'ti-close m-r-1'})
-                    ),
-                    React.createElement(
-                      'a',
-                      {href: ''},
-                      React.createElement('span', {className: 'ti-download'})
-                    )
-                  ),
-                  React.createElement(
-                    'h2',
-                    {className: 'fee-red'},
-                    React.createElement('strong', null, '5')
-                  ),
-                  React.createElement(
-                    'h6',
-                    {className: 'btn btn-primary w50 p05 remainder'},
-                    'View Info'
                   )
                 )
-              ),
-              React.createElement(
-                'h5',
-                {className: 'bg-heading p-1 m-0'},
-                'Received Info'
-              ),
-              React.createElement(
-                'table',
-                {id: 'admissionlistpage', className: 'striped-table fwidth bg-white p-2'},
-                React.createElement(
-                  'thead',
-                  null,
-                  React.createElement(
-                    'tr',
-                    null,
-                    React.createElement(
-                      'th',
-                      null,
-                      React.createElement('input', {
-                        type: 'checkbox',
-                        value: 'checkedall',
-                        name: '',
-                        id: '',
-                      })
-                    ),
-                    React.createElement('th', null, 'Enquiry ID'),
-                    React.createElement('th', null, 'Name'),
-                    React.createElement('th', null, 'Contact'),
-                    React.createElement('th', null, 'Status'),
-                    React.createElement('th', null, 'Date'),
-                    React.createElement('th', null, 'Details')
-                  )
-                ),
-                React.createElement(
-                  'tbody',
-                  null,
-                  admissionEnquiries.map(function(admissionEnquiry) {
-                    return React.createElement(AdmissionRow, {
-                      key: admissionEnquiry.id,
-                      admissionEnquiry: admissionEnquiry,
-                    });
-                  })
-                )
-              )
-            );
-          };
-          var AdmissionEnquiryPage = function AdmissionEnquiryPage(_a) {
-            var admissionEnquiries = _a.data.admissionEnquiries;
-            return React.createElement(
-              'section',
-              {className: 'customCss'},
-              React.createElement(
-                'h3',
-                {className: 'bg-heading p-1'},
-                React.createElement('i', {
-                  className: 'fa fa-university stroke-transparent mr-1',
-                  'aria-hidden': 'true',
-                }),
-                ' Admin - Admission'
-              ),
-              React.createElement(
-                'div',
-                {className: 'm-b-1 dflex bg-heading justify-Content'},
-                React.createElement('h4', {className: 'ptl-06'}, 'Enquiry'),
-                React.createElement(
-                  'div',
-                  null,
-                  React.createElement(
-                    'a',
-                    {className: 'btn btn-primary', style: w180},
-                    'Create New Enquiry'
-                  )
-                )
-              ),
-              React.createElement(AdmissionsTable, {
-                admissionEnquiries: admissionEnquiries,
-              })
-            );
-          };
-          exports.default = react_apollo_1.graphql(AdmissionEnquiryListQueryGql)(
-            withLoadingHandler_1.default(AdmissionEnquiryPage)
-          );
+              );
+            };
+            return AdmissionEnquiryPage;
+          })(React.Component);
+          {
+          } /* // type AdmissionEnquiryPageOwnProps = RouteComponentProps<{}>;
+   // type AdmissionEnquiryPageProps = {
+   //   data: QueryProps & AdmissionEnquiryQuery;
+   // };
+   // const AdmissionEnquiryPage = ({ data: { admissionEnquiries } }: AdmissionEnquiryPageProps) => (
+   //   <section className="customCss">
+   //     <h3 className="bg-heading p-1">
+   //       <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true"></i> Admin - Admission
+   //         </h3>
+   //     <div className="m-b-1 dflex bg-heading justify-Content">
+   //       <h4 className="ptl-06">Enquiry</h4>
+   //       <div>
+   //         <a className="btn btn-primary" style={w180}>
+   //           Create New Enquiry
+   //         </a>
+   //         {/* <a className="btn btn-primary">Save</a> */
+
+          //       </div>
+          //     </div>
+          //     <AdmissionsTable admissionEnquiries={admissionEnquiries} />
+          //     {/* <AdmissionsTable admissions={admissions} /> */}
+          //   </section>
+          // ); */}
+          // export default graphql<AdmissionEnquiryQuery, AdmissionEnquiryPageOwnProps, AdmissionEnquiryPageProps>(
+          //   AdmissionEnquiryListQueryGql
+          // )(withLoadingHandler(AdmissionEnquiryPage));
+          exports.default = withAdmissionDataloader_1.default(AdmissionEnquiryPage);
 
           /***/
         },
 
-      /***/ './domain/Admission/AdmissionEnquiryPage/AdmissionEnquiryQuery.graphql':
-        /*!*****************************************************************************!*\
-  !*** ./domain/Admission/AdmissionEnquiryPage/AdmissionEnquiryQuery.graphql ***!
-  \*****************************************************************************/
+      /***/ './domain/Admission/AdmissionEnquiryPage/AdmissionsApp.tsx':
+        /*!*****************************************************************!*\
+  !*** ./domain/Admission/AdmissionEnquiryPage/AdmissionsApp.tsx ***!
+  \*****************************************************************/
         /*! no static exports found */
         /***/ function(module, exports, __webpack_require__) {
+          'use strict';
+
+          Object.defineProperty(exports, '__esModule', {value: true});
+          var React = __webpack_require__(/*! react */ 'react');
+          var ReactDOM = __webpack_require__(/*! react-dom */ 'react-dom');
+          var react_apollo_1 = __webpack_require__(
+            /*! react-apollo */ '../node_modules/react-apollo/react-apollo.browser.umd.js'
+          );
+          var react_router_dom_1 = __webpack_require__(
+            /*! react-router-dom */ '../node_modules/react-router-dom/es/index.js'
+          );
+          var createGraphQLClient_1 = __webpack_require__(
+            /*! ../../../createGraphQLClient */ './createGraphQLClient.tsx'
+          );
+          var AdmissionEnquiryPage_1 = __webpack_require__(
+            /*! ./AdmissionEnquiryPage */ './domain/Admission/AdmissionEnquiryPage/AdmissionEnquiryPage.tsx'
+          );
+          __webpack_require__(/*! ../../../css/dark.css */ './css/dark.css');
+          var graphQLClient = createGraphQLClient_1.createGraphQLClient();
+          function init() {
+            setTimeout(function() {
+              ReactDOM.render(
+                React.createElement(
+                  react_apollo_1.ApolloProvider,
+                  {client: graphQLClient},
+                  React.createElement(
+                    react_router_dom_1.BrowserRouter,
+                    null,
+                    React.createElement(
+                      react_router_dom_1.Switch,
+                      null,
+                      React.createElement(react_router_dom_1.Route, {
+                        path: '/plugins/xformation-cms-admission-panel/page/admissions',
+                        component: AdmissionEnquiryPage_1.default,
+                      })
+                    )
+                  )
+                ),
+                document.getElementById('mountAdmissionEnquiry')
+              );
+            }, 100);
+          }
+          exports.default = init;
+
+          /***/
+        },
+
+      /***/ './domain/Admission/AdmissionEnquiryPage/GetAdmissionData.graphql':
+        /*!************************************************************************!*\
+  !*** ./domain/Admission/AdmissionEnquiryPage/GetAdmissionData.graphql ***!
+  \************************************************************************/
+        /*! no static exports found */
+        /***/ function(module, exports) {
           var doc = {
             kind: 'Document',
             definitions: [
               {
-                kind: 'FragmentDefinition',
-                name: {kind: 'Name', value: 'admissionEnquirySummary'},
-                typeCondition: {
-                  kind: 'NamedType',
-                  name: {kind: 'Name', value: 'AdmissionEnquiry'},
-                },
-                directives: [],
-                selectionSet: {
-                  kind: 'SelectionSet',
-                  selections: [
-                    {
-                      kind: 'FragmentSpread',
-                      name: {kind: 'Name', value: 'admissionEnquiry'},
-                      directives: [],
-                    },
-                  ],
-                },
-              },
-              {
                 kind: 'OperationDefinition',
                 operation: 'query',
-                name: {kind: 'Name', value: 'admissionEnquiry'},
-                variableDefinitions: [],
+                name: {kind: 'Name', value: 'getAdmissionData'},
+                variableDefinitions: [
+                  {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'branchId'}},
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+                  },
+                  {
+                    kind: 'VariableDefinition',
+                    variable: {
+                      kind: 'Variable',
+                      name: {kind: 'Name', value: 'admissionApplicationId'},
+                    },
+                    type: {
+                      kind: 'NonNullType',
+                      type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+                    },
+                  },
+                ],
                 directives: [],
                 selectionSet: {
                   kind: 'SelectionSet',
                   selections: [
                     {
                       kind: 'Field',
-                      name: {kind: 'Name', value: 'admissionEnquiries'},
-                      arguments: [],
+                      name: {kind: 'Name', value: 'getAdmissionData'},
+                      arguments: [
+                        {
+                          kind: 'Argument',
+                          name: {kind: 'Name', value: 'branchId'},
+                          value: {
+                            kind: 'Variable',
+                            name: {kind: 'Name', value: 'branchId'},
+                          },
+                        },
+                        {
+                          kind: 'Argument',
+                          name: {kind: 'Name', value: 'admissionApplicationId'},
+                          value: {
+                            kind: 'Variable',
+                            name: {kind: 'Name', value: 'admissionApplicationId'},
+                          },
+                        },
+                      ],
                       directives: [],
                       selectionSet: {
                         kind: 'SelectionSet',
                         selections: [
                           {
-                            kind: 'FragmentSpread',
-                            name: {kind: 'Name', value: 'admissionEnquirySummary'},
+                            kind: 'Field',
+                            name: {kind: 'Name', value: 'totalAdmissions'},
+                            arguments: [],
+                            directives: [],
+                          },
+                          {
+                            kind: 'Field',
+                            name: {kind: 'Name', value: 'totalFollowup'},
+                            arguments: [],
+                            directives: [],
+                          },
+                          {
+                            kind: 'Field',
+                            name: {kind: 'Name', value: 'totalDeclined'},
+                            arguments: [],
+                            directives: [],
+                          },
+                          {
+                            kind: 'Field',
+                            name: {kind: 'Name', value: 'totalConverted'},
+                            arguments: [],
                             directives: [],
                           },
                         ],
@@ -23830,11 +23920,11 @@ object-assign
                 },
               },
             ],
-            loc: {start: 0, end: 231},
+            loc: {start: 0, end: 260},
           };
           doc.loc.source = {
             body:
-              '#import "../../gqlfragments/admissionEnquiry.graphql"\r\n\r\nfragment admissionEnquirySummary on AdmissionEnquiry {\r\n  ...admissionEnquiry\r\n}\r\n\r\nquery admissionEnquiry {\r\n  admissionEnquiries {\r\n    ...admissionEnquirySummary\r\n  }\r\n}\r\n',
+              'query getAdmissionData( $branchId:String, $admissionApplicationId:String!)\r\n{\r\n  getAdmissionData(branchId:$branchId, admissionApplicationId:$admissionApplicationId)\r\n  {\r\n    totalAdmissions,\r\n    totalFollowup,\r\n    totalDeclined,\r\n    totalConverted\r\n  }\r\n}',
             name: 'GraphQL request',
             locationOffset: {line: 1, column: 1},
           };
@@ -23852,13 +23942,6 @@ object-assign
               }
             });
           }
-          doc.definitions = doc.definitions.concat(
-            unique(
-              __webpack_require__(
-                /*! ../../gqlfragments/admissionEnquiry.graphql */ './domain/gqlfragments/admissionEnquiry.graphql'
-              ).definitions
-            )
-          );
 
           // Collect any fragment/type references from a node, adding them to the refs Set
           function collectFragmentReferences(node, refs) {
@@ -23952,218 +24035,45 @@ object-assign
 
           module.exports = doc;
 
-          module.exports['admissionEnquiry'] = oneQuery(doc, 'admissionEnquiry');
+          module.exports['getAdmissionData'] = oneQuery(doc, 'getAdmissionData');
 
           /***/
         },
 
-      /***/ './domain/Admission/AdmissionEnquiryPage/AdmissionsApp.tsx':
-        /*!*****************************************************************!*\
-  !*** ./domain/Admission/AdmissionEnquiryPage/AdmissionsApp.tsx ***!
-  \*****************************************************************/
+      /***/ './domain/Admission/AdmissionEnquiryPage/withAdmissionDataloader.tsx':
+        /*!***************************************************************************!*\
+  !*** ./domain/Admission/AdmissionEnquiryPage/withAdmissionDataloader.tsx ***!
+  \***************************************************************************/
         /*! no static exports found */
         /***/ function(module, exports, __webpack_require__) {
           'use strict';
 
           Object.defineProperty(exports, '__esModule', {value: true});
-          var React = __webpack_require__(/*! react */ 'react');
-          var ReactDOM = __webpack_require__(/*! react-dom */ 'react-dom');
           var react_apollo_1 = __webpack_require__(
             /*! react-apollo */ '../node_modules/react-apollo/react-apollo.browser.umd.js'
           );
-          var react_router_dom_1 = __webpack_require__(
-            /*! react-router-dom */ '../node_modules/react-router-dom/es/index.js'
+          var GetAdmissionDataGql = __webpack_require__(
+            /*! ./GetAdmissionData.graphql */ './domain/Admission/AdmissionEnquiryPage/GetAdmissionData.graphql'
           );
-          var createGraphQLClient_1 = __webpack_require__(
-            /*! ../../../createGraphQLClient */ './createGraphQLClient.tsx'
+          var withLoadingHandler_1 = __webpack_require__(
+            /*! ../../../components/withLoadingHandler */ './components/withLoadingHandler.tsx'
           );
-          var AdmissionEnquiryPage_1 = __webpack_require__(
-            /*! ./AdmissionEnquiryPage */ './domain/Admission/AdmissionEnquiryPage/AdmissionEnquiryPage.tsx'
-          );
-          __webpack_require__(/*! ../../../css/dark.css */ './css/dark.css');
-          var graphQLClient = createGraphQLClient_1.createGraphQLClient();
-          function init() {
-            setTimeout(function() {
-              ReactDOM.render(
-                React.createElement(
-                  react_apollo_1.ApolloProvider,
-                  {client: graphQLClient},
-                  React.createElement(
-                    react_router_dom_1.BrowserRouter,
-                    null,
-                    React.createElement(
-                      react_router_dom_1.Switch,
-                      null,
-                      React.createElement(react_router_dom_1.Route, {
-                        path: '/plugins/xformation-cms-admission-panel/page/admissions',
-                        component: AdmissionEnquiryPage_1.default,
-                      })
-                    )
-                  )
-                ),
-                document.getElementById('mountAdmissionEnquiry')
-              );
-            }, 100);
-          }
-          exports.default = init;
-
-          /***/
-        },
-
-      /***/ './domain/gqlfragments/admissionEnquiry.graphql':
-        /*!******************************************************!*\
-  !*** ./domain/gqlfragments/admissionEnquiry.graphql ***!
-  \******************************************************/
-        /*! no static exports found */
-        /***/ function(module, exports) {
-          var doc = {
-            kind: 'Document',
-            definitions: [
-              {
-                kind: 'FragmentDefinition',
-                name: {kind: 'Name', value: 'admissionEnquiry'},
-                typeCondition: {
-                  kind: 'NamedType',
-                  name: {kind: 'Name', value: 'AdmissionEnquiry'},
-                },
-                directives: [],
-                selectionSet: {
-                  kind: 'SelectionSet',
-                  selections: [
-                    {
-                      kind: 'Field',
-                      name: {kind: 'Name', value: 'id'},
-                      arguments: [],
-                      directives: [],
-                    },
-                    {
-                      kind: 'Field',
-                      name: {kind: 'Name', value: 'studentName'},
-                      arguments: [],
-                      directives: [],
-                    },
-                    {
-                      kind: 'Field',
-                      name: {kind: 'Name', value: 'mobileNumber'},
-                      arguments: [],
-                      directives: [],
-                    },
-                    {
-                      kind: 'Field',
-                      name: {kind: 'Name', value: 'alternateMobileNumber'},
-                      arguments: [],
-                      directives: [],
-                    },
-                    {
-                      kind: 'Field',
-                      name: {kind: 'Name', value: 'email'},
-                      arguments: [],
-                      directives: [],
-                    },
-                    {
-                      kind: 'Field',
-                      name: {kind: 'Name', value: 'courseApplyingFor'},
-                      arguments: [],
-                      directives: [],
-                    },
-                    {
-                      kind: 'Field',
-                      name: {kind: 'Name', value: 'modeOfEnquiry'},
-                      arguments: [],
-                      directives: [],
-                    },
-                    {
-                      kind: 'Field',
-                      name: {kind: 'Name', value: 'status'},
-                      arguments: [],
-                      directives: [],
-                    },
-                    {
-                      kind: 'Field',
-                      name: {kind: 'Name', value: 'description'},
-                      arguments: [],
-                      directives: [],
-                    },
-                    {
-                      kind: 'Field',
-                      name: {kind: 'Name', value: 'enquiryDate'},
-                      arguments: [],
-                      directives: [],
-                    },
-                    {
-                      kind: 'Field',
-                      name: {kind: 'Name', value: 'updatedOn'},
-                      arguments: [],
-                      directives: [],
-                    },
-                    {
-                      kind: 'Field',
-                      name: {kind: 'Name', value: 'updatedBy'},
-                      arguments: [],
-                      directives: [],
-                    },
-                    {
-                      kind: 'Field',
-                      name: {kind: 'Name', value: 'branch'},
-                      arguments: [],
-                      directives: [],
-                      selectionSet: {
-                        kind: 'SelectionSet',
-                        selections: [
-                          {
-                            kind: 'Field',
-                            name: {kind: 'Name', value: 'branchName'},
-                            arguments: [],
-                            directives: [],
-                          },
-                        ],
-                      },
-                    },
-                    {
-                      kind: 'Field',
-                      name: {kind: 'Name', value: 'admissionApplication'},
-                      arguments: [],
-                      directives: [],
-                      selectionSet: {
-                        kind: 'SelectionSet',
-                        selections: [
-                          {
-                            kind: 'Field',
-                            name: {kind: 'Name', value: 'admissionStatus'},
-                            arguments: [],
-                            directives: [],
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
+          var withAdmissionDataloader = function withAdmissionDataloader(
+            TargetComponent
+          ) {
+            return react_apollo_1.graphql(GetAdmissionDataGql, {
+              options: function options(_a) {
+                var match = _a.match;
+                return {
+                  variables: {
+                    branchId: 1851,
+                    admissionApplicationId: 4501,
+                  },
+                };
               },
-            ],
-            loc: {start: 0, end: 312},
+            })(withLoadingHandler_1.default(TargetComponent));
           };
-          doc.loc.source = {
-            body:
-              'fragment admissionEnquiry on AdmissionEnquiry {\r\n  id\r\n  studentName\r\n  mobileNumber\r\n  alternateMobileNumber\r\n  email\r\n  courseApplyingFor\r\n  modeOfEnquiry\r\n  status\r\n  description\r\n  enquiryDate\r\n  updatedOn\r\n  updatedBy\r\n  branch {\r\n    branchName\r\n  }\r\n  admissionApplication {\r\n    admissionStatus\r\n  }\r\n}\r\n',
-            name: 'GraphQL request',
-            locationOffset: {line: 1, column: 1},
-          };
-
-          var names = {};
-          function unique(defs) {
-            return defs.filter(function(def) {
-              if (def.kind !== 'FragmentDefinition') return true;
-              var name = def.name.value;
-              if (names[name]) {
-                return false;
-              } else {
-                names[name] = true;
-                return true;
-              }
-            });
-          }
-
-          module.exports = doc;
+          exports.default = withAdmissionDataloader;
 
           /***/
         },

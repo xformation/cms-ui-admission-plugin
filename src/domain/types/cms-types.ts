@@ -25,3 +25,10 @@ export type AdmissionEnquiryData = {
     admissionStatus: string;
   };
 };
+
+export type GetAdmissionData = {
+  totalAdmissions: any;
+  totalFollowup: any;
+  totalDeclined: any;
+  totalConverted: any;
+};
