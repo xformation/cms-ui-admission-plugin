@@ -19,7 +19,7 @@ const withAdmissionDataloader = (TargetComponent: ReactFunctionOrComponentClass<
     options: ({ match }) => ({
       variables: {
         branchId: 1851,
-        admissionApplicationId: 4501
+        admissionApplicationId: 6051
       }
     })
   })(withLoadingHandler(TargetComponent));
