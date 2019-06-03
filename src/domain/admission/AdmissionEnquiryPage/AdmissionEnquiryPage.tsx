@@ -1,11 +1,9 @@
 import * as React from 'react';
-import * as GetAdmissionDataGql from './GetAdmissionData.graphql';
 import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
-import { graphql, QueryProps } from 'react-apollo';
+import { graphql, QueryProps, MutationFunc, compose } from 'react-apollo';
 
-import * as AdmissionEnquiryListQueryGql from './AdmissionEnquiryQuery.graphql';
-import { AdmissionEnquiryQuery, AdmissionEnquirySummaryFragment ,AdmissionEnquiryCountQueryType} from '../../types';
-import withLoadingHandler from '../../../components/withLoadingHandler';
+import * as AdmissionEnquiryListQueryGql from './AdmissionEnquiry.graphql';
+import { AdmissionEnquiryQuery,AdmissionEnquiryCountQueryType} from '../../types';
 import widthAdmissionDataloader from './withAdmissionDataloader';
 
 const w180 = {
@@ -20,66 +18,142 @@ type AdmissionDataRootProps = RouteComponentProps<{
   data: QueryProps & AdmissionEnquiryCountQueryType;
 };
 
+type AdmissionDataPageProps = AdmissionDataRootProps& {
+  mutate: MutationFunc<AdmissionEnquiryQuery>
+};
+
 type AdmissionDataState = {
-  admissionGetData: any,
-  branches: any,
-  admissionApplications: any,
+  admissionEnquiryData: any
 }
 
-type AdmissionDataPageProps = AdmissionDataRootProps;
-
-/*const AdmissionRow = ({ admissionEnquiry }: { admissionEnquiry: AdmissionEnquirySummaryFragment }) => (
-  <tr key={admissionEnquiry.id}>
-    <td>
-      <input type="checkbox" name="" id="" />
-    </td>
-    <td>{admissionEnquiry.id}</td>
-    <td>{admissionEnquiry.studentName}</td>
-    <td>{admissionEnquiry.mobileNumber}</td>
-    <td>{admissionEnquiry.status}</td>
-    <td>{admissionEnquiry.enquiryDate}</td>
-    <td><span className="btn btn-primary">Details</span></td>
-  </tr>
-);
-*/
-
-/*const AdmissionsTable = ({ admissionEnquiries }: { admissionEnquiries: AdmissionEnquirySummaryFragment[] }) => (*/
   class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, AdmissionDataState> {
-    constructor(props: AdmissionDataPageProps) {
+    constructor(props: any) {
       super(props);
       this.state = {
-        admissionGetData: {
+        admissionEnquiryData: {
           branch: {
             id: 1851 //1001
           },
           admissionApplication: {
-            id: 4501 //1051
+            id: 6051 //1051
           },
-        
-        },
-        branches: [],
-        admissionApplications: [],
+       mutateResult: []
       }
+      };
+      this.checkAllAdmissions = this.checkAllAdmissions.bind(this);
+      this.createAdmissionRows = this.createAdmissionRows.bind(this);
+      this.onClickCheckbox = this.onClickCheckbox.bind(this);
     }
+
+    onClickCheckbox(index: any, e: any) {
+      const { id } = e.nativeEvent.target;
+      let chkBox : any = document.querySelector("#"+id);
+      chkBox.checked = e.nativeEvent.target.checked;
+    }
+
+    checkAllAdmissions(e: any) {
+      const { admissionEnquiryData } = this.state;
+      const mutateResLength = admissionEnquiryData.mutateResult.length;
+      let chkAll  = e.nativeEvent.target.checked;
+      let els = document.querySelectorAll("input[type=checkbox]");
+
+      var empty = [].filter.call( els, function( el: any ) {
+        if(chkAll){
+          el.checked = true;
+        }else{
+          el.checked = false;
+        }
+      });
+    }
+
+    createNoRecordMessage(objAry: any){
+      const mutateResLength = objAry.length;
+      const retVal = [];
+      for(let x=0; x< mutateResLength; x++){
+        const tempObj = objAry[x];
+        const admissionArray = tempObj.data.getAdmissionEnquiry;
+        const length = admissionArray.length;
+        if(length === 0){
+          retVal.push(
+            <h4 className="ptl-06">No Record Found</h4>
+          );
+        }
+      }
+      return retVal;
+    }
+
+    createAdmissionRows(objAry: any) {
+      const mutateResLength = objAry.length;
+      const retVal = [];
+      for(let x=0; x< mutateResLength; x++){
+        const tempObj = objAry[x];
+        const admissionArray = tempObj.data.getAdmissionEnquiry;
+        const length = admissionArray.length;
+        for (let i = 0; i < length; i++) {
+          const admissionEnquiry = admissionArray[i];
+          retVal.push(
+            <tr >
+              <td>
+                <input onClick={(e: any) => this.onClickCheckbox(i, e)} checked={admissionEnquiry.isChecked} type="checkbox" name="" id={"chk"+admissionEnquiry.id} />
+              </td>
+              <td>{admissionEnquiry.id}</td>
+              <td>{admissionEnquiry.studentName}</td>
+              <td>{admissionEnquiry.mobileNumber}</td>
+              <td>{admissionEnquiry.status}</td>
+              <td>{admissionEnquiry.strEnquiryDate}</td>
+              <td><span className="btn btn-primary">Details</span></td>
+            </tr>
+          );
+        }
+      }
+      return retVal;
+    }
+
+    onClick = (e: any) => {
+      const { mutate } = this.props;
+      const { admissionEnquiryData } = this.state;
+      e.preventDefault();
+      let btn : any = document.querySelector("#btnFind");
+      btn.setAttribute("disabled", true);
+      return mutate({
+        variables: {
+            branchId: admissionEnquiryData.branch.id,
+            admissionApplicationId: admissionEnquiryData.admissionApplication.id,
+          },
+      }).then(data => {
+        btn.removeAttribute("disabled");
+        const aet = data;
+        admissionEnquiryData.mutateResult = [];
+        admissionEnquiryData.mutateResult.push(aet);
+        this.setState({
+          admissionEnquiryData: admissionEnquiryData
+        });
+        console.log('Admission result :  ', admissionEnquiryData.mutateResult);
+      }).catch((error: any) => {
+        btn.removeAttribute("disabled");
+        console.log('there was an error sending the admission mutation result ', error);
+        return Promise.reject(`Could not retrieve admission data: ${error}`);
+      });
+
+    }
+
     render() {
       const {
-        branches,
-        admissionApplications,
+        admissionEnquiryData
       } = this.state;
       return (
-        <React.Fragment>
-  <section className="border">
-    <div className="inDashboard p-1">
-      <div className="invoiceDashboard">
-        <div className="invoiceHeader">
+      <section className="border">
+       <div className="inDashboard p-1">
+         <div className="invoiceDashboard">
+          <div className="invoiceHeader">
           <h6 className="center">Total Enquiry</h6>
           <a href=""><span className="ti-close m-r-1"></span></a>
           <a href=""><span className="ti-download"></span></a>
         </div>
         <h2 className="fee-red"><strong>{this.props.data.getAdmissionData.totalAdmissions}</strong></h2>
         <h6 className="btn btn-primary w50 p05 remainder">View Info</h6>
-      </div>
-      <div className="invoiceDashboard">
+        </div>
+        <div className="invoiceDashboard">
         <div className="invoiceHeader">
           <h6 className="center">Follow Up</h6>
           <a href=""><span className="ti-close m-r-1"></span></a>
@@ -107,13 +181,14 @@ type AdmissionDataPageProps = AdmissionDataRootProps;
         <h6 className="btn btn-primary w50 p05 remainder">View Info</h6>
       </div>
     </div>
-     
-     {/* <h5 className="bg-heading p-1 m-0">Received Info</h5>
+
+     <h5 className="bg-heading-admission p-1 m-0">Received Info</h5>
+      <button className="btn btn-primary btn-sm" id="btnFind" name="btnFind" onClick={this.onClick} >Search</button>
     <table id="admissionlistpage" className="striped-table fwidth bg-white p-2">
       <thead>
         <tr>
           <th>
-            <input type="checkbox" value="checkedall" name="" id="" />
+          <input type="checkbox" onClick={(e: any) => this.checkAllAdmissions(e)} value="checkedall" name="" id="chkCheckedAll" />
           </th>
           <th>Enquiry ID</th>
           <th>Name</th>
@@ -124,41 +199,23 @@ type AdmissionDataPageProps = AdmissionDataRootProps;
         </tr>
       </thead>
       <tbody>
-        {admissionEnquiries.map(admissionEnquiry => <AdmissionRow key={admissionEnquiry.id} admissionEnquiry={admissionEnquiry} />)}
+      {
+       this.createAdmissionRows(this.state.admissionEnquiryData.mutateResult)
+       }
       </tbody>
-    </table> */}
-    
+    </table>
+
   </section>
-  </React.Fragment>
 );
   }
 }
 
-{/* // type AdmissionEnquiryPageOwnProps = RouteComponentProps<{}>;
-// type AdmissionEnquiryPageProps = {
-//   data: QueryProps & AdmissionEnquiryQuery;
-// };
 
-// const AdmissionEnquiryPage = ({ data: { admissionEnquiries } }: AdmissionEnquiryPageProps) => (
-//   <section className="customCss">
-//     <h3 className="bg-heading p-1">
-//       <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true"></i> Admin - Admission
-//         </h3>
-//     <div className="m-b-1 dflex bg-heading justify-Content">
-//       <h4 className="ptl-06">Enquiry</h4>
-//       <div>
-//         <a className="btn btn-primary" style={w180}>
-//           Create New Enquiry
-//         </a>
-//         {/* <a className="btn btn-primary">Save</a> */}
-//       </div>
-//     </div>
-//     <AdmissionsTable admissionEnquiries={admissionEnquiries} />
-//     {/* <AdmissionsTable admissions={admissions} /> */}
-//   </section>
-// ); */}
-
-// export default graphql<AdmissionEnquiryQuery, AdmissionEnquiryPageOwnProps, AdmissionEnquiryPageProps>(
-//   AdmissionEnquiryListQueryGql
-// )(withLoadingHandler(AdmissionEnquiryPage));
-export default widthAdmissionDataloader((AdmissionEnquiryPage) as any);
+export default widthAdmissionDataloader(
+  compose(
+    graphql<AdmissionEnquiryQuery,AdmissionDataRootProps>(AdmissionEnquiryListQueryGql,{
+      name:"mutate"
+    })
+  )
+  (AdmissionEnquiryPage) as any
+  );

@@ -5,30 +5,30 @@ export type ReactFunctionOrComponentClass<P> =
 
 // --------------------------------------
 
-export type AdmissionEnquiryData = {
-  // id: any;
-  studentName: string;
-  mobileNumber: string;
-  alternateMobileNumber: string;
-  email: string;
-  courseApplyingFor: string;
-  modeOfEnquiry: string;
-  status: string;
-  description: string;
-  enquiryDate: string;
-  updatedOn: string;
-  updatedBy: string;
-  branch: {
-    branchName: string;
-  };
-  admissionApplication: {
-    admissionStatus: string;
-  };
-};
+// export type AdmissionEnquiryData = {
+//   // id: any;
+//   studentName: string;
+//   mobileNumber: string;
+//   alternateMobileNumber: string;
+//   email: string;
+//   courseApplyingFor: string;
+//   modeOfEnquiry: string;
+//   status: string;
+//   description: string;
+//   enquiryDate: string;
+//   updatedOn: string;
+//   updatedBy: string;
+//   branch: {
+//     branchName: string;
+//   };
+//   admissionApplication: {
+//     admissionStatus: string;
+//   };
+// };
 
-export type GetAdmissionData = {
-  totalAdmissions: any;
-  totalFollowup: any;
-  totalDeclined: any;
-  totalConverted: any;
-};
+// export type GetAdmissionData = {
+//   totalAdmissions: any;
+//   totalFollowup: any;
+//   totalDeclined: any;
+//   totalConverted: any;
+// };
