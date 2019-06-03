@@ -23530,7 +23530,7 @@ object-assign
               {
                 kind: 'OperationDefinition',
                 operation: 'mutation',
-                name: {kind: 'Name', value: 'getAdmissionEnquiry'},
+                name: {kind: 'Name', value: 'admissionEnquiryList'},
                 variableDefinitions: [
                   {
                     kind: 'VariableDefinition',
@@ -23543,10 +23543,7 @@ object-assign
                       kind: 'Variable',
                       name: {kind: 'Name', value: 'admissionApplicationId'},
                     },
-                    type: {
-                      kind: 'NonNullType',
-                      type: {kind: 'NamedType', name: {kind: 'Name', value: 'Long'}},
-                    },
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'Long'}},
                   },
                 ],
                 directives: [],
@@ -23555,7 +23552,7 @@ object-assign
                   selections: [
                     {
                       kind: 'Field',
-                      name: {kind: 'Name', value: 'getAdmissionEnquiry'},
+                      name: {kind: 'Name', value: 'admissionEnquiryList'},
                       arguments: [
                         {
                           kind: 'Argument',
@@ -23615,11 +23612,11 @@ object-assign
                 },
               },
             ],
-            loc: {start: 0, end: 256},
+            loc: {start: 0, end: 248},
           };
           doc.loc.source = {
             body:
-              'mutation getAdmissionEnquiry($branchId:Long,$admissionApplicationId:Long!){\r\n  getAdmissionEnquiry(branchId:$branchId, admissionApplicationId:$admissionApplicationId){\r\n    id,\r\n    studentName,\r\n    mobileNumber,\r\n    status,\r\n    strEnquiryDate\r\n  }\r\n}\r\n',
+              'mutation admissionEnquiryList($branchId:Long,$admissionApplicationId:Long){\n  admissionEnquiryList(branchId:$branchId, admissionApplicationId:$admissionApplicationId){\n    id,\n    studentName,\n    mobileNumber,\n    status,\n    strEnquiryDate\n  }\n}\n',
             name: 'GraphQL request',
             locationOffset: {line: 1, column: 1},
           };
@@ -23730,7 +23727,7 @@ object-assign
 
           module.exports = doc;
 
-          module.exports['getAdmissionEnquiry'] = oneQuery(doc, 'getAdmissionEnquiry');
+          module.exports['admissionEnquiryList'] = oneQuery(doc, 'admissionEnquiryList');
 
           /***/
         },
@@ -23835,6 +23832,7 @@ object-assign
               _this.checkAllAdmissions = _this.checkAllAdmissions.bind(_this);
               _this.createAdmissionRows = _this.createAdmissionRows.bind(_this);
               _this.onClickCheckbox = _this.onClickCheckbox.bind(_this);
+              _this.createNoRecordMessage = _this.createNoRecordMessage.bind(_this);
               return _this;
             }
             AdmissionEnquiryPage.prototype.onClickCheckbox = function(index, e) {
@@ -23860,7 +23858,7 @@ object-assign
               var retVal = [];
               for (var x = 0; x < mutateResLength; x++) {
                 var tempObj = objAry[x];
-                var admissionArray = tempObj.data.getAdmissionEnquiry;
+                var admissionArray = tempObj.data.admissionEnquiryList;
                 var length_1 = admissionArray.length;
                 if (length_1 === 0) {
                   retVal.push(
@@ -23876,7 +23874,7 @@ object-assign
               var retVal = [];
               for (var x = 0; x < mutateResLength; x++) {
                 var tempObj = objAry[x];
-                var admissionArray = tempObj.data.getAdmissionEnquiry;
+                var admissionArray = tempObj.data.admissionEnquiryList;
                 var length_2 = admissionArray.length;
                 var _loop_1 = function _loop_1(i) {
                   var admissionEnquiry = admissionArray[i];
@@ -24063,58 +24061,70 @@ object-assign
                   )
                 ),
                 React.createElement(
-                  'h5',
-                  {className: 'bg-heading-admission p-1 m-0'},
-                  'Received Info'
-                ),
-                React.createElement(
-                  'button',
-                  {
-                    className: 'btn btn-primary btn-sm',
-                    id: 'btnFind',
-                    name: 'btnFind',
-                    onClick: this.onClick,
-                  },
-                  'Search'
-                ),
-                React.createElement(
-                  'table',
-                  {
-                    id: 'admissionlistpage',
-                    className: 'striped-table fwidth bg-white p-2',
-                  },
+                  'div',
+                  {className: 'm-b-1 dflex bg-heading'},
+                  React.createElement('h4', {className: 'ptl-06'}),
                   React.createElement(
-                    'thead',
-                    null,
-                    React.createElement(
-                      'tr',
-                      null,
-                      React.createElement(
-                        'th',
-                        null,
-                        React.createElement('input', {
-                          type: 'checkbox',
-                          onClick: function onClick(e) {
-                            return _this.checkAllAdmissions(e);
-                          },
-                          value: 'checkedall',
-                          name: '',
-                          id: 'chkCheckedAll',
-                        })
-                      ),
-                      React.createElement('th', null, 'Enquiry ID'),
-                      React.createElement('th', null, 'Name'),
-                      React.createElement('th', null, 'Contact'),
-                      React.createElement('th', null, 'Status'),
-                      React.createElement('th', null, 'Date'),
-                      React.createElement('th', null, 'Details')
-                    )
+                    'button',
+                    {
+                      className: 'btn btn-primary max-width-13',
+                      id: 'btnFind',
+                      name: 'btnFind',
+                      onClick: this.onClick,
+                    },
+                    'Search'
+                  )
+                ),
+                React.createElement(
+                  'div',
+                  {className: 'col-md-12'},
+                  React.createElement(
+                    'h5',
+                    {className: 'bg-heading p-1 m-0'},
+                    'Received Info'
                   ),
                   React.createElement(
-                    'tbody',
-                    null,
-                    this.createAdmissionRows(this.state.admissionEnquiryData.mutateResult)
-                  )
+                    'table',
+                    {
+                      id: 'admissionlistpage',
+                      className: 'striped-table fwidth bg-white p-2',
+                    },
+                    React.createElement(
+                      'thead',
+                      null,
+                      React.createElement(
+                        'tr',
+                        null,
+                        React.createElement(
+                          'th',
+                          null,
+                          React.createElement('input', {
+                            type: 'checkbox',
+                            onClick: function onClick(e) {
+                              return _this.checkAllAdmissions(e);
+                            },
+                            value: 'checkedall',
+                            name: '',
+                            id: 'chkCheckedAll',
+                          })
+                        ),
+                        React.createElement('th', null, 'Enquiry ID'),
+                        React.createElement('th', null, 'Name'),
+                        React.createElement('th', null, 'Contact'),
+                        React.createElement('th', null, 'Status'),
+                        React.createElement('th', null, 'Date'),
+                        React.createElement('th', null, 'Details')
+                      )
+                    ),
+                    React.createElement(
+                      'tbody',
+                      null,
+                      this.createAdmissionRows(
+                        this.state.admissionEnquiryData.mutateResult
+                      )
+                    )
+                  ),
+                  this.createNoRecordMessage(this.state.admissionEnquiryData.mutateResult)
                 )
               );
             };
