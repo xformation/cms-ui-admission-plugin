@@ -1,9 +1,0 @@
-mutation getAdmissionEnquiry($branchId:Long,$admissionApplicationId:Long!){
-  getAdmissionEnquiry(branchId:$branchId, admissionApplicationId:$admissionApplicationId){
-    id,
-    studentName,
-    mobileNumber,
-    status,
-    strEnquiryDate
-  }
-}
