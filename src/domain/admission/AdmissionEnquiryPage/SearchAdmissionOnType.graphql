@@ -1,0 +1,10 @@
+mutation searchAdmissionOnType($admissionEnquiryType:String, $branchId:Long, $admissionApplicationId:Long ){
+  searchAdmissionOnType(admissionEnquiryType:$admissionEnquiryType,branchId:$branchId, admissionApplicationId:$admissionApplicationId){
+    id,
+    studentName,
+    mobileNumber,
+    status,
+    strEnquiryDate
+  }
+}
+

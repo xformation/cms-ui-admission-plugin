@@ -2,8 +2,8 @@ import * as React from 'react';
 import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import { graphql, QueryProps, MutationFunc, compose } from 'react-apollo';
 
-import * as AdmissionEnquiryListQueryGql from './AdmissionEnquiry.graphql';
-import { AdmissionEnquiryQuery,AdmissionEnquiryCountQueryType} from '../../types';
+import * as AdmissionEnquiryListQueryGql from './SearchAdmissionOnType.graphql';
+import { SearchAdmissionOnTypeListType,AdmissionEnquiryCountQueryType} from '../../types';
 import widthAdmissionDataloader from './withAdmissionDataloader';
 
 const w180 = {
@@ -19,7 +19,7 @@ type AdmissionDataRootProps = RouteComponentProps<{
 };
 
 type AdmissionDataPageProps = AdmissionDataRootProps& {
-  mutate: MutationFunc<AdmissionEnquiryQuery>
+  mutate: MutationFunc<SearchAdmissionOnTypeListType>
 };
 
 type AdmissionDataState = {
@@ -39,6 +39,7 @@ type AdmissionDataState = {
           },
        mutateResult: []
       }
+     
       };
       this.checkAllAdmissions = this.checkAllAdmissions.bind(this);
       this.createAdmissionRows = this.createAdmissionRows.bind(this);
@@ -72,7 +73,7 @@ type AdmissionDataState = {
       const retVal = [];
       for(let x=0; x< mutateResLength; x++){
         const tempObj = objAry[x];
-        const admissionArray = tempObj.data.admissionEnquiryList;
+        const admissionArray = tempObj.data.searchAdmissionOnType;
         const length = admissionArray.length;
         if(length === 0){
           retVal.push(
@@ -88,7 +89,7 @@ type AdmissionDataState = {
       const retVal = [];
       for(let x=0; x< mutateResLength; x++){
         const tempObj = objAry[x];
-        const admissionArray = tempObj.data.admissionEnquiryList;
+        const admissionArray = tempObj.data.searchAdmissionOnType;
         const length = admissionArray.length;
         for (let i = 0; i < length; i++) {
           const admissionEnquiry = admissionArray[i];
@@ -102,7 +103,12 @@ type AdmissionDataState = {
               <td>{admissionEnquiry.mobileNumber}</td>
               <td>{admissionEnquiry.status}</td>
               <td>{admissionEnquiry.strEnquiryDate}</td>
-              <td><span className="btn btn-primary">Details</span></td>
+              <td>
+              <Link
+                className="table-link link-color"
+                to={`/plugins/xformation-cms-admission-panel/page/admissiondetails`}
+              >       
+              <span className="btn btn-primary">Details</span></Link></td>
             </tr>
           );
         }
@@ -110,17 +116,30 @@ type AdmissionDataState = {
       return retVal;
     }
 
+    
     onClick = (e: any) => {
+      const { name, value } = e.nativeEvent.target;
       const { mutate } = this.props;
       const { admissionEnquiryData } = this.state;
       e.preventDefault();
-      let btn : any = document.querySelector("#btnFind");
-      btn.setAttribute("disabled", true);
-      return mutate({
-        variables: { 
-            branchId: admissionEnquiryData.branch.id,
-            admissionApplicationId: admissionEnquiryData.admissionApplication.id,
-          },
+      let admType = "";
+      if(name === "btnTotalReceived"){
+        admType = "RECEIVED"
+      }else if(name === "btnFollowup"){
+        admType = "FOLLOWUP"
+      }else if(name === "btnDeclined"){
+        admType = "DECLINED"
+      }else if(name === "btnConverted"){
+        admType = "CONVERTED"
+     }
+     let btn: any = document.querySelector("#"+name);
+     btn.setAttribute("disabled", true);
+     return mutate({
+      variables: { 
+           admissionEnquiryType: admType,
+           branchId: admissionEnquiryData.branch.id,
+           admissionApplicationId: admissionEnquiryData.admissionApplication.id,
+      },
       }).then(data => {
         btn.removeAttribute("disabled");
         const aet = data;
@@ -137,7 +156,7 @@ type AdmissionDataState = {
       });
   
     }
-
+  
     render() {
       const {
         admissionEnquiryData
@@ -152,7 +171,7 @@ type AdmissionDataState = {
           <a href=""><span className="ti-download"></span></a>
         </div>
         <h2 className="fee-red"><strong>{this.props.data.getAdmissionData.totalAdmissions}</strong></h2>
-        <h6 className="btn btn-primary w50 p05 remainder">View Info</h6>
+        <button className="center btn btn-primary w50 p05 remainder"  id="btnTotalReceived" name="btnTotalReceived"  onClick={this.onClick}>View Info</button>
         </div>
         <div className="invoiceDashboard">
         <div className="invoiceHeader">
@@ -161,7 +180,7 @@ type AdmissionDataState = {
           <a href=""><span className="ti-download"></span></a>
         </div>
         <h2 className="fee-red"><strong>{this.props.data.getAdmissionData.totalFollowup}</strong></h2>
-        <h6 className="btn btn-primary w50 p05 remainder">View Info</h6>
+        <button className="center btn btn-primary w50 p05 remainder" id="btnFollowup" name="btnFollowup"  onClick={this.onClick}>View Info</button>
       </div>
       <div className="invoiceDashboard">
         <div className="invoiceHeader">
@@ -170,7 +189,7 @@ type AdmissionDataState = {
           <a href=""><span className="ti-download"></span></a>
         </div>
         <h2 className="fee-orange"><strong>{this.props.data.getAdmissionData.totalDeclined}</strong></h2>
-        <h6 className="center btn btn-primary w50 p05 remainder">View Info</h6>
+        <button className="center btn btn-primary w50 p05 remainder" id="btnDeclined" name="btnDeclined"  onClick={this.onClick}>View Info</button>
       </div>
       <div className="invoiceDashboard">
         <div className="invoiceHeader">
@@ -179,13 +198,11 @@ type AdmissionDataState = {
           <a href=""><span className="ti-download"></span></a>
         </div>
         <h2 className="fee-red"><strong>{this.props.data.getAdmissionData.totalConverted}</strong></h2>
-        <h6 className="btn btn-primary w50 p05 remainder">View Info</h6>
+        <button className="center btn btn-primary w50 p05 remainder" id="btnConverted" name="btnConverted"  onClick={this.onClick}>View Info</button>
+              
       </div>
     </div>
-    <div className="m-b-1 dflex bg-heading">
-                  <h4 className="ptl-06"></h4>
-                  <button className="btn btn-primary max-width-13" id="btnFind" name="btnFind"  onClick={this.onClick} >Search</button>
-               </div>
+    
        <div className="col-md-12">
      <h5 className="bg-heading p-1 m-0">Received Info</h5>
      
@@ -221,7 +238,7 @@ type AdmissionDataState = {
 
 export default widthAdmissionDataloader(
   compose(
-    graphql<AdmissionEnquiryQuery,AdmissionDataRootProps>(AdmissionEnquiryListQueryGql,{
+    graphql<SearchAdmissionOnTypeListType,AdmissionDataRootProps>(AdmissionEnquiryListQueryGql,{
       name:"mutate"
     })
   )

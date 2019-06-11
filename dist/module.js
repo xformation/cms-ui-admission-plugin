@@ -23475,7 +23475,7 @@ object-assign
           // 	http://dev.apollodata.com/react/initialization.html#creating-client
           exports.createGraphQLClient = function() {
             var networkInterface = react_apollo_1.createNetworkInterface({
-              uri: 'http://18.234.66.133:8080/graphql',
+              uri: 'http://localhost:8080/graphql',
             });
             var client = new react_apollo_1.ApolloClient({
               networkInterface: networkInterface,
@@ -23518,220 +23518,6 @@ object-assign
           /***/
         },
 
-      /***/ './domain/Admission/AdmissionEnquiryPage/AdmissionEnquiry.graphql':
-        /*!************************************************************************!*\
-  !*** ./domain/Admission/AdmissionEnquiryPage/AdmissionEnquiry.graphql ***!
-  \************************************************************************/
-        /*! no static exports found */
-        /***/ function(module, exports) {
-          var doc = {
-            kind: 'Document',
-            definitions: [
-              {
-                kind: 'OperationDefinition',
-                operation: 'mutation',
-                name: {kind: 'Name', value: 'admissionEnquiryList'},
-                variableDefinitions: [
-                  {
-                    kind: 'VariableDefinition',
-                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'branchId'}},
-                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'Long'}},
-                  },
-                  {
-                    kind: 'VariableDefinition',
-                    variable: {
-                      kind: 'Variable',
-                      name: {kind: 'Name', value: 'admissionApplicationId'},
-                    },
-                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'Long'}},
-                  },
-                ],
-                directives: [],
-                selectionSet: {
-                  kind: 'SelectionSet',
-                  selections: [
-                    {
-                      kind: 'Field',
-                      name: {kind: 'Name', value: 'admissionEnquiryList'},
-                      arguments: [
-                        {
-                          kind: 'Argument',
-                          name: {kind: 'Name', value: 'branchId'},
-                          value: {
-                            kind: 'Variable',
-                            name: {kind: 'Name', value: 'branchId'},
-                          },
-                        },
-                        {
-                          kind: 'Argument',
-                          name: {kind: 'Name', value: 'admissionApplicationId'},
-                          value: {
-                            kind: 'Variable',
-                            name: {kind: 'Name', value: 'admissionApplicationId'},
-                          },
-                        },
-                      ],
-                      directives: [],
-                      selectionSet: {
-                        kind: 'SelectionSet',
-                        selections: [
-                          {
-                            kind: 'Field',
-                            name: {kind: 'Name', value: 'id'},
-                            arguments: [],
-                            directives: [],
-                          },
-                          {
-                            kind: 'Field',
-                            name: {kind: 'Name', value: 'studentName'},
-                            arguments: [],
-                            directives: [],
-                          },
-                          {
-                            kind: 'Field',
-                            name: {kind: 'Name', value: 'mobileNumber'},
-                            arguments: [],
-                            directives: [],
-                          },
-                          {
-                            kind: 'Field',
-                            name: {kind: 'Name', value: 'status'},
-                            arguments: [],
-                            directives: [],
-                          },
-                          {
-                            kind: 'Field',
-                            name: {kind: 'Name', value: 'strEnquiryDate'},
-                            arguments: [],
-                            directives: [],
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-            loc: {start: 0, end: 248},
-          };
-          doc.loc.source = {
-            body:
-              'mutation admissionEnquiryList($branchId:Long,$admissionApplicationId:Long){\n  admissionEnquiryList(branchId:$branchId, admissionApplicationId:$admissionApplicationId){\n    id,\n    studentName,\n    mobileNumber,\n    status,\n    strEnquiryDate\n  }\n}\n',
-            name: 'GraphQL request',
-            locationOffset: {line: 1, column: 1},
-          };
-
-          var names = {};
-          function unique(defs) {
-            return defs.filter(function(def) {
-              if (def.kind !== 'FragmentDefinition') return true;
-              var name = def.name.value;
-              if (names[name]) {
-                return false;
-              } else {
-                names[name] = true;
-                return true;
-              }
-            });
-          }
-
-          // Collect any fragment/type references from a node, adding them to the refs Set
-          function collectFragmentReferences(node, refs) {
-            if (node.kind === 'FragmentSpread') {
-              refs.add(node.name.value);
-            } else if (node.kind === 'VariableDefinition') {
-              var type = node.type;
-              if (type.kind === 'NamedType') {
-                refs.add(type.name.value);
-              }
-            }
-
-            if (node.selectionSet) {
-              node.selectionSet.selections.forEach(function(selection) {
-                collectFragmentReferences(selection, refs);
-              });
-            }
-
-            if (node.variableDefinitions) {
-              node.variableDefinitions.forEach(function(def) {
-                collectFragmentReferences(def, refs);
-              });
-            }
-
-            if (node.definitions) {
-              node.definitions.forEach(function(def) {
-                collectFragmentReferences(def, refs);
-              });
-            }
-          }
-
-          var definitionRefs = {};
-          (function extractReferences() {
-            doc.definitions.forEach(function(def) {
-              if (def.name) {
-                var refs = new Set();
-                collectFragmentReferences(def, refs);
-                definitionRefs[def.name.value] = refs;
-              }
-            });
-          })();
-
-          function findOperation(doc, name) {
-            for (var i = 0; i < doc.definitions.length; i++) {
-              var element = doc.definitions[i];
-              if (element.name && element.name.value == name) {
-                return element;
-              }
-            }
-          }
-
-          function oneQuery(doc, operationName) {
-            // Copy the DocumentNode, but clear out the definitions
-            var newDoc = {
-              kind: doc.kind,
-              definitions: [findOperation(doc, operationName)],
-            };
-            if (doc.hasOwnProperty('loc')) {
-              newDoc.loc = doc.loc;
-            }
-
-            // Now, for the operation we're running, find any fragments referenced by
-            // it or the fragments it references
-            var opRefs = definitionRefs[operationName] || new Set();
-            var allRefs = new Set();
-            var newRefs = new Set(opRefs);
-            while (newRefs.size > 0) {
-              var prevRefs = newRefs;
-              newRefs = new Set();
-
-              prevRefs.forEach(function(refName) {
-                if (!allRefs.has(refName)) {
-                  allRefs.add(refName);
-                  var childRefs = definitionRefs[refName] || new Set();
-                  childRefs.forEach(function(childRef) {
-                    newRefs.add(childRef);
-                  });
-                }
-              });
-            }
-
-            allRefs.forEach(function(refName) {
-              var op = findOperation(doc, refName);
-              if (op) {
-                newDoc.definitions.push(op);
-              }
-            });
-
-            return newDoc;
-          }
-
-          module.exports = doc;
-
-          module.exports['admissionEnquiryList'] = oneQuery(doc, 'admissionEnquiryList');
-
-          /***/
-        },
-
       /***/ './domain/Admission/AdmissionEnquiryPage/AdmissionEnquiryPage.tsx':
         /*!************************************************************************!*\
   !*** ./domain/Admission/AdmissionEnquiryPage/AdmissionEnquiryPage.tsx ***!
@@ -23767,11 +23553,14 @@ object-assign
             })();
           Object.defineProperty(exports, '__esModule', {value: true});
           var React = __webpack_require__(/*! react */ 'react');
+          var react_router_dom_1 = __webpack_require__(
+            /*! react-router-dom */ '../node_modules/react-router-dom/es/index.js'
+          );
           var react_apollo_1 = __webpack_require__(
             /*! react-apollo */ '../node_modules/react-apollo/react-apollo.browser.umd.js'
           );
           var AdmissionEnquiryListQueryGql = __webpack_require__(
-            /*! ./AdmissionEnquiry.graphql */ './domain/Admission/AdmissionEnquiryPage/AdmissionEnquiry.graphql'
+            /*! ./SearchAdmissionOnType.graphql */ './domain/Admission/AdmissionEnquiryPage/SearchAdmissionOnType.graphql'
           );
           var withAdmissionDataloader_1 = __webpack_require__(
             /*! ./withAdmissionDataloader */ './domain/Admission/AdmissionEnquiryPage/withAdmissionDataloader.tsx'
@@ -23785,13 +23574,27 @@ object-assign
             function AdmissionEnquiryPage(props) {
               var _this = _super.call(this, props) || this;
               _this.onClick = function(e) {
+                var _a = e.nativeEvent.target,
+                  name = _a.name,
+                  value = _a.value;
                 var mutate = _this.props.mutate;
                 var admissionEnquiryData = _this.state.admissionEnquiryData;
                 e.preventDefault();
-                var btn = document.querySelector('#btnFind');
+                var admType = '';
+                if (name === 'btnTotalReceived') {
+                  admType = 'RECEIVED';
+                } else if (name === 'btnFollowup') {
+                  admType = 'FOLLOWUP';
+                } else if (name === 'btnDeclined') {
+                  admType = 'DECLINED';
+                } else if (name === 'btnConverted') {
+                  admType = 'CONVERTED';
+                }
+                var btn = document.querySelector('#' + name);
                 btn.setAttribute('disabled', true);
                 return mutate({
                   variables: {
+                    admissionEnquiryType: admType,
                     branchId: admissionEnquiryData.branch.id,
                     admissionApplicationId: admissionEnquiryData.admissionApplication.id,
                   },
@@ -23858,7 +23661,7 @@ object-assign
               var retVal = [];
               for (var x = 0; x < mutateResLength; x++) {
                 var tempObj = objAry[x];
-                var admissionArray = tempObj.data.admissionEnquiryList;
+                var admissionArray = tempObj.data.searchAdmissionOnType;
                 var length_1 = admissionArray.length;
                 if (length_1 === 0) {
                   retVal.push(
@@ -23874,7 +23677,7 @@ object-assign
               var retVal = [];
               for (var x = 0; x < mutateResLength; x++) {
                 var tempObj = objAry[x];
-                var admissionArray = tempObj.data.admissionEnquiryList;
+                var admissionArray = tempObj.data.searchAdmissionOnType;
                 var length_2 = admissionArray.length;
                 var _loop_1 = function _loop_1(i) {
                   var admissionEnquiry = admissionArray[i];
@@ -23904,9 +23707,17 @@ object-assign
                         'td',
                         null,
                         React.createElement(
-                          'span',
-                          {className: 'btn btn-primary'},
-                          'Details'
+                          react_router_dom_1.Link,
+                          {
+                            className: 'table-link link-color',
+                            to:
+                              '/plugins/xformation-cms-admission-panel/page/admissiondetails',
+                          },
+                          React.createElement(
+                            'span',
+                            {className: 'btn btn-primary'},
+                            'Details'
+                          )
                         )
                       )
                     )
@@ -23955,8 +23766,13 @@ object-assign
                       )
                     ),
                     React.createElement(
-                      'h6',
-                      {className: 'btn btn-primary w50 p05 remainder'},
+                      'button',
+                      {
+                        className: 'center btn btn-primary w50 p05 remainder',
+                        id: 'btnTotalReceived',
+                        name: 'btnTotalReceived',
+                        onClick: this.onClick,
+                      },
                       'View Info'
                     )
                   ),
@@ -23988,8 +23804,13 @@ object-assign
                       )
                     ),
                     React.createElement(
-                      'h6',
-                      {className: 'btn btn-primary w50 p05 remainder'},
+                      'button',
+                      {
+                        className: 'center btn btn-primary w50 p05 remainder',
+                        id: 'btnFollowup',
+                        name: 'btnFollowup',
+                        onClick: this.onClick,
+                      },
                       'View Info'
                     )
                   ),
@@ -24021,8 +23842,13 @@ object-assign
                       )
                     ),
                     React.createElement(
-                      'h6',
-                      {className: 'center btn btn-primary w50 p05 remainder'},
+                      'button',
+                      {
+                        className: 'center btn btn-primary w50 p05 remainder',
+                        id: 'btnDeclined',
+                        name: 'btnDeclined',
+                        onClick: this.onClick,
+                      },
                       'View Info'
                     )
                   ),
@@ -24054,25 +23880,15 @@ object-assign
                       )
                     ),
                     React.createElement(
-                      'h6',
-                      {className: 'btn btn-primary w50 p05 remainder'},
+                      'button',
+                      {
+                        className: 'center btn btn-primary w50 p05 remainder',
+                        id: 'btnConverted',
+                        name: 'btnConverted',
+                        onClick: this.onClick,
+                      },
                       'View Info'
                     )
-                  )
-                ),
-                React.createElement(
-                  'div',
-                  {className: 'm-b-1 dflex bg-heading'},
-                  React.createElement('h4', {className: 'ptl-06'}),
-                  React.createElement(
-                    'button',
-                    {
-                      className: 'btn btn-primary max-width-13',
-                      id: 'btnFind',
-                      name: 'btnFind',
-                      onClick: this.onClick,
-                    },
-                    'Search'
                   )
                 ),
                 React.createElement(
@@ -24401,6 +24217,239 @@ object-assign
           module.exports = doc;
 
           module.exports['getAdmissionData'] = oneQuery(doc, 'getAdmissionData');
+
+          /***/
+        },
+
+      /***/ './domain/Admission/AdmissionEnquiryPage/SearchAdmissionOnType.graphql':
+        /*!*****************************************************************************!*\
+  !*** ./domain/Admission/AdmissionEnquiryPage/SearchAdmissionOnType.graphql ***!
+  \*****************************************************************************/
+        /*! no static exports found */
+        /***/ function(module, exports) {
+          var doc = {
+            kind: 'Document',
+            definitions: [
+              {
+                kind: 'OperationDefinition',
+                operation: 'mutation',
+                name: {kind: 'Name', value: 'searchAdmissionOnType'},
+                variableDefinitions: [
+                  {
+                    kind: 'VariableDefinition',
+                    variable: {
+                      kind: 'Variable',
+                      name: {kind: 'Name', value: 'admissionEnquiryType'},
+                    },
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+                  },
+                  {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'branchId'}},
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'Long'}},
+                  },
+                  {
+                    kind: 'VariableDefinition',
+                    variable: {
+                      kind: 'Variable',
+                      name: {kind: 'Name', value: 'admissionApplicationId'},
+                    },
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'Long'}},
+                  },
+                ],
+                directives: [],
+                selectionSet: {
+                  kind: 'SelectionSet',
+                  selections: [
+                    {
+                      kind: 'Field',
+                      name: {kind: 'Name', value: 'searchAdmissionOnType'},
+                      arguments: [
+                        {
+                          kind: 'Argument',
+                          name: {kind: 'Name', value: 'admissionEnquiryType'},
+                          value: {
+                            kind: 'Variable',
+                            name: {kind: 'Name', value: 'admissionEnquiryType'},
+                          },
+                        },
+                        {
+                          kind: 'Argument',
+                          name: {kind: 'Name', value: 'branchId'},
+                          value: {
+                            kind: 'Variable',
+                            name: {kind: 'Name', value: 'branchId'},
+                          },
+                        },
+                        {
+                          kind: 'Argument',
+                          name: {kind: 'Name', value: 'admissionApplicationId'},
+                          value: {
+                            kind: 'Variable',
+                            name: {kind: 'Name', value: 'admissionApplicationId'},
+                          },
+                        },
+                      ],
+                      directives: [],
+                      selectionSet: {
+                        kind: 'SelectionSet',
+                        selections: [
+                          {
+                            kind: 'Field',
+                            name: {kind: 'Name', value: 'id'},
+                            arguments: [],
+                            directives: [],
+                          },
+                          {
+                            kind: 'Field',
+                            name: {kind: 'Name', value: 'studentName'},
+                            arguments: [],
+                            directives: [],
+                          },
+                          {
+                            kind: 'Field',
+                            name: {kind: 'Name', value: 'mobileNumber'},
+                            arguments: [],
+                            directives: [],
+                          },
+                          {
+                            kind: 'Field',
+                            name: {kind: 'Name', value: 'status'},
+                            arguments: [],
+                            directives: [],
+                          },
+                          {
+                            kind: 'Field',
+                            name: {kind: 'Name', value: 'strEnquiryDate'},
+                            arguments: [],
+                            directives: [],
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            loc: {start: 0, end: 336},
+          };
+          doc.loc.source = {
+            body:
+              'mutation searchAdmissionOnType($admissionEnquiryType:String, $branchId:Long, $admissionApplicationId:Long ){\r\n  searchAdmissionOnType(admissionEnquiryType:$admissionEnquiryType,branchId:$branchId, admissionApplicationId:$admissionApplicationId){\r\n    id,\r\n    studentName,\r\n    mobileNumber,\r\n    status,\r\n    strEnquiryDate\r\n  }\r\n}\r\n\r\n',
+            name: 'GraphQL request',
+            locationOffset: {line: 1, column: 1},
+          };
+
+          var names = {};
+          function unique(defs) {
+            return defs.filter(function(def) {
+              if (def.kind !== 'FragmentDefinition') return true;
+              var name = def.name.value;
+              if (names[name]) {
+                return false;
+              } else {
+                names[name] = true;
+                return true;
+              }
+            });
+          }
+
+          // Collect any fragment/type references from a node, adding them to the refs Set
+          function collectFragmentReferences(node, refs) {
+            if (node.kind === 'FragmentSpread') {
+              refs.add(node.name.value);
+            } else if (node.kind === 'VariableDefinition') {
+              var type = node.type;
+              if (type.kind === 'NamedType') {
+                refs.add(type.name.value);
+              }
+            }
+
+            if (node.selectionSet) {
+              node.selectionSet.selections.forEach(function(selection) {
+                collectFragmentReferences(selection, refs);
+              });
+            }
+
+            if (node.variableDefinitions) {
+              node.variableDefinitions.forEach(function(def) {
+                collectFragmentReferences(def, refs);
+              });
+            }
+
+            if (node.definitions) {
+              node.definitions.forEach(function(def) {
+                collectFragmentReferences(def, refs);
+              });
+            }
+          }
+
+          var definitionRefs = {};
+          (function extractReferences() {
+            doc.definitions.forEach(function(def) {
+              if (def.name) {
+                var refs = new Set();
+                collectFragmentReferences(def, refs);
+                definitionRefs[def.name.value] = refs;
+              }
+            });
+          })();
+
+          function findOperation(doc, name) {
+            for (var i = 0; i < doc.definitions.length; i++) {
+              var element = doc.definitions[i];
+              if (element.name && element.name.value == name) {
+                return element;
+              }
+            }
+          }
+
+          function oneQuery(doc, operationName) {
+            // Copy the DocumentNode, but clear out the definitions
+            var newDoc = {
+              kind: doc.kind,
+              definitions: [findOperation(doc, operationName)],
+            };
+            if (doc.hasOwnProperty('loc')) {
+              newDoc.loc = doc.loc;
+            }
+
+            // Now, for the operation we're running, find any fragments referenced by
+            // it or the fragments it references
+            var opRefs = definitionRefs[operationName] || new Set();
+            var allRefs = new Set();
+            var newRefs = new Set(opRefs);
+            while (newRefs.size > 0) {
+              var prevRefs = newRefs;
+              newRefs = new Set();
+
+              prevRefs.forEach(function(refName) {
+                if (!allRefs.has(refName)) {
+                  allRefs.add(refName);
+                  var childRefs = definitionRefs[refName] || new Set();
+                  childRefs.forEach(function(childRef) {
+                    newRefs.add(childRef);
+                  });
+                }
+              });
+            }
+
+            allRefs.forEach(function(refName) {
+              var op = findOperation(doc, refName);
+              if (op) {
+                newDoc.definitions.push(op);
+              }
+            });
+
+            return newDoc;
+          }
+
+          module.exports = doc;
+
+          module.exports['searchAdmissionOnType'] = oneQuery(
+            doc,
+            'searchAdmissionOnType'
+          );
 
           /***/
         },

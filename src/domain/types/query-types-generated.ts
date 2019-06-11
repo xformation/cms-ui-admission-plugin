@@ -175,8 +175,8 @@ export type AdmissionEnquiryCountQueryType = {
   };
 };
 
-export type AdmissionEnquiryQuery = {
-  admissionEnquiryList: {
+export type SearchAdmissionOnTypeListType = {
+  searchAdmissionOnType: {
     id: number;
     studentName: string;
     mobileNumber: string;
