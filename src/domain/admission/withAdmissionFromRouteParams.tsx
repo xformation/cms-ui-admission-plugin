@@ -20,7 +20,7 @@ type AdmissionPageProps = RouteComponentProps<AdmissionPageRouteParams>;
 // (that is with the properties from GraphQL including the loaded admission)
 type AdmissionPageFullProps = AdmissionPageProps & {
   data: QueryProps & AdmissionQuery;
-  admission: AdmissionEnquiryDetailsFragment;
+  admissionEnquiry: AdmissionEnquiryDetailsFragment;
 };
 
 // this function takes a Component, that must have AdmissionPageProps-compatible properties.

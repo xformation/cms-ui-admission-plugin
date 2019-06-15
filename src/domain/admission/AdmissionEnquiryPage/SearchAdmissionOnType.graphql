@@ -1,5 +1,5 @@
-mutation searchAdmissionOnType($admissionEnquiryType:String, $branchId:Long, $admissionApplicationId:Long ){
-  searchAdmissionOnType(admissionEnquiryType:$admissionEnquiryType,branchId:$branchId, admissionApplicationId:$admissionApplicationId){
+mutation searchAdmissionOnType($admissionEnquiryType:String, $branchId:Long ){
+  searchAdmissionOnType(admissionEnquiryType:$admissionEnquiryType,branchId:$branchId){
     id,
     studentName,
     mobileNumber,

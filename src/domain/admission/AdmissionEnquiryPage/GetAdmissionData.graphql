@@ -1,6 +1,6 @@
-query getAdmissionData( $branchId:String, $admissionApplicationId:String!)
+query getAdmissionData( $branchId:String)
 {
-  getAdmissionData(branchId:$branchId, admissionApplicationId:$admissionApplicationId)
+  getAdmissionData(branchId:$branchId)
   {
     totalAdmissions,
     totalFollowup,

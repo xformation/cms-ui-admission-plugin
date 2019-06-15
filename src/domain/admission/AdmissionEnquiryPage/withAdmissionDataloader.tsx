@@ -7,7 +7,6 @@ import withLoadingHandler from '../../../components/withLoadingHandler';
 
 type withAdmissionCountPageDataLoaderProps = RouteComponentProps<{
   branchId: string;
-  admissionApplicationId: string;
 }>;
 
 type TargetComponentProps = {
@@ -18,8 +17,7 @@ const withAdmissionDataloader = (TargetComponent: ReactFunctionOrComponentClass<
   return graphql<AdmissionEnquiryCountQueryType, withAdmissionCountPageDataLoaderProps, TargetComponentProps>(GetAdmissionDataGql, {
     options: ({ match }) => ({
       variables: {
-        branchId: 1851,
-        admissionApplicationId: 6051
+        branchId: 1851
       }
     })
   })(withLoadingHandler(TargetComponent));

@@ -13,7 +13,6 @@ const w180 = {
 
 type AdmissionDataRootProps = RouteComponentProps<{
   branchId: string;
-  admissionApplicationId: string;
 }> & {
   data: QueryProps & AdmissionEnquiryCountQueryType;
 };
@@ -33,9 +32,6 @@ type AdmissionDataState = {
         admissionEnquiryData: {
           branch: {
             id: 1851 //1001
-          },
-          admissionApplication: {
-            id: 6051 //1051
           },
        mutateResult: []
       }
@@ -103,12 +99,8 @@ type AdmissionDataState = {
               <td>{admissionEnquiry.mobileNumber}</td>
               <td>{admissionEnquiry.status}</td>
               <td>{admissionEnquiry.strEnquiryDate}</td>
-              <td>
-              <Link
-                className="table-link link-color"
-                to={`/plugins/xformation-cms-admission-panel/page/admissiondetails`}
-              >       
-              <span className="btn btn-primary">Details</span></Link></td>
+              <td>     
+              <span className="btn btn-primary">Details</span></td>
             </tr>
           );
         }
@@ -138,7 +130,6 @@ type AdmissionDataState = {
       variables: { 
            admissionEnquiryType: admType,
            branchId: admissionEnquiryData.branch.id,
-           admissionApplicationId: admissionEnquiryData.admissionApplication.id,
       },
       }).then(data => {
         btn.removeAttribute("disabled");

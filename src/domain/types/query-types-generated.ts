@@ -67,6 +67,15 @@ export type AdmissionQuery = {
     updatedBy: string;
     branch: {
       branchName: string;
+      city: {
+        cityName: string;
+      };
+      state: {
+        stateName: string;
+        country: {
+          countryName: string;
+        };
+      };
     };
     admissionApplication: {
       admissionStatus: string;
@@ -89,6 +98,15 @@ export type AdmissionEnquiryFragment = {
   updatedBy: string;
   branch: {
     branchName: string;
+    city: {
+      cityName: string;
+    };
+    state: {
+      stateName: string;
+      country: {
+        countryName: string;
+      };
+    };
   };
   admissionApplication: {
     admissionStatus: string;
@@ -110,6 +128,15 @@ export type AdmissionEnquiryDetailsFragment = {
   updatedBy: string;
   branch: {
     branchName: string;
+    city: {
+      cityName: string;
+    };
+    state: {
+      stateName: string;
+      country: {
+        countryName: string;
+      };
+    };
   };
   admissionApplication: {
     admissionStatus: string;
@@ -131,9 +158,43 @@ export type AdmissionEnquirySummaryFragment = {
   updatedBy: string;
   branch: {
     branchName: string;
+    city: {
+      cityName: string;
+    };
+    state: {
+      stateName: string;
+      country: {
+        countryName: string;
+      };
+    };
   };
   admissionApplication: {
     admissionStatus: string;
+  };
+};
+
+export type AdmissionEnquiryQuery = {
+  admissionEnquiryList: {
+    id: number;
+    studentName: string;
+    mobileNumber: string;
+    status: string;
+    alternateMobileNumber: string;
+    email: string;
+    courseApplyingFor: string;
+    strEnquiryDate: string;
+    branch: {
+      branchName: string;
+      city: {
+        cityName: string;
+      };
+      state: {
+        stateName: string;
+        country: {
+          countryName: string;
+        };
+      };
+    };
   };
 };
 
@@ -181,7 +242,22 @@ export type SearchAdmissionOnTypeListType = {
     studentName: string;
     mobileNumber: string;
     status: string;
+    alternateMobileNumber: string;
+    email: string;
+    courseApplyingFor: string;
     strEnquiryDate: string;
+    branch: {
+      branchName: string;
+      city: {
+        cityName: string;
+      };
+      state: {
+        stateName: string;
+        country: {
+          countryName: string;
+        };
+      };
+    };
   };
 };
 
@@ -206,7 +282,16 @@ export type AdmissionEnquiryData = {
   updatedOn: string;
   updatedBy: string;
   branch: {
-    branchName: any;
+    branchName: string;
+    city: {
+      cityName: string;
+    };
+    state: {
+      stateName: string;
+      country: {
+        countryName: string;
+      };
+    };
   };
   admissionApplication: {
     admissionStatus: any;
