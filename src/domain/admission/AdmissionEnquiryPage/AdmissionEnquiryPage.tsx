@@ -100,7 +100,11 @@ type AdmissionDataState = {
               <td>{admissionEnquiry.status}</td>
               <td>{admissionEnquiry.strEnquiryDate}</td>
               <td>     
-              <span className="btn btn-primary">Details</span></td>
+              <Link
+                className="table-link link-color"
+                to={`/plugins/xformation-cms-admission-panel/page/admissiondetails?id=${admissionEnquiry.id}`}
+              >       
+              <span className="btn btn-primary">Details</span></Link></td>
             </tr>
           );
         }

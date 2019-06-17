@@ -1,0 +1,22 @@
+mutation admissionEnquiryList($branchId:Long){
+  admissionEnquiryList(branchId:$branchId){
+    id,
+    studentName,
+    mobileNumber,
+    status,
+    alternateMobileNumber,
+    email,
+    courseApplyingFor,
+    branch{
+    city{
+      cityName
+    }
+    state{
+      stateName
+       country{
+        countryName
+      }
+    }
+  }
+  }
+}

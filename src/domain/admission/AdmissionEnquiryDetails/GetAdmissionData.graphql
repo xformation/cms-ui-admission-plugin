@@ -1,0 +1,10 @@
+query getAdmissionData( $branchId:String)
+{
+  getAdmissionData(branchId:$branchId)
+  {
+    totalAdmissions,
+    totalFollowup,
+    totalDeclined,
+    totalConverted
+  }
+}
