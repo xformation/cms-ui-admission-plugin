@@ -5,9 +5,9 @@ import { ApolloProvider } from 'react-apollo';
 
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import { createGraphQLClient } from '../../createGraphQLClient';
-import AdmissionEnquiryPage from './AdmissionEnquiryPage';
-import AddAdmissionPage from './AddAdmissionPage'
+import { createGraphQLClient } from '../../../createGraphQLClient';
+import AddAdmissionPage from './AddAdmissionPage';
+
 const graphQLClient = createGraphQLClient();
 
 export default function init() {
@@ -17,17 +17,13 @@ export default function init() {
         <BrowserRouter>
           <Switch>
             <Route
-              path="/plugins/xformation-cms-admission-panel/page/admissions"
-              component={AdmissionEnquiryPage}
-            />
-             <Route
-              path="/plugins/ems-student/page/addadmission"
+              path="/plugins/xformation-cms-admission-panel/page/addadmission"
               component={AddAdmissionPage}
             />
           </Switch>
         </BrowserRouter>
       </ApolloProvider>,
-      document.getElementById('mount')
+      document.getElementById('mountAddAdmission')
     );
-  }, 10);
+  }, 100);
 }

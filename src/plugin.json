@@ -34,6 +34,13 @@
       "addToNav": true,
       "defaultNav": false,
       "component": "AdmissionsPage"
+    },
+    {
+      "type": "page",
+      "name": "AddAdmission",
+      "addToNav": true,
+      "defaultNav": false,
+      "component": "AddAdmissionPage"
     }
   ],
   "dependencies": {

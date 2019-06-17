@@ -1,0 +1,11 @@
+mutation addCompetitiveExam($input:AddCompetitiveExamInput!){
+  	addCompetitiveExam(input: $input){
+    competitiveExam{
+     id
+      testName
+      testScore
+      enrollmentNo
+      rank
+    }
+  }
+}

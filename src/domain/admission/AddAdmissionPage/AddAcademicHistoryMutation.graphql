@@ -1,0 +1,14 @@
+mutation addAdmissionApplication($input:AddAcademicHistoryInput!){
+  	addAcademicHistory(input: $input){
+    academicHistory{
+      id	 
+      qualification
+      yearOfPassing
+      institution
+      university
+      enrollmentNo
+      score
+      percentage
+    }
+  }
+}

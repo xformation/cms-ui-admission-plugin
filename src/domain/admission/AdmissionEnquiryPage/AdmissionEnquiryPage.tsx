@@ -154,6 +154,15 @@ type AdmissionDataState = {
       } = this.state;
       return (   
       <section className="border">
+      
+      <div>
+      <Link
+                to={`/plugins/xformation-cms-admission-panel/page/addadmission`}
+                className="btn btn-primary" style={w180}>Create New Admission
+                </Link>
+  
+        </div>
+       
        <div className="inDashboard p-1">
          <div className="invoiceDashboard">
           <div className="invoiceHeader">
