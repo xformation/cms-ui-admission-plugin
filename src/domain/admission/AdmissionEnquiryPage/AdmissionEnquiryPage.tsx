@@ -158,14 +158,18 @@ type AdmissionDataState = {
       } = this.state;
       return (   
       <section className="border">
+         <h3 className="bg-heading-admission p-1 mb-1">
+          <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
+          Admission
+        </h3>
       
-      <div>
+      {/* <div>
       <Link
                 to={`/plugins/xformation-cms-admission-panel/page/addadmission`}
                 className="btn btn-primary" style={w180}>Create New Admission
                 </Link>
   
-        </div>
+        </div> */}
        
        <div className="inDashboard p-1">
          <div className="invoiceDashboard">

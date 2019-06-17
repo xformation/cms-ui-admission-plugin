@@ -24,15 +24,15 @@
     {
       "type": "page",
       "name": "Home",
-      "addToNav": true,
-      "defaultNav": true,
+      "addToNav": false,
+      "defaultNav": false,
       "component": "WelcomePage"
     },
     {
       "type": "page",
       "name": "Admissions",
       "addToNav": true,
-      "defaultNav": false,
+      "defaultNav": true,
       "component": "AdmissionsPage"
     },
     {
@@ -45,7 +45,7 @@
     {
       "type": "page",
       "name": "AdmissionDetails",
-      "addToNav": true,
+      "addToNav": false,
       "defaultNav": false,
       "component": "AdmissionEnquiryDetails"
     }

@@ -150,7 +150,7 @@ type AdmissionDataState = {
             <div className="col-md-4">
               <div>
                 <label htmlFor="">Enquiry ID</label>
-                <input name="id" value="7051" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input name="id" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
               </div>
               </div>
               </div>
@@ -158,59 +158,59 @@ type AdmissionDataState = {
               <div className="col-md-4">
               <div>
                 <label htmlFor="">Student Name</label>
-                <input name="studentName" value="Rajesh" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input name="studentName" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
               </div>
               </div>
               <div className="col-md-4">
               <div>
                 <label htmlFor="">Mobile Number</label>
-                <input name="mobileNumber" value="123456789" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input name="mobileNumber" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
               </div>
               </div>
               <div className="col-md-4">
               <div>
                 <label htmlFor="">Alternate Mobile Number</label>
-                <input name="alternateMobileNumber" value="1233465653" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input name="alternateMobileNumber" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
               </div>
               </div>
               <div className="col-md-4">
               <div>
                 <label htmlFor="">Email</label>
-                <input name="email" value="Rajesh@gmail.com" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input name="email" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
               </div>
               </div>
               <div className="col-md-4">
                 <label htmlFor="">Class Applying For</label>
-                <input name="courseApplyingFor" value="BTECH" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input name="courseApplyingFor" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
               </div>
               <div className="col-md-4">
               <div>
                 <label htmlFor="">Status</label>
-                <input name="status" value="FOLLOWUP" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input name="status" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
               </div>
               </div>
               <div className="col-md-4">
               <div>
                 <label htmlFor="">Campus</label>
-                <input name="branchName" value="Hyd Eng College" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input name="branchName" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
               </div>
               </div>
               <div className="col-md-4">
               <div>
                 <label htmlFor="">State</label>
-                <input name="stateName" value="ANDHRA PRADESH" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input name="stateName" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
               </div>
               </div>
               <div className="col-md-4">
               <div>
                 <label htmlFor="">City</label>
-                <input name="cityName" value="HYDERABAD" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input name="cityName" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
               </div>
               </div>
               <div className="col-md-4">
               <div>
                 <label htmlFor="">Country</label>
-                <input name="countryName" value="INDIA" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input name="countryName" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
               </div>
               </div>
    </div>

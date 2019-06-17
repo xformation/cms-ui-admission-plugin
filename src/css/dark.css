@@ -599,10 +599,12 @@ td {
 .margin-bott {
   margin-bottom: 25px;
 }
+
 .bg-heading-admission {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  background-color: #f6f6f6;
 }
 .bg-heading-admission h2 {
   flex-grow: 1;
