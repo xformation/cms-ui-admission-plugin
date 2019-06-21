@@ -36,41 +36,10 @@ type AdmissionDataState = {
        mutateResult: []
       }
       };
-      this.createAdmissionForm = this.createAdmissionForm.bind(this);
-    }
-
-    createAdmissionForm(objAry: any) {
-      const mutateResLength = objAry.length;
-      const retVal = [];
-      for(let x=0; x< mutateResLength; x++){
-        const tempObj = objAry[x];
-        const admissionArray = tempObj.data.admissionEnquiryList;
-        const length = admissionArray.length;
-        for (let i = 0; i < length; i++) {
-          const admissionEnquiry = admissionArray[i];
-          retVal.push(
-            <form>
-              {admissionEnquiry.id}
-              {admissionEnquiry.studentName}
-              {admissionEnquiry.mobileNumber}
-              {admissionEnquiry.alternateMobileNumber}
-              {admissionEnquiry.email}
-              {admissionEnquiry.courseApplyingFor}
-             {admissionEnquiry.status}
-              {admissionEnquiry.branch.branchName}
-             {admissionEnquiry.branch.city.cityName}
-             {admissionEnquiry.branch.state.stateName}
-              {admissionEnquiry.branch.state.country.countryName}
-              </form>
-          );
-        }
-      }
-      return retVal;
     }
 
 
-
-    onForm = (e: any) => {
+    onSubmit = (e: any) => {
       const { mutate } = this.props;
       const { admissionEnquiryData } = this.state;
       e.preventDefault();
@@ -78,7 +47,8 @@ type AdmissionDataState = {
       dataSavedMessage.style.display = "none";
       return mutate({
         variables: { 
-            branchId: admissionEnquiryData.branch.id
+            branchId: admissionEnquiryData.branch.id,
+            admissionApplicationId: admissionEnquiryData.admissionApplication.id
           },
       }).then(data => {
         dataSavedMessage.style.display = "inline-block";
@@ -111,7 +81,6 @@ type AdmissionDataState = {
           <a href=""><span className="ti-download"></span></a>
         </div>
         <h2 className="fee-red"><strong>{this.props.data.getAdmissionData.totalAdmissions}</strong></h2>
-        <h6 className="btn btn-primary w50 p05 remainder">View Info</h6>
         </div>
         <div className="invoiceDashboard">
         <div className="invoiceHeader">
@@ -120,7 +89,6 @@ type AdmissionDataState = {
           <a href=""><span className="ti-download"></span></a>
         </div>
         <h2 className="fee-red"><strong>{this.props.data.getAdmissionData.totalFollowup}</strong></h2>
-        <h6 className="btn btn-primary w50 p05 remainder">View Info</h6>
       </div>
       <div className="invoiceDashboard">
         <div className="invoiceHeader">
@@ -129,7 +97,6 @@ type AdmissionDataState = {
           <a href=""><span className="ti-download"></span></a>
         </div>
         <h2 className="fee-orange"><strong>{this.props.data.getAdmissionData.totalDeclined}</strong></h2>
-        <h6 className="center btn btn-primary w50 p05 remainder">View Info</h6>
       </div>
       <div className="invoiceDashboard">
         <div className="invoiceHeader">
@@ -138,19 +105,18 @@ type AdmissionDataState = {
           <a href=""><span className="ti-download"></span></a>
         </div>
         <h2 className="fee-red"><strong>{this.props.data.getAdmissionData.totalConverted}</strong></h2>
-        <h6 className="btn btn-primary w50 p05 remainder">View Info</h6>
       </div>
     </div>
        <div className="col-md-12">
      <h5 className="bg-heading p-1 m-0">Details</h5>
-     
+    
      <form id="admissionlistpage" className="striped-table fwidth bg-white p-2">
 
      <div className="row">
             <div className="col-md-4">
               <div>
                 <label htmlFor="">Enquiry ID</label>
-                <input name="id" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input   value={admissionEnquiryData.id} onChange={this.onSubmit} className="fwidth" />
               </div>
               </div>
               </div>
@@ -158,65 +124,46 @@ type AdmissionDataState = {
               <div className="col-md-4">
               <div>
                 <label htmlFor="">Student Name</label>
-                <input name="studentName" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input  value={admissionEnquiryData.studentName}  onChange={this.onSubmit} className="fwidth" />
               </div>
               </div>
               <div className="col-md-4">
               <div>
                 <label htmlFor="">Mobile Number</label>
-                <input name="mobileNumber" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input  value={admissionEnquiryData.mobileNumber} onChange={this.onSubmit} className="fwidth" />
               </div>
               </div>
               <div className="col-md-4">
               <div>
                 <label htmlFor="">Alternate Mobile Number</label>
-                <input name="alternateMobileNumber" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input   value={admissionEnquiryData.alternateMobileNumber} onChange={this.onSubmit} className="fwidth" />
               </div>
               </div>
               <div className="col-md-4">
               <div>
                 <label htmlFor="">Email</label>
-                <input name="email" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input   value={admissionEnquiryData.email} onChange={this.onSubmit} className="fwidth" />
               </div>
               </div>
               <div className="col-md-4">
                 <label htmlFor="">Class Applying For</label>
-                <input name="courseApplyingFor" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input    value={admissionEnquiryData.courseApplyingFor} onChange={this.onSubmit} className="fwidth" />
               </div>
               <div className="col-md-4">
               <div>
                 <label htmlFor="">Status</label>
-                <input name="status" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input    value={admissionEnquiryData.status} onChange={this.onSubmit} className="fwidth" />
               </div>
               </div>
               <div className="col-md-4">
               <div>
                 <label htmlFor="">Campus</label>
-                <input name="branchName" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
+                <input   value={admissionEnquiryData.branch.id} onChange={this.onSubmit} className="fwidth" />
               </div>
               </div>
-              <div className="col-md-4">
-              <div>
-                <label htmlFor="">State</label>
-                <input name="stateName" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
               </div>
-              </div>
-              <div className="col-md-4">
-              <div>
-                <label htmlFor="">City</label>
-                <input name="cityName" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
-              </div>
-              </div>
-              <div className="col-md-4">
-              <div>
-                <label htmlFor="">Country</label>
-                <input name="countryName" onChange={this.createAdmissionForm} onSubmit={this.onForm} className="fwidth" />
-              </div>
-              </div>
-   </div>
      
-    
-</form>
+    </form>
     </div>
   </section>
 );

@@ -184,16 +184,10 @@ export type AdmissionEnquiryQuery = {
     courseApplyingFor: string;
     strEnquiryDate: string;
     branch: {
-      branchName: string;
-      city: {
-        cityName: string;
-      };
-      state: {
-        stateName: string;
-        country: {
-          countryName: string;
-        };
-      };
+      branch: any;
+    };
+    admissionApplication: {
+      admissionApplication: any;
     };
   };
 };
@@ -258,6 +252,9 @@ export type SearchAdmissionOnTypeListType = {
         };
       };
     };
+    admissionApplication: {
+      admissionApplication: any;
+    };
   };
 };
 
@@ -294,7 +291,7 @@ export type AdmissionEnquiryData = {
     };
   };
   admissionApplication: {
-    admissionStatus: any;
+    admissionApplication: any;
   };
 };
 
@@ -539,11 +536,20 @@ export type StudentData = {
   };
 };
 
-export type LoadStudentFilterDataCacheType = {
-  createStudentFilterDataCache: {
+export type LoadAdmissionDataCacheType = {
+  createAdmissionDataCache: {
     branches: Array<{
       id: number;
       branchName: string;
+      college: {
+        id: number;
+      };
+      state: {
+        id: number;
+      };
+      city: {
+        id: number;
+      };
     }>;
     departments: Array<{
       id: number;
@@ -562,18 +568,18 @@ export type LoadStudentFilterDataCacheType = {
         id: number;
       };
     }>;
-    sections: Array<{
+    states: Array<{
       id: number;
-      section: string;
-      batch: {
+      stateName: string;
+      country: {
         id: number;
       };
     }>;
-    studentTypes: Array<{
+    cities: Array<{
       id: number;
-      description: string;
+      cityName: string;
     }>;
-    genders: Array<{
+    courses: Array<{
       id: number;
       description: string;
     }>;

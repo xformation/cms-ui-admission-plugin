@@ -1,9 +1,10 @@
-export const StudentServices = {
-  getStudentDepartments,
-  getStudentYears,
-  getStudentBranches,
-  getStudentSections,
-  getStudentTypes,
+export const AdmissionServices = {
+  getAdmissionDepartments,
+  getAdmissionYears,
+  getAdmissionBranches,
+  getAdmissionStates,
+  getAdmissionCities,
+  getAdmissionCourses,
 };
 
 const url = 'http://18.234.66.133:8080/api/';
@@ -18,27 +19,32 @@ function getRequestOptions(method: any) {
   return requestOptions;
 }
 
-function getStudentDepartments() {
+function getAdmissionDepartments() {
   let requestOptions = getRequestOptions('GET');
   return fetch(`${url}departments`, requestOptions).then(response => response.json());
 }
 
-function getStudentYears() {
+function getAdmissionYears() {
   let requestOptions = getRequestOptions('GET');
   return fetch(`${url}batches`, requestOptions).then(response => response.json());
 }
 
-function getStudentBranches() {
+function getAdmissionBranches() {
   let requestOptions = getRequestOptions('GET');
   return fetch(`${url}branches`, requestOptions).then(response => response.json());
 }
 
-function getStudentSections() {
+function getAdmissionStates() {
   let requestOptions = getRequestOptions('GET');
-  return fetch(`${url}sections`, requestOptions).then(response => response.json());
+  return fetch(`${url}states`, requestOptions).then(response => response.json());
 }
 
-function getStudentTypes() {
+function getAdmissionCities() {
   let requestOptions = getRequestOptions('GET');
-  return fetch(`${url}studenttypes`, requestOptions).then(response => response.json());
+  return fetch(`${url}cities`, requestOptions).then(response => response.json());
+}
+
+function getAdmissionCourses() {
+  let requestOptions = getRequestOptions('GET');
+  return fetch(`${url}courses`, requestOptions).then(response => response.json());
 }

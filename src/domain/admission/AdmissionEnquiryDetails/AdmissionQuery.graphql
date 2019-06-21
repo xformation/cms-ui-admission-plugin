@@ -1,6 +1,6 @@
-mutation admissionEnquiryList($branchId:Long){
-  admissionEnquiryList(branchId:$branchId){
-    id,
+mutation admissionEnquiryList($branchId:Long,$admissionApplicationId:Long!){
+  admissionEnquiryList(branchId:$branchId,admissionApplicationId:$admissionApplicationId){
+   id,
     studentName,
     mobileNumber,
     status,
@@ -8,6 +8,8 @@ mutation admissionEnquiryList($branchId:Long){
     email,
     courseApplyingFor,
     branch{
+      id
+      branchName
     city{
       cityName
     }
@@ -18,5 +20,8 @@ mutation admissionEnquiryList($branchId:Long){
       }
     }
   }
+    admissionApplication{
+      id
+    }
   }
 }
