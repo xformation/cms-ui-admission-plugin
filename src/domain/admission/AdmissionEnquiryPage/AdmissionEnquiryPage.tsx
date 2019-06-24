@@ -65,7 +65,7 @@ class Tabs extends React.Component<{}, any> {
 
   render() {
     return (
-      <div className="tabs">
+      <div className="tabsAdmission">
         {/* <div className="tabWrapper"> */}
         {this.renderTabs()}
         {/* </div> */}
