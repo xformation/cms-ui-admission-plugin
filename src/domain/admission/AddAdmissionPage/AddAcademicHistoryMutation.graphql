@@ -1,4 +1,4 @@
-mutation addAdmissionApplication($input:AddAcademicHistoryInput!){
+mutation addAcademicHistory($input:AddAcademicHistoryInput!){
   	addAcademicHistory(input: $input){
     academicHistory{
       id	 

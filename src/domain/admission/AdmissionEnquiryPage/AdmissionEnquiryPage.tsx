@@ -33,14 +33,18 @@ type AdmissionDataState = {
           branch: {
             id: 1851 //1001
           },
-       mutateResult: []
-      }
+          mutateResult: [],
+          enquiryData: {}
+        }
      
       };
       this.checkAllAdmissions = this.checkAllAdmissions.bind(this);
       this.createAdmissionRows = this.createAdmissionRows.bind(this);
       this.onClickCheckbox = this.onClickCheckbox.bind(this);
       this.createNoRecordMessage = this.createNoRecordMessage.bind(this);
+      this.showDetail = this.showDetail.bind(this);
+      this.createDetailsDiv = this.createDetailsDiv.bind(this);
+      this.back = this.back.bind(this);
     }
 
     onClickCheckbox(index: any, e: any) {
@@ -100,19 +104,138 @@ type AdmissionDataState = {
               <td>{admissionEnquiry.status}</td>
               <td>{admissionEnquiry.strEnquiryDate}</td>
               <td>     
-              <Link
-                className="table-link link-color"
-                to={`/plugins/xformation-cms-admission-panel/page/admissiondetails?id=${admissionEnquiry.id}`}
-              >       
-              <span className="btn btn-primary">Details</span></Link></td>
+                    
+              <button className="btn btn-primary" onClick={e => this.showDetail(admissionEnquiry)}>Details</button></td>
+              
             </tr>
           );
         }
       }
+      
       return retVal;
     }
 
-    
+    showDetail(obj: any){
+        const { admissionEnquiryData } = this.state;
+        admissionEnquiryData.enquiryData = obj;
+        this.setState({
+          admissionEnquiryData: admissionEnquiryData
+        });
+
+        let detailDiv : any = document.querySelector("#admissionDetailShow");
+        let gridDiv : any = document.querySelector("#admissionGridShow");
+        let backDiv : any = document.querySelector("#backDiv");
+        detailDiv.setAttribute("class", "col-md-12 ");
+        gridDiv.setAttribute("class", "hide");
+        backDiv.setAttribute("class", "d-flex fwidth justify-content-between pt-2");
+        this.createDetailsDiv(obj);
+    }
+
+    back(){
+        let detailDiv : any = document.querySelector("#admissionDetailShow");
+        let gridDiv : any = document.querySelector("#admissionGridShow");
+        detailDiv.setAttribute("class", "hide");
+        gridDiv.setAttribute("class", "col-md-12");
+        let backDiv : any = document.querySelector("#backDiv");
+        backDiv.setAttribute("class", "hide");
+    }
+
+    createDetailsDiv(obj: any){
+      
+      
+      return (
+        
+        <div className="hide" id="admissionDetailShow">
+          <h5 className="bg-heading p-1 m-0">Details</h5>
+          <div className="row">
+              <div className="col-md-4">
+                <div>
+                  <label htmlFor="">Enquiry ID</label>
+                  <input name="id" className="fwidth" value={obj.id}/>
+                </div>
+              </div>
+          </div>
+          <div className="row">
+            <div className="col-md-4">
+              <div>
+                <label htmlFor="">Student Name</label>
+                <input name="studentName"  className="fwidth" value={obj.studentName}/>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div>
+                <label htmlFor="">Mobile Number</label>
+                <input name="mobileNumber" className="fwidth" value={obj.mobileNumber}/>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div>
+                <label htmlFor="">Alternate Mobile Number</label>
+                <input name="alternateMobileNumber"  className="fwidth" value={obj.alternateMobileNumber}/>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div>
+                <label htmlFor="">Email</label>
+                <input name="email" className="fwidth" value={obj.email}/>
+              </div>
+            </div>
+            <div className="col-md-4">
+                <label htmlFor="">Class Applying For</label>
+                <input name="courseApplyingFor"  className="fwidth" value={obj.courseApplyingFor}/>
+            </div>
+            <div className="col-md-4">
+              <div>
+                <label htmlFor="">Status</label>
+                <input name="status"  className="fwidth" value={obj.status}/>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div>
+                <label htmlFor="">Campus</label>
+                { obj.branch !== undefined && (
+                  <input name="branchName"  className="fwidth" value={obj.branch.branchName}/>
+                )
+                }
+                
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div>
+                <label htmlFor="">State</label>
+                { obj.branch !== undefined && (
+                  <input name="stateName"  className="fwidth" value={obj.branch.state.stateName}/>
+                )
+                }
+                
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div>
+                <label htmlFor="">City</label>
+                { obj.branch !== undefined && (
+                  <input name="cityName"  className="fwidth" value={obj.branch.city.cityName}/>
+                )
+                }
+                
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div>
+                <label htmlFor="">Country</label>
+                { obj.branch !== undefined && (
+                  <input name="countryName"  className="fwidth" value={obj.branch.state.country.countryName}/>
+                )
+                }
+                
+              </div>
+            </div>
+        </div>
+      </div>
+
+    );
+  }
+
     onClick = (e: any) => {
       const { name, value } = e.nativeEvent.target;
       const { mutate } = this.props;
@@ -128,6 +251,7 @@ type AdmissionDataState = {
       }else if(name === "btnConverted"){
         admType = "CONVERTED"
      }
+     this.back();
      let btn: any = document.querySelector("#"+name);
      btn.setAttribute("disabled", true);
      return mutate({
@@ -153,9 +277,7 @@ type AdmissionDataState = {
     }
   
     render() {
-      const {
-        admissionEnquiryData
-      } = this.state;
+      const {admissionEnquiryData } = this.state;
       return (   
       <section className="border">
          <h3 className="bg-heading-admission p-1 mb-1">
@@ -211,32 +333,42 @@ type AdmissionDataState = {
       </div>
     </div>
     
-       <div className="col-md-12">
-     <h5 className="bg-heading p-1 m-0">Received Info</h5>
+       <div className="col-md-12" id="admissionGridShow">
+            <h5 className="bg-heading p-1 m-0">Received Info</h5>
      
-    <table id="admissionlistpage" className="striped-table fwidth bg-white p-2">
-      <thead>
-        <tr>
-          <th>
-          <input type="checkbox" onClick={(e: any) => this.checkAllAdmissions(e)} value="checkedall" name="" id="chkCheckedAll" />
-          </th>
-          <th>Enquiry ID</th>
-          <th>Name</th>
-          <th>Contact</th>
-          <th>Status</th>
-          <th>Date</th>
-          <th>Details</th>
-        </tr>
-      </thead>
-      <tbody>
-      {
-       this.createAdmissionRows(this.state.admissionEnquiryData.mutateResult)
-       }
-      </tbody>
-    </table>
+            <table id="admissionlistpage" className="striped-table fwidth bg-white p-2">
+              <thead>
+                <tr>
+                  <th>
+                  <input type="checkbox" onClick={(e: any) => this.checkAllAdmissions(e)} value="checkedall" name="" id="chkCheckedAll" />
+                  </th>
+                  <th>Enquiry ID</th>
+                  <th>Name</th>
+                  <th>Contact</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+              {
+              this.createAdmissionRows(this.state.admissionEnquiryData.mutateResult)
+              }
+              </tbody>
+            </table>
+            {
+                this.createNoRecordMessage(this.state.admissionEnquiryData.mutateResult)
+            }
+    </div>
     {
-        this.createNoRecordMessage(this.state.admissionEnquiryData.mutateResult)
+      this.createDetailsDiv(admissionEnquiryData.enquiryData)
     }
+    
+    <div className="hide" id="backDiv">
+      <p></p>
+      <div>
+        <button className="btn btn-primary mr-1" id="btnBack" name="btnBack" onClick={this.back}>Back to Grid</button>
+      </div>
     </div>
   </section>
 );

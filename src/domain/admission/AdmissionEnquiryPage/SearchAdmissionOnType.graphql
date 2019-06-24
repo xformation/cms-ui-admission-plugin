@@ -4,7 +4,23 @@ mutation searchAdmissionOnType($admissionEnquiryType:String, $branchId:Long ){
     studentName,
     mobileNumber,
     status,
-    strEnquiryDate
+    
+    alternateMobileNumber,
+    email,
+    courseApplyingFor,
+    strEnquiryDate,
+    branch{
+      branchName,
+      city{
+        cityName
+      },
+      state{
+        stateName,
+        country{
+          countryName
+        }
+      }
+      
+    }
   }
 }
-

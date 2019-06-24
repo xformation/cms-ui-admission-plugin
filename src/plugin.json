@@ -41,13 +41,6 @@
       "addToNav": true,
       "defaultNav": false,
       "component": "AddAdmissionPage"
-    },
-    {
-      "type": "page",
-      "name": "AdmissionDetails",
-      "addToNav": false,
-      "defaultNav": false,
-      "component": "AdmissionEnquiryDetails"
     }
   ],
   "dependencies": {
