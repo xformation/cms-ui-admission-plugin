@@ -4,7 +4,7 @@ mutation searchAdmissionOnType($admissionEnquiryType:String, $branchId:Long ){
     studentName,
     mobileNumber,
     status,
-    
+
     alternateMobileNumber,
     email,
     courseApplyingFor,
@@ -20,7 +20,7 @@ mutation searchAdmissionOnType($admissionEnquiryType:String, $branchId:Long ){
           countryName
         }
       }
-      
+
     }
   }
 }

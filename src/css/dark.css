@@ -1,82 +1,66 @@
-/* .heading{
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+.tabs .tab {
+  margin: 0px 5px;
+  color: rgba(255, 255, 255, 0.8);
+  display: inline-block;
+  padding: 5px 15px 0 15px;
+  border-bottom: 2px solid rgba(74, 161, 241, 0.7);
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  background: #3d9bef !important;
+  margin-top: 14px;
+}
+.tabs .tab:hover,
+.tabs .tab.active {
+  background: #cecece !important;
+  border-bottom: 2px solid rgba(74, 161, 241, 0.7);
+  color: #3d9bef;
+}
+.tabs .content {
+  padding: 20px;
+  color: rgba(0, 0, 0, 0.6);
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid #3d9bef;
+  margin-left: -3%;
+  height: 40vh;
+}
+.tabWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  g: ;
+}
+.m-4 {
+  margin-top: -4%;
+}
+.tab-div {
+  border: 2px solid rgb(61, 155, 239);
+}
+.dark-text {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+.head-prime {
+  color: rgb(61, 155, 239) !important;
+}
+.bg-grey {
+  background: rgba(0, 0, 0, 0.1);
+}
+.btn-adm {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 40vh;
+  border: 2px solid #3697ef;
+  margin-top: -4%;
+}
+.profile-label {
+  color: rgb(78, 144, 203) !important;
+  padding-right: 4px;
 }
 
-.striped-table{
-    width: 100%;
-    border-collapse: separate;
-    margin-bottom: 2rem;
+.w10rem {
+  width: 10rem;
 }
-
-.striped-table th{
-    width: auto;
-    text-align: left;
-    height: 30px;
-    white-space: nowrap;
-    font-weight: bold;
-    background-color: #3C3834 !important;
-    color: white;
-    padding-left: 10px;
-}
-
-.striped-table tr{
-    height: 40px;
-}
-
-.striped-table tbody tr td{
-    padding-left: 10px;
-    border-top: 1px solid #34302D;
-}
-.striped-table tbody tr:nth-child(odd) {
-    background: #F1F1F1;
-}
-
-.striped-table .table-link{
-    text-decoration: underline;
-    color: #5fa134;
-}
-
-.striped-table .table-link:hover{
-    text-decoration: none !important;
-}
-
-.customButton{
-    background-color: #34302D !important;
-    border: 1px solid #5fa134 !important;
-    color: white;
-    border-radius: 0px !important;
-}
-
-.customButton:hover {
-    border: 1px solid #34302D !important;
-    color: white;
-}
-
-.page-container {
-    margin: 0px !important;
-    max-width: 100%;
-    background-color: white;
-    padding: 10px !important;
-}
-
-.main-view {
-    padding: 20px;
-    background: #EFEFEF;
-}
-
-.page-header{
- padding: 0px;
-}
-
-.page-header__inner{
-    margin-bottom: 0px;
-}
-.page-header__logo {
-    margin: 0px;
-    height: 30px;
-}
- */
 .plugin-bg-white {
   background: white;
   min-height: 96vh;
@@ -617,7 +601,7 @@ td {
 /* Fee Setup */
 .inDashboard {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 .b-1 {
   border: 1px solid darkgray;
@@ -626,7 +610,7 @@ td {
 .invoiceDashboard {
   border: 1px solid gray;
   border-radius: 5px;
-  width: 18rem;
+  width: 15rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -849,3 +833,23 @@ table.adminListPage td:first-child {
 }
 
 /* Fee Setup */
+
+.adminDetails {
+  display: flex;
+  justify-content: flex-start;
+}
+.w-8 {
+  width: 8rem;
+}
+.w-12 {
+  width: 12rem;
+}
+.w-10 {
+  width: 10rem;
+}
+.mt--12 {
+  margin-top: 12px;
+}
+.p--512 {
+  padding: 5px 12px;
+}
