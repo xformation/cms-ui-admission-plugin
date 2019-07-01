@@ -203,7 +203,7 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
         <div className="row">
           <div className="col-md-2 buttons-container dont-print mt--12">
             <h5 className="bg-grey head-prime text-uppercase p--512">Enquiry <span className="dark-text">
-              IdAF2451</span></h5>
+              {obj.id}</span></h5>
             <div className="btn-group btn-adm m-4">
               <button className="btn btn-primary">Approve</button>
               <button className="btn btn-primary">Followup</button>
@@ -230,14 +230,19 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
                         <span className="profile-label w-12">
                           Middle Name:
         </span>
-                        <span className="">{obj.studentMiddleName}</span>
+                        {obj.admissionApplication !== undefined && (
+
+                          <span >{obj.admissionApplication.student.studentMiddleName}</span>
+                        )}
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-10">
-                          Last Name
-        </span>
-                        <span className="">                        {/* {obj.admissionApplication.student.studentLastName} */}
-                        </span>
+                          Last Name: </span>
+                        {obj.admissionApplication !== undefined && (
+
+                          <span >{obj.admissionApplication.student.studentLastName}</span>
+                        )}
+
                       </div>
                     </div>
                     <div className="row">
@@ -245,19 +250,28 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
                         <span className="profile-label w-8">
                           Father's Name:
         </span>
-                        <span className="">{obj.fatherName}</span>
+                        {obj.admissionApplication !== undefined && (
+
+                          <span >{obj.admissionApplication.student.fatherName}</span>
+                        )}
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-12">
                           Father's Middle Name:
         </span>
-                        <span className="">{obj.fatherMiddleName}</span>
+                        {obj.admissionApplication !== undefined && (
+
+                          <span >{obj.admissionApplication.student.fatherMiddleName}</span>
+                        )}
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-10">
                           Father's Last Name
         </span>
-                        <span className="">{obj.fatherLastName}</span>
+                        {obj.admissionApplication !== undefined && (
+
+                          <span >{obj.admissionApplication.student.fatherLastName}</span>
+                        )}
                       </div>
                     </div>
                     <div className="row">
@@ -265,19 +279,28 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
                         <span className="profile-label w-8">
                           Mother's Name:
         </span>
-                        <span className="">{obj.motherName}</span>
+                        {obj.admissionApplication !== undefined && (
+
+                          <span >{obj.admissionApplication.student.motherName}</span>
+                        )}
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-12">
                           Mother's Middle Name:
         </span>
-                        <span className="">{obj.motherMiddleName}</span>
+                        {obj.admissionApplication !== undefined && (
+
+                          <span >{obj.admissionApplication.student.motherMiddleName}</span>
+                        )}
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-10">
                           Mother's Last Name
         </span>
-                        <span className="">{obj.motherLastName}</span>
+                        {obj.admissionApplication !== undefined && (
+
+                          <span >{obj.admissionApplication.student.motherLastName}</span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -287,19 +310,28 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
                         <span className="profile-label w-8">
                           Date Of Birth
           </span>
-                        <span className="">{obj.dateOfBirth}</span>
+                        {obj.admissionApplication !== undefined && (
+
+                          <span>{obj.admissionApplication.student.dateOfBirth}</span>
+                        )}
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-12">
                           Sex
           </span>
-                        <span className="">{obj.sex}</span>
+                        {obj.admissionApplication !== undefined && (
+
+                          <span >{obj.admissionApplication.student.sex}</span>
+                        )}
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-10">
                           Nationality
           </span>
-                        <span className="">{obj.country}</span>
+                        {obj.branch !== undefined && (
+
+                          <span >{obj.branch.state.country.countryName}</span>
+                        )}
                       </div>
                     </div>
                     <div className="row">
@@ -313,7 +345,10 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
                         <span className="profile-label w-12">
                           Alternate Contact Number
           </span>
-                        <span className="">{obj.alternateMobileNumber}</span>
+                        {obj.admissionApplication !== undefined && (
+
+                          <span >{obj.admissionApplication.student.alternateMobileNumber}</span>
+                        )}
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-10">

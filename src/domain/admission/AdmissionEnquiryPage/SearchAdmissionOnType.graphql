@@ -22,5 +22,21 @@ mutation searchAdmissionOnType($admissionEnquiryType:String, $branchId:Long ){
       }
 
     }
+    admissionApplication{
+      admissionStatus,
+      student{
+        studentMiddleName,
+        studentLastName,
+        fatherName,
+        fatherMiddleName,
+        fatherLastName,
+        motherName,
+        motherMiddleName,
+        motherLastName,
+        dateOfBirth,
+        sex,
+        alternateContactNumber
+      }
+    }
   }
 }
