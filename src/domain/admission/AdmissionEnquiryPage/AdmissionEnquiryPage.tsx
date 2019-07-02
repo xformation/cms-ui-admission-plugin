@@ -345,10 +345,11 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
                         <span className="profile-label w-12">
                           Alternate Contact Number
           </span>
-                        {obj.admissionApplication !== undefined && (
+                        {/* {obj.admissionApplication !== undefined && (
 
-                          <span >{obj.admissionApplication.student.alternateMobileNumber}</span>
-                        )}
+                          <span >{obj.admissionApplication.student.alternateContactNumber}</span>
+                        )} */}
+                        <span className="">{obj.alternateMobileNumber}</span>
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-10">
