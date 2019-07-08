@@ -1,5 +1,6 @@
 import {WelcomePage} from './ui/WelcomePage';
 import {ConfigCtrl} from './ui/Config';
-import {AdmissionsPage} from './ui/AdmissionsPage';
+import {ApplicationsPage} from './ui/ApplicationsPage';
 import {AddAdmissionPage} from './ui/AddAdmissionPage';
-export {WelcomePage, ConfigCtrl, AdmissionsPage, AddAdmissionPage};
+import {EnquiriesPage} from './ui/EnquiriesPage';
+export {WelcomePage, ConfigCtrl, ApplicationsPage, AddAdmissionPage, EnquiriesPage};

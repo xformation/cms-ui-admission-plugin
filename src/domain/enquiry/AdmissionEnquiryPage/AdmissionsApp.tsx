@@ -5,8 +5,9 @@ import { ApolloProvider } from "react-apollo";
 
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
-import { createGraphQLClient } from "../createGraphQLClient";
-import AdmissionEnquiryListPage from "../domain/application/AdmissionApplicationPage";
+import { createGraphQLClient } from "../../../createGraphQLClient";
+import AdmissionEnquiryPage from "./AdmissionEnquiryPage";
+import '../../../css/dark.css';
 
 const graphQLClient = createGraphQLClient();
 
@@ -16,10 +17,10 @@ export default function init() {
       <ApolloProvider client={graphQLClient}>
         <BrowserRouter>
           <Switch>
-            <Route component={AdmissionEnquiryListPage} />
+            <Route path="/plugins/xformation-cms-admission-panel/page/enquiries" component={AdmissionEnquiryPage} />
           </Switch>
         </BrowserRouter>
       </ApolloProvider>,
-      document.getElementById("mount"));
-  }, 1000);
+      document.getElementById("mountAdmissionEnquiry"));
+  }, 100);
 }

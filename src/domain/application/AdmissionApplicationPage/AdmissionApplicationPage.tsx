@@ -78,7 +78,7 @@ class Tabs extends React.Component<{}, any> {
 
 // Tabs
 
-class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, AdmissionDataState> {
+class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, AdmissionDataState> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -426,17 +426,8 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
       <section className="border">
         <h3 className="bg-heading-admission p-1 mb-1">
           <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
-          Admission
+          Admission Application
         </h3>
-
-        {/* <div>
-      <Link
-                to={`/plugins/xformation-cms-admission-panel/page/addadmission`}
-                className="btn btn-primary" style={w180}>Create New Admission
-                </Link>
-
-        </div> */}
-
         <div className="inDashboard p-1">
           <div className="invoiceDashboard">
             <div className="invoiceHeader">
@@ -526,5 +517,5 @@ export default widthAdmissionDataloader(
       name: "mutate"
     })
   )
-    (AdmissionEnquiryPage) as any
+    (AdmissionApplicationPage) as any
 );

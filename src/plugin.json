@@ -30,10 +30,17 @@
     },
     {
       "type": "page",
-      "name": "Admissions",
+      "name": "Applications",
       "addToNav": true,
       "defaultNav": true,
-      "component": "AdmissionsPage"
+      "component": "ApplicationsPage"
+    },
+    {
+      "type": "page",
+      "name": "Enquiries",
+      "addToNav": true,
+      "defaultNav": true,
+      "component": "EnquiriesPage"
     },
     {
       "type": "page",
