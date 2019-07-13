@@ -1,0 +1,32 @@
+{
+  "name": "xform-react",
+  "version": "1.0.1",
+  "description": "xform.js is a JavaScript  Library used across xformation platform ",
+  "keywords": [
+    "xformation",
+    "JavaScript",
+    "Bootstrap",
+    "Library",
+    "react",
+    "react-component"
+  ],
+  "homepage": "https://xformjs.io/",
+  "license": "Apache 2.0",
+  "files": [
+    "xform.css",
+    "xform.min.css",
+    "xform.react.d.ts",
+    "xform.react.js",
+    "xform.react.min.js"
+  ],
+  "main": "xform.react.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xformation/xformjs.git"
+  },
+  "typings": "xform.react.d.ts",
+  "peerDependencies": {
+    "react": ">=15.0.1 || ^16.2.0",
+    "react-dom": ">=15.0.1 || ^16.2.0"
+  }
+}

@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { graphql, QueryProps, MutationFunc, compose } from 'react-apollo';
 import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
+import * as Survey from "xform-react";
+import "xform-react/xform.min.css";
+
 import * as AddStudentMutationGql from './AddStudentMutation.graphql'
 import * as AddAdmissionMutationGql from './AddAdmissionMutation.graphql';
 import * as AddCompetitiveExamMutationGql from './AddCompetitiveExamMutation.graphql';
@@ -9,7 +12,7 @@ import * as AddAcademicHistoryMutationGql from './AddAcademicHistoryMutation.gra
 import PersonalData from './PersonalData';
 import AcademicHistory from './AcademicHistory';
 import Document from './Document';
-import { AdmissionServices } from './_services';
+// import { AdmissionServices } from './_services';
 import {
     LoadAdmissionDataCacheType,
     AddStudentMutation,
@@ -32,12 +35,12 @@ import withAdmissionDataCacheLoader from "./withAdmissionDataCacheLoader";
 
 type AdmissionDataRootProps = RouteComponentProps<{
     // collegeId: string;
-  }> & {
-    data: QueryProps & LoadAdmissionDataCacheType;
-  }
+}> & {
+        data: QueryProps & LoadAdmissionDataCacheType;
+    }
 
-type AddAdmissionPageProps = AdmissionDataRootProps& {
-    addStudentMutation : MutationFunc<AddStudentMutation>;
+type AddAdmissionPageProps = AdmissionDataRootProps & {
+    addStudentMutation: MutationFunc<AddStudentMutation>;
     addAcademicHistoryMutation: MutationFunc<AcademicHistoryAddMutationType>;
     addCompetitiveExam: MutationFunc<CompetitiveAddMutationType>;
     addDocument: MutationFunc<DocumentsAddMutationType>;
@@ -73,8 +76,50 @@ type EditAdmissionProfileStates = {
     cities: any,
     courses: any,
     submitted: any,
-    uploadPhoto:any,
+    uploadPhoto: any,
     fileName: any,
+};
+
+const leftCss = {
+    root: "form-container",
+    header: "form-header",
+    footer: "panel-footer card-footer text-right",
+    body: "form-body",
+    question: {
+        title: "gf-form-label width-8 m-0",
+        mainRoot: "gf-form",
+    },
+    text: "gf-form-input max-width-22",
+    dropdown:{
+        control: "gf-form-input max-width-22",
+    },
+    navigation: {
+        complete: "btn bs"
+    },
+    error: {
+        root: "error"
+    }
+};
+
+const rightCss = {
+    root: "form-container",
+    header: "form-header",
+    footer: "panel-footer card-footer text-right",
+    body: "form-body",
+    question: {
+        title: "form-control-label",
+        mainRoot: "form-control-container sv_qstn"
+    },
+    text: "input-form-control",
+    dropdown:{
+        control: "select-form-control",
+    },
+    navigation: {
+        complete: "btn bs"
+    },
+    error: {
+        root: "error"
+    }
 };
 
 class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmissionProfileStates>{
@@ -98,21 +143,21 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                     id: ""
                 },
                 state: {
-                    id:""
+                    id: ""
                 },
                 city: {
-                    id:""
+                    id: ""
                 },
-                course:{
-                    id:""
+                course: {
+                    id: ""
                 }
             },
             departments: [],
             branches: [],
             batches: [],
             states: [],
-            cities:[],
-            courses:[],
+            cities: [],
+            courses: [],
             submitted: false,
             uploadPhoto: null,
             fileName: "",
@@ -125,60 +170,350 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
         this.createCourseOptions = this.createCourseOptions.bind(this);
     }
 
+    PERSONAL = {
+        title: "Personal Details",
+        showQuestionNumbers: "off",
+        elements: [
+            {
+                type: "text",
+                name: 'studentName',
+                title: 'Name',
+                requiredErrorText: 'Please enter Name',
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: "text",
+                name: 'studentMiddleName',
+                title: 'Middle Name',
+                requiredErrorText: 'Please enter Middle Name',
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: "text",
+                name: 'studentLastName',
+                title: 'Last Name',
+                requiredErrorText: 'Please enter Last Name',
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: "text",
+                name: 'fatherName',
+                title: 'Father Name',
+                requiredErrorText: 'Please enter Father Name',
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: "text",
+                name: 'fatherMiddleName',
+                title: 'Father Middle Name',
+                requiredErrorText: 'Please enter Father Middle Name',
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: "text",
+                name: 'fatherLastName',
+                title: 'Father Last Name',
+                requiredErrorText: 'Please enter Father Last Name',
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: "text",
+                name: 'motherName',
+                title: 'Mother Name',
+                requiredErrorText: 'Please enter Mother Name',
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: "text",
+                name: 'motherMiddleName',
+                title: 'Mother Middle Name',
+                requiredErrorText: 'Please enter Mother Middle Name',
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: "text",
+                name: 'motherLastName',
+                title: 'mother Last Name',
+                requiredErrorText: 'Please enter mother Last Name',
+                isRequired: true,
+                startWithNewLine: false,
+            },
+
+            {
+                type: "text",
+                name: 'dateOfBirth',
+                title: 'Date Of Birth',
+                requiredErrorText: 'Please enter Date Of Birth',
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: 'dropdown',
+                name: 'sex',
+                title: 'Gender',
+                requiredErrorText: 'Please enter Gender',
+                isRequired: true,
+                startWithNewLine: false,
+                choices: [
+                    {
+                        value: "MALE",
+                        text: "MALE"
+                    },
+                    {
+                        value: "FEMALE",
+                        text: "FEMALE"
+                    },
+                    {
+                        value: "OTHER",
+                        text: "OTHER"
+                    }
+                ]
+            },
+            {
+                type: "text",
+                name: 'studentContactNumber',
+                title: 'Student Contact Number',
+                requiredErrorText: 'Please enter Student Contact Number',
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: "text",
+                name: 'alternateContactNumber',
+                title: 'Alternate Contact Number',
+                requiredErrorText: 'Please enter Alternate Contact Number',
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: "text",
+                name: 'studentEmailAddress',
+                title: 'Student Email',
+                requiredErrorText: 'Please enter Student Email',
+                isRequired: true,
+                startWithNewLine: false,
+            },
+
+        ]
+    };
+
+    ACADEMIC_HISTORY = {
+        title: "Academic History",
+        showQuestionNumbers: "off",
+        elements: [
+            {
+                type: 'text',
+                name: 'qualification',
+                title: 'Highest Qualification',
+                requiredErrorText: "Please enter Highest Qualification",
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: 'text',
+                name: 'yearOfPassing',
+                title: 'Year',
+                requiredErrorText: "Please enter Year",
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: 'text',
+                name: 'institution',
+                title: 'Institution',
+                requiredErrorText: "Please enter Institution",
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: 'text',
+                name: 'university',
+                title: 'Board/University',
+                requiredErrorText: "Please enter Board/University",
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: 'text',
+                name: 'enrollmentNo',
+                title: 'Enrollment No',
+                requiredErrorText: "Please enter Enrollment No",
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: 'text',
+                name: 'testName',
+                title: 'Exam Name',
+                requiredErrorText: "Please enter Exam Name",
+                isRequired: true,
+                startWithNewLine: false,
+            },
+            {
+                type: 'text',
+                name: 'testScore',
+                title: 'Score',
+                requiredErrorText: "Please enter Score",
+                isRequired: true,
+                startWithNewLine: false,
+            },
+        ]
+    };
+
+    DOCUMENTS = {
+        title: "Documents",
+        showQuestionNumbers: "off",
+        elements: [
+            {
+                type: 'text',
+                name: 'documentName',
+                title: 'Document Name',
+                isRequired: true,
+                requiredErrorText: 'Please enter Document Name',
+                startWithNewLine: false,
+            },
+            {
+                type: 'text',
+                name: 'upload',
+                title: 'Upload',
+                isRequired: true,
+                requiredErrorText: 'Please enter Upload',
+                startWithNewLine: false,
+            },
+        ]
+    };
+
+    ADMISSION_DETAILS = {
+        title: "",
+        showQuestionNumbers: "off",
+        elements: [
+            {
+                type: "text",
+                name: "admissionNo",
+                title: "Admission No",
+                isRequired: true,
+                maxLength: 50,
+                startWithNewLine: true,
+                requiredErrorText: "Please enter Admission No"
+            },
+            {
+                    type: 'dropdown',
+                    name: 'branch',
+                    title: 'Branch',
+                    requiredErrorText: 'Please enter Branch',
+                    isRequired: true,
+                    startWithNewLine: true,
+                    choices: []
+            },
+            {
+                    type: 'dropdown',
+                    name: 'department',
+                    title: 'Department',
+                    requiredErrorText: 'Please enter Department',
+                    isRequired: true,
+                    startWithNewLine: true,
+                    choices: []
+            },
+            {
+                    type: 'dropdown',
+                    name: 'batch',
+                    title: 'Year',
+                    requiredErrorText: 'Please enter Year',
+                    isRequired: true,
+                    startWithNewLine: true,
+                    choices: []
+            },
+            {
+                    type: 'dropdown',
+                    name: 'state',
+                    title: 'State',
+                    requiredErrorText: 'Please enter State',
+                    isRequired: true,
+                    startWithNewLine: true,
+                    choices: []
+            },
+            {
+                    type: 'dropdown',
+                    name: 'city',
+                    title: 'City',
+                    requiredErrorText: 'Please enter City',
+                    isRequired: true,
+                    startWithNewLine: true,
+                    choices: []
+            },
+            {
+                    type: 'dropdown',
+                    name: 'course',
+                    title: 'Course',
+                    requiredErrorText: 'Please enter Course',
+                    isRequired: true,
+                    startWithNewLine: true,
+                    choices: []
+            },
+        ]
+    };
+
     createDepartments(departments: any, selectedBranchId: any) {
         let departmentsOptions = [<option key={0} value="">Select department</option>];
         for (let i = 0; i < departments.length; i++) {
-            let brId = ""+departments[i].branch.id;
-        if (selectedBranchId == brId ) {
-            departmentsOptions.push(
-            <option key={departments[i].id} value={departments[i].id}>{departments[i].name}</option>
-            );
-        }
+            let brId = "" + departments[i].branch.id;
+            if (selectedBranchId == brId) {
+                departmentsOptions.push(
+                    <option key={departments[i].id} value={departments[i].id}>{departments[i].name}</option>
+                );
+            }
         }
         return departmentsOptions;
     }
-    
-    createBranches(branches: any){
+
+    createBranches(branches: any) {
         let branchesOptions = [<option key={0} value="">Select Branch</option>];
         for (let i = 0; i < branches.length; i++) {
-          branchesOptions.push(
-            <option key={branches[i].id} value={branches[i].id}>{branches[i].branchName}</option>
-          );
+            branchesOptions.push(
+                <option key={branches[i].id} value={branches[i].id}>{branches[i].branchName}</option>
+            );
         }
         return branchesOptions;
-      }
+    }
 
     createBatches(batches: any, selectedDepartmentId: any) {
         let batchesOptions = [<option key={0} value="">Select Year</option>];
         for (let i = 0; i < batches.length; i++) {
-            let dptId = ""+batches[i].department.id;
+            let dptId = "" + batches[i].department.id;
             if (dptId == selectedDepartmentId) {
                 batchesOptions.push(
-                <option key={batches[i].id} value={batches[i].id}>{batches[i].batch}</option>
+                    <option key={batches[i].id} value={batches[i].id}>{batches[i].batch}</option>
                 );
             }
         }
         return batchesOptions;
     }
-   
-    createStates(states: any){
+
+    createStates(states: any) {
         let statesOptions = [<option key={0} value="">Select State</option>];
         for (let i = 0; i < states.length; i++) {
-          statesOptions.push(
-            <option key={states[i].id} value={states[i].id}>{states[i].branchName}</option>
-          );
+            statesOptions.push(
+                <option key={states[i].id} value={states[i].id}>{states[i].branchName}</option>
+            );
         }
         return statesOptions;
-      }
-   
+    }
 
     createCities(cities: any, selectedStateId: any) {
         let citiesOptions = [<option key={0} value="">Select City</option>];
         for (let i = 0; i < cities.length; i++) {
-            let ctId = ""+cities[i].state.id;
-            if (selectedStateId == ctId ) {
+            let ctId = "" + cities[i].state.id;
+            if (selectedStateId == ctId) {
                 citiesOptions.push(
-                <option key={cities[i].id} value={cities[i].id}>{cities[i].cityName}</option>
+                    <option key={cities[i].id} value={cities[i].id}>{cities[i].cityName}</option>
                 );
             }
         }
@@ -196,20 +531,20 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
         return coursesOptions;
     }
 
-    
+
     getStudentImage = (e: any) => {
         const { admissionData } = this.state;
         admissionData.uploadPhoto = URL.createObjectURL(e.target.files[0]);
         var r = new FileReader();
-		r.onload = function (e: any){
-			admissionData.fileName = e.target.result;
+        r.onload = function (e: any) {
+            admissionData.fileName = e.target.result;
             console.log('Image converted to base64 on upload :\n\n' + admissionData.fileName);
-		};
-		r.readAsDataURL(e.target.files[0]);    
+        };
+        r.readAsDataURL(e.target.files[0]);
 
         this.setState({
             admissionData: admissionData
-        })     
+        })
     }
 
     onChange = (e: any) => {
@@ -223,23 +558,23 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                         id: value
                     },
                     department: {
-                      id: ""
+                        id: ""
                     },
                     batch: {
-                      id: ""
+                        id: ""
                     },
-                    state:{
-                      id:""
+                    state: {
+                        id: ""
                     },
-                    city:{
-                        id:""
+                    city: {
+                        id: ""
                     },
-                    course:{
-                       id:""
+                    course: {
+                        id: ""
                     }
                 }
             });
-        }else if (name === "department") {
+        } else if (name === "department") {
             this.setState({
                 admissionData: {
                     ...admissionData,
@@ -248,16 +583,16 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                     },
                     batch: {
                         id: ""
-                      },
-                      state:{
-                        id:""
-                      },
-                      city:{
-                          id:""
-                      },
-                      course:{
-                         id:""
-                      }
+                    },
+                    state: {
+                        id: ""
+                    },
+                    city: {
+                        id: ""
+                    },
+                    course: {
+                        id: ""
+                    }
                 }
             });
         } else if (name === "batch") {
@@ -266,55 +601,55 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                     ...admissionData,
                     batch: {
                         id: ""
-                      },
-                      state:{
-                        id:""
-                      },
-                      city:{
-                          id:""
-                      },
-                      course:{
-                         id:""
-                      }
+                    },
+                    state: {
+                        id: ""
+                    },
+                    city: {
+                        id: ""
+                    },
+                    course: {
+                        id: ""
+                    }
                 }
             });
-        }  else if (name === "state") {
+        } else if (name === "state") {
             this.setState({
                 admissionData: {
                     ...admissionData,
-                      state:{
-                        id:""
-                      },
-                      city:{
-                          id:""
-                      },
-                      course:{
-                         id:""
-                      }
+                    state: {
+                        id: ""
+                    },
+                    city: {
+                        id: ""
+                    },
+                    course: {
+                        id: ""
+                    }
                 }
             });
-        }  else if (name === "city") {
+        } else if (name === "city") {
             this.setState({
                 admissionData: {
                     ...admissionData,
-                      city:{
-                          id:""
-                      },
-                      course:{
-                         id:""
-                      }
+                    city: {
+                        id: ""
+                    },
+                    course: {
+                        id: ""
+                    }
                 }
             });
-        }  else if (name === "course") {
+        } else if (name === "course") {
             this.setState({
                 admissionData: {
                     ...admissionData,
-                      course:{
-                         id:""
-                      }
+                    course: {
+                        id: ""
+                    }
                 }
             });
-        }   else {
+        } else {
             this.setState({
                 admissionData: {
                     ...admissionData,
@@ -331,120 +666,120 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
         const { addStudentMutation } = this.props;
         const { admissionData } = this.state;
         e.preventDefault();
-            let dplStudentData = {
-                ...admissionData,
-                uploadPhoto: admissionData.uploadPhoto,
-                fileName: admissionData.fileName
-            };
-            
-            let btn = e.target.querySelector("button[type='submit']");
-            btn.setAttribute("disabled", true);
-            let dataSavedMessage: any = document.querySelector(".data-saved-message");
-            dataSavedMessage.style.display = "none";
-            return addStudentMutation({
-                variables: { input: dplStudentData },
-            }).then((data: any) => {
-                btn.removeAttribute("disabled");
-                dataSavedMessage.style.display = "inline-block";
-            }).catch((error: any) => {
-                btn.removeAttribute("disabled");
-                dataSavedMessage.style.display = "inline-block";
-                console.log('there was an error sending the update mutation', error);
-                return Promise.reject(`Could not save student: ${error}`);
-            });
-        }
-    
+        let dplStudentData = {
+            ...admissionData,
+            uploadPhoto: admissionData.uploadPhoto,
+            fileName: admissionData.fileName
+        };
 
-        saveAcademicHistory = (e: any) => {
-            this.setState({
-                submitted: true
-            });
-            const {addAcademicHistoryMutation } = this.props;
-            const { admissionData } = this.state;
-            e.preventDefault();
-                let dplAcademicHistoryData = {
-                    ...admissionData
-                };
-                
-                let btn = e.target.querySelector("button[type='submit']");
-                btn.setAttribute("disabled", true);
-                let dataSavedMessage: any = document.querySelector(".data-saved-message");
-                dataSavedMessage.style.display = "none";
-                return addAcademicHistoryMutation({
-                    variables: { input: dplAcademicHistoryData },
-                }).then((data: any) => {
-                    btn.removeAttribute("disabled");
-                    dataSavedMessage.style.display = "inline-block";
-                }).catch((error: any) => {
-                    btn.removeAttribute("disabled");
-                    dataSavedMessage.style.display = "inline-block";
-                    console.log('there was an error sending the update mutation', error);
-                    return Promise.reject(`Could not save student: ${error}`);
-                });
-            }
+        let btn = e.target.querySelector("button[type='submit']");
+        btn.setAttribute("disabled", true);
+        let dataSavedMessage: any = document.querySelector(".data-saved-message");
+        dataSavedMessage.style.display = "none";
+        return addStudentMutation({
+            variables: { input: dplStudentData },
+        }).then((data: any) => {
+            btn.removeAttribute("disabled");
+            dataSavedMessage.style.display = "inline-block";
+        }).catch((error: any) => {
+            btn.removeAttribute("disabled");
+            dataSavedMessage.style.display = "inline-block";
+            console.log('there was an error sending the update mutation', error);
+            return Promise.reject(`Could not save student: ${error}`);
+        });
+    }
 
-            saveCompetiveExam = (e: any) => {
-                this.setState({
-                    submitted: true
-                });
-                const {addCompetitiveExam } = this.props;
-                const { admissionData } = this.state;
-                e.preventDefault();
-                    let dplCompetitiveExamData = {
-                        ...admissionData
-                    };
-                    
-                    let btn = e.target.querySelector("button[type='submit']");
-                    btn.setAttribute("disabled", true);
-                    let dataSavedMessage: any = document.querySelector(".data-saved-message");
-                    dataSavedMessage.style.display = "none";
-                    return addCompetitiveExam({
-                        variables: { input: dplCompetitiveExamData },
-                    }).then((data: any) => {
-                        btn.removeAttribute("disabled");
-                        dataSavedMessage.style.display = "inline-block";
-                    }).catch((error: any) => {
-                        btn.removeAttribute("disabled");
-                        dataSavedMessage.style.display = "inline-block";
-                        console.log('there was an error sending the update mutation', error);
-                        return Promise.reject(`Could not save student: ${error}`);
-                    });
-                }
 
-                saveDocuments = (e: any) => {
-                    this.setState({
-                        submitted: true
-                    });
-                    const {addDocument } = this.props;
-                    const { admissionData } = this.state;
-                    e.preventDefault();
-                        let dplDocumentData = {
-                            ...admissionData
-                        };
-                        
-                        let btn = e.target.querySelector("button[type='submit']");
-                        btn.setAttribute("disabled", true);
-                        let dataSavedMessage: any = document.querySelector(".data-saved-message");
-                        dataSavedMessage.style.display = "none";
-                        return addDocument({
-                            variables: { input: dplDocumentData },
-                        }).then((data: any) => {
-                            btn.removeAttribute("disabled");
-                            dataSavedMessage.style.display = "inline-block";
-                        }).catch((error: any) => {
-                            btn.removeAttribute("disabled");
-                            dataSavedMessage.style.display = "inline-block";
-                            console.log('there was an error sending the update mutation', error);
-                            return Promise.reject(`Could not save student: ${error}`);
-                        });
-                    }
-            
-        
-    render() {
-        const {data:{createAdmissionDataCache,refetch}, addStudentMutation,addAcademicHistoryMutation,addCompetitiveExam,addDocument } = this.props;
-        const { admissionData,submitted } = this.state;
+    saveAcademicHistory = (e: any) => {
+        this.setState({
+            submitted: true
+        });
+        const { addAcademicHistoryMutation } = this.props;
+        const { admissionData } = this.state;
+        e.preventDefault();
+        let dplAcademicHistoryData = {
+            ...admissionData
+        };
+
+        let btn = e.target.querySelector("button[type='submit']");
+        btn.setAttribute("disabled", true);
+        let dataSavedMessage: any = document.querySelector(".data-saved-message");
+        dataSavedMessage.style.display = "none";
+        return addAcademicHistoryMutation({
+            variables: { input: dplAcademicHistoryData },
+        }).then((data: any) => {
+            btn.removeAttribute("disabled");
+            dataSavedMessage.style.display = "inline-block";
+        }).catch((error: any) => {
+            btn.removeAttribute("disabled");
+            dataSavedMessage.style.display = "inline-block";
+            console.log('there was an error sending the update mutation', error);
+            return Promise.reject(`Could not save student: ${error}`);
+        });
+    }
+
+    saveCompetiveExam = (e: any) => {
+        this.setState({
+            submitted: true
+        });
+        const { addCompetitiveExam } = this.props;
+        const { admissionData } = this.state;
+        e.preventDefault();
+        let dplCompetitiveExamData = {
+            ...admissionData
+        };
+
+        let btn = e.target.querySelector("button[type='submit']");
+        btn.setAttribute("disabled", true);
+        let dataSavedMessage: any = document.querySelector(".data-saved-message");
+        dataSavedMessage.style.display = "none";
+        return addCompetitiveExam({
+            variables: { input: dplCompetitiveExamData },
+        }).then((data: any) => {
+            btn.removeAttribute("disabled");
+            dataSavedMessage.style.display = "inline-block";
+        }).catch((error: any) => {
+            btn.removeAttribute("disabled");
+            dataSavedMessage.style.display = "inline-block";
+            console.log('there was an error sending the update mutation', error);
+            return Promise.reject(`Could not save student: ${error}`);
+        });
+    }
+
+    saveDocuments = (e: any) => {
+        this.setState({
+            submitted: true
+        });
+        const { addDocument } = this.props;
+        const { admissionData } = this.state;
+        e.preventDefault();
+        let dplDocumentData = {
+            ...admissionData
+        };
+
+        let btn = e.target.querySelector("button[type='submit']");
+        btn.setAttribute("disabled", true);
+        let dataSavedMessage: any = document.querySelector(".data-saved-message");
+        dataSavedMessage.style.display = "none";
+        return addDocument({
+            variables: { input: dplDocumentData },
+        }).then((data: any) => {
+            btn.removeAttribute("disabled");
+            dataSavedMessage.style.display = "inline-block";
+        }).catch((error: any) => {
+            btn.removeAttribute("disabled");
+            dataSavedMessage.style.display = "inline-block";
+            console.log('there was an error sending the update mutation', error);
+            return Promise.reject(`Could not save student: ${error}`);
+        });
+    }
+
+
+    render12() {
+        const { data: { createAdmissionDataCache, refetch }, addStudentMutation, addAcademicHistoryMutation, addCompetitiveExam, addDocument } = this.props;
+        const { admissionData, submitted } = this.state;
         return (
-            <section className="customCss">
+            <section className="">
                 <h3 className="bg-heading p-1 m-b-0">
                     <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
                     Application Form
@@ -466,60 +801,59 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                                     <div className="col-md-6 col-lg-12 col-xs-12 col-sm-6 student-photo">
                                         <img className="photo" id="stPhoto" src={admissionData.uploadPhoto}></img>
                                     </div>
-                                    
+
                                     <div className="col-sm-6 col-xs-12 col-md-6 col-lg-12">
-                                        
-                                        <input type="file"  accept="image/*" id="stImageUpload" onChange={this.getStudentImage} ></input>
-                                        
-                                        
+
+                                        <input type="file" accept="image/*" id="stImageUpload" onChange={this.getStudentImage} ></input>
+
                                         <div className="gf-form">
                                             <span className="gf-form-label width-8">Admission No</span>
-                                            <input name="admissionNo"  onChange={this.onChange} type="text" className="gf-form-input max-width-22" />
+                                            <input name="admissionNo" onChange={this.onChange} type="text" className="gf-form-input max-width-22" />
                                         </div>
-                        
+
                                         <div className="gf-form">
                                             <span className="gf-form-label width-8">Branch</span>
                                             <select required name="branch" id="branch" onChange={this.onChange} value={admissionData.branch.id} className="gf-form-input max-width-22">
-                                            {this.createBranches(this.props.data.createAdmissionDataCache.branches)}
+                                                {this.createBranches(this.props.data.createAdmissionDataCache.branches)}
                                             </select>
                                         </div>
-                                       
+
                                         <div className="gf-form">
                                             <span className="gf-form-label width-8">Department</span>
                                             <select name="department" id="department" onChange={this.onChange} value={admissionData.department.id} className="gf-form-input max-width-22">
-                                            {this.createDepartments(this.props.data.createAdmissionDataCache.departments, admissionData.branch.id)}
+                                                {this.createDepartments(this.props.data.createAdmissionDataCache.departments, admissionData.branch.id)}
                                             </select>
                                         </div>
-                                       
+
                                         <div className="gf-form">
                                             <span className="gf-form-label width-8">Year</span>
                                             <select name="batch" id="batch" onChange={this.onChange} value={admissionData.batch.id} className="gf-form-input max-width-22">
-                                            {this.createBatches(this.props.data.createAdmissionDataCache.batches, admissionData.department.id)}
+                                                {this.createBatches(this.props.data.createAdmissionDataCache.batches, admissionData.department.id)}
                                             </select>
                                         </div>
-                                        
+
                                         <div className="gf-form">
                                             <span className="gf-form-label width-8">State</span>
                                             <select name="state" id="state" onChange={this.onChange} value={admissionData.state.id} className="gf-form-input max-width-22">
-                                            {this.createStates(this.props.data.createAdmissionDataCache.states)}
+                                                {this.createStates(this.props.data.createAdmissionDataCache.states)}
                                             </select>
                                         </div>
-        
+
                                         <div className="gf-form">
                                             <span className="gf-form-label width-8">City</span>
                                             <select name="city" id="city" onChange={this.onChange} value={admissionData.city.id} className="gf-form-input max-width-22">
-                                            {this.createCities(this.props.data.createAdmissionDataCache.cities, admissionData.state.id)}
+                                                {this.createCities(this.props.data.createAdmissionDataCache.cities, admissionData.state.id)}
                                             </select>
                                         </div>
-                                       
+
                                         <div className="gf-form">
                                             <span className="gf-form-label width-8">Course</span>
                                             <select name="course" id="course" onChange={this.onChange} value={admissionData.course.id} className="gf-form-input max-width-22">
-                                            {this.createCourseOptions(this.props.data.createAdmissionDataCache.courses)}
+                                                {this.createCourseOptions(this.props.data.createAdmissionDataCache.courses)}
                                             </select>
-                                        </div>   
-                                        </div>       
-                                   
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                             <div className="col-lg-9 col-md-12 col-sm-12 col-xs-12 student-profile-form">
@@ -533,7 +867,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                                         </div>
                                         <div className="clear-both"></div>
                                     </div>
-                                    <PersonalData modelData={admissionData} onChange={(name: any, value: any)  => {
+                                    <PersonalData modelData={admissionData} onChange={(name: any, value: any) => {
                                         this.setState({
                                             admissionData: {
                                                 ...admissionData,
@@ -586,6 +920,55 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
             </section>
         );
     }
+
+    render() {
+        let data = this.createBranches(this.props.data.createAdmissionDataCache.branches);
+        console.log("branches", data);
+        Survey.Survey.cssType = "bootstrap";
+        return (
+            <section className="xform-container">
+                <div className="student-profile-container">
+                    <form className="gf-form-group">
+                        <div className="row m-0">
+                            <div className="col-sm-12 col-xs-12 profile-header m-b-2">
+                                <div className="pull-left">Admin - Add Admission</div>
+                                <div className="pull-right">
+                                    <span className="m-r-2 data-saved-message" style={{ fontSize: "13px", color: "#AA0000", display: "none" }}>Data Saved</span>
+                                    <button className="btn bs" type="submit">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row form-main-container m-0">
+                            <div className="col-lg-3 col-md-12 col-sm-12 col-xs-12 left-part">
+                                <div className="row p-1">
+                                    <div className="col-md-6 col-lg-12 col-xs-12 col-sm-6">
+                                        <img className="student-photo" id="stPhoto" />
+                                    </div>
+                                    <div className="col-sm-6 col-xs-12 col-md-6 col-lg-12">
+                                        <input type="file" accept="image/*" id="stImageUpload" onChange={this.getStudentImage} />
+                                        <div>
+                                            <Survey.Survey json={this.ADMISSION_DETAILS} css={leftCss} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-lg-9 col-md-12 col-sm-12 col-xs-12 right-part">
+                                <div>
+                                    <Survey.SurveyCollapseForm json={this.PERSONAL} css={rightCss} />
+                                </div>
+                                <div>
+                                    <Survey.SurveyCollapseForm json={this.ACADEMIC_HISTORY} css={rightCss} />
+                                </div>
+                                <div>
+                                    <Survey.SurveyCollapseForm json={this.DOCUMENTS} css={leftCss} />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        );
+    }
 }
 
 // export default withRouter(
@@ -597,22 +980,22 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
 export default withAdmissionDataCacheLoader(
 
     compose(
-    
-      graphql<AddStudentMutation, AdmissionDataRootProps>(AddStudentMutationGql, {
-        name: "addStudentMutation",
-      }),
-      graphql<AcademicHistoryAddMutationType, AdmissionDataRootProps>(AddAcademicHistoryMutationGql, {
-        name: "addAcademicHistoryMutation",
-      }),
-      graphql<CompetitiveAddMutationType, AdmissionDataRootProps>(AddCompetitiveExamMutationGql, {
-        name: "addCompetitiveExam",
-      }),
-      graphql<DocumentsAddMutationType, AdmissionDataRootProps>(AddDocumentMutationGql, {
-        name: "addDocument",
-      }),
-     
-      
+
+        graphql<AddStudentMutation, AdmissionDataRootProps>(AddStudentMutationGql, {
+            name: "addStudentMutation",
+        }),
+        graphql<AcademicHistoryAddMutationType, AdmissionDataRootProps>(AddAcademicHistoryMutationGql, {
+            name: "addAcademicHistoryMutation",
+        }),
+        graphql<CompetitiveAddMutationType, AdmissionDataRootProps>(AddCompetitiveExamMutationGql, {
+            name: "addCompetitiveExam",
+        }),
+        graphql<DocumentsAddMutationType, AdmissionDataRootProps>(AddDocumentMutationGql, {
+            name: "addDocument",
+        }),
+
+
     )
-  
-      (AddAdmissionPage) as any
-  );
+
+        (AddAdmissionPage) as any
+);
