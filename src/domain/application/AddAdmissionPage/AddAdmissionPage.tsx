@@ -960,7 +960,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                                     <Survey.SurveyCollapseForm json={this.ACADEMIC_HISTORY} css={rightCss} />
                                 </div>
                                 <div>
-                                    <Survey.SurveyCollapseForm json={this.DOCUMENTS} css={leftCss} />
+                                    <Survey.SurveyCollapseForm json={this.DOCUMENTS} css={rightCss} />
                                 </div>
                             </div>
                         </div>
