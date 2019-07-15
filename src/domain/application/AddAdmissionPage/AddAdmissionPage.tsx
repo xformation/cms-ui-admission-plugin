@@ -80,28 +80,7 @@ type EditAdmissionProfileStates = {
     fileName: any,
 };
 
-const leftCss = {
-    root: "form-container",
-    header: "form-header",
-    footer: "panel-footer card-footer text-right",
-    body: "form-body",
-    question: {
-        title: "gf-form-label width-8 m-0",
-        mainRoot: "gf-form",
-    },
-    text: "gf-form-input max-width-22",
-    dropdown:{
-        control: "gf-form-input max-width-22",
-    },
-    navigation: {
-        complete: "btn bs"
-    },
-    error: {
-        root: "error"
-    }
-};
-
-const rightCss = {
+const customCss = {
     root: "form-container",
     header: "form-header",
     footer: "panel-footer card-footer text-right",
@@ -111,7 +90,7 @@ const rightCss = {
         mainRoot: "form-control-container sv_qstn"
     },
     text: "input-form-control",
-    dropdown:{
+    dropdown: {
         control: "select-form-control",
     },
     navigation: {
@@ -405,58 +384,58 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 requiredErrorText: "Please enter Admission No"
             },
             {
-                    type: 'dropdown',
-                    name: 'branch',
-                    title: 'Branch',
-                    requiredErrorText: 'Please enter Branch',
-                    isRequired: true,
-                    startWithNewLine: true,
-                    choices: []
+                type: 'dropdown',
+                name: 'branch',
+                title: 'Branch',
+                requiredErrorText: 'Please enter Branch',
+                isRequired: true,
+                startWithNewLine: true,
+                choices: []
             },
             {
-                    type: 'dropdown',
-                    name: 'department',
-                    title: 'Department',
-                    requiredErrorText: 'Please enter Department',
-                    isRequired: true,
-                    startWithNewLine: true,
-                    choices: []
+                type: 'dropdown',
+                name: 'department',
+                title: 'Department',
+                requiredErrorText: 'Please enter Department',
+                isRequired: true,
+                startWithNewLine: true,
+                choices: []
             },
             {
-                    type: 'dropdown',
-                    name: 'batch',
-                    title: 'Year',
-                    requiredErrorText: 'Please enter Year',
-                    isRequired: true,
-                    startWithNewLine: true,
-                    choices: []
+                type: 'dropdown',
+                name: 'batch',
+                title: 'Year',
+                requiredErrorText: 'Please enter Year',
+                isRequired: true,
+                startWithNewLine: true,
+                choices: []
             },
             {
-                    type: 'dropdown',
-                    name: 'state',
-                    title: 'State',
-                    requiredErrorText: 'Please enter State',
-                    isRequired: true,
-                    startWithNewLine: true,
-                    choices: []
+                type: 'dropdown',
+                name: 'state',
+                title: 'State',
+                requiredErrorText: 'Please enter State',
+                isRequired: true,
+                startWithNewLine: true,
+                choices: []
             },
             {
-                    type: 'dropdown',
-                    name: 'city',
-                    title: 'City',
-                    requiredErrorText: 'Please enter City',
-                    isRequired: true,
-                    startWithNewLine: true,
-                    choices: []
+                type: 'dropdown',
+                name: 'city',
+                title: 'City',
+                requiredErrorText: 'Please enter City',
+                isRequired: true,
+                startWithNewLine: true,
+                choices: []
             },
             {
-                    type: 'dropdown',
-                    name: 'course',
-                    title: 'Course',
-                    requiredErrorText: 'Please enter Course',
-                    isRequired: true,
-                    startWithNewLine: true,
-                    choices: []
+                type: 'dropdown',
+                name: 'course',
+                title: 'Course',
+                requiredErrorText: 'Please enter Course',
+                isRequired: true,
+                startWithNewLine: true,
+                choices: []
             },
         ]
     };
@@ -924,47 +903,45 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
     render() {
         let data = this.createBranches(this.props.data.createAdmissionDataCache.branches);
         console.log("branches", data);
-        Survey.Survey.cssType = "bootstrap";
+        // Survey.Survey.cssType = "bootstrap";
         return (
             <section className="xform-container">
                 <div className="student-profile-container">
-                    <form className="gf-form-group">
-                        <div className="row m-0">
-                            <div className="col-sm-12 col-xs-12 profile-header m-b-2">
-                                <div className="pull-left">Admin - Add Admission</div>
-                                <div className="pull-right">
-                                    <span className="m-r-2 data-saved-message" style={{ fontSize: "13px", color: "#AA0000", display: "none" }}>Data Saved</span>
-                                    <button className="btn bs" type="submit">Save</button>
-                                </div>
+                    <div className="row m-0">
+                        <div className="col-sm-12 col-xs-12 profile-header m-b-2">
+                            <div className="pull-left">Admin - Add Admission</div>
+                            <div className="pull-right">
+                                <span className="m-r-2 data-saved-message" style={{ fontSize: "13px", color: "#AA0000", display: "none" }}>Data Saved</span>
+                                <button className="btn bs" type="submit">Save</button>
                             </div>
                         </div>
-                        <div className="row form-main-container m-0">
-                            <div className="col-lg-3 col-md-12 col-sm-12 col-xs-12 left-part">
-                                <div className="row p-1">
-                                    <div className="col-md-6 col-lg-12 col-xs-12 col-sm-6">
-                                        <img className="student-photo" id="stPhoto" />
-                                    </div>
-                                    <div className="col-sm-6 col-xs-12 col-md-6 col-lg-12">
-                                        <input type="file" accept="image/*" id="stImageUpload" onChange={this.getStudentImage} />
-                                        <div>
-                                            <Survey.Survey json={this.ADMISSION_DETAILS} css={leftCss} />
-                                        </div>
+                    </div>
+                    <div className="row form-main-container m-0">
+                        <div className="col-lg-3 col-md-12 col-sm-12 col-xs-12 left-part grafana-style">
+                            <div className="row p-1">
+                                <div className="col-md-6 col-lg-12 col-xs-12 col-sm-6">
+                                    <img className="student-photo" id="stPhoto" />
+                                </div>
+                                <div className="col-sm-6 col-xs-12 col-md-6 col-lg-12">
+                                    <input type="file" accept="image/*" id="stImageUpload" onChange={this.getStudentImage} />
+                                    <div>
+                                        <Survey.Survey json={this.ADMISSION_DETAILS} css={customCss} />
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-lg-9 col-md-12 col-sm-12 col-xs-12 right-part">
-                                <div>
-                                    <Survey.SurveyCollapseForm json={this.PERSONAL} css={rightCss} />
-                                </div>
-                                <div>
-                                    <Survey.SurveyCollapseForm json={this.ACADEMIC_HISTORY} css={rightCss} />
-                                </div>
-                                <div>
-                                    <Survey.SurveyCollapseForm json={this.DOCUMENTS} css={rightCss} />
-                                </div>
+                        </div>
+                        <div className="col-lg-9 col-md-12 col-sm-12 col-xs-12 right-part custom-style">
+                            <div>
+                                <Survey.SurveyCollapseForm json={this.PERSONAL} css={customCss} />
+                            </div>
+                            <div>
+                                <Survey.SurveyCollapseForm json={this.ACADEMIC_HISTORY} css={customCss} />
+                            </div>
+                            <div>
+                                <Survey.SurveyCollapseForm json={this.DOCUMENTS} css={customCss} />
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </section>
         );
