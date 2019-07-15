@@ -106,12 +106,6 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
         super(props);
         this.state = {
             admissionData: {
-                // college: {
-                //     id: 1801 
-                // },
-                // academicYear: {
-                //     id: 1701  
-                // },
                 department: {
                     id: ""
                 },
@@ -147,6 +141,51 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
         this.createStates = this.createStates.bind(this);
         this.createCities = this.createCities.bind(this);
         this.createCourseOptions = this.createCourseOptions.bind(this);
+        this.onAdmissionDetailsChanged = this.onAdmissionDetailsChanged.bind(this);
+    }
+
+    onAdmissionDetailsChanged(sender: any, options: any){
+        let { admissionData } = this.state;
+        switch (options.name) {
+            case "branch":
+                this.ADMISSION_DETAILS.elements[1].defaultValue = options.value;
+                this.ADMISSION_DETAILS.elements[2].defaultValue = "";
+                this.ADMISSION_DETAILS.elements[3].defaultValue = "";
+                break;
+            case "department":
+                this.ADMISSION_DETAILS.elements[2].defaultValue = options.value;
+                this.ADMISSION_DETAILS.elements[3].defaultValue = "";
+                break;
+            case "batch":
+                this.ADMISSION_DETAILS.elements[3].defaultValue = options.value;
+                break;
+            case "state":
+                this.ADMISSION_DETAILS.elements[4].defaultValue = options.value;
+                this.ADMISSION_DETAILS.elements[5].defaultValue = "";
+                break;
+            case "city":
+                this.ADMISSION_DETAILS.elements[5].defaultValue = options.value;
+                break;
+            case "course":
+                this.ADMISSION_DETAILS.elements[6].defaultValue = options.value;
+                break;
+        }
+        this.forceUpdate();
+    }
+
+    setChoices(){
+        let branches = this.createBranches(this.props.data.createAdmissionDataCache.branches);
+        let departments = this.createDepartments(this.props.data.createAdmissionDataCache.departments, this.ADMISSION_DETAILS.elements[1].defaultValue);
+        let batches = this.createBatches(this.props.data.createAdmissionDataCache.batches, this.ADMISSION_DETAILS.elements[2].defaultValue);
+        let states = this.createStates(this.props.data.createAdmissionDataCache.states);
+        let cities = this.createCities(this.props.data.createAdmissionDataCache.cities, this.ADMISSION_DETAILS.elements[4].defaultValue);
+        let course = this.createCourseOptions(this.props.data.createAdmissionDataCache.courses);
+        this.ADMISSION_DETAILS.elements[1].choices = branches;
+        this.ADMISSION_DETAILS.elements[2].choices = departments;
+        this.ADMISSION_DETAILS.elements[3].choices = batches;
+        this.ADMISSION_DETAILS.elements[4].choices = states;
+        this.ADMISSION_DETAILS.elements[5].choices = cities;
+        this.ADMISSION_DETAILS.elements[6].choices = course;
     }
 
     PERSONAL = {
@@ -370,7 +409,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
         ]
     };
 
-    ADMISSION_DETAILS = {
+    ADMISSION_DETAILS: any = {
         title: "",
         showQuestionNumbers: "off",
         elements: [
@@ -390,7 +429,8 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 requiredErrorText: 'Please enter Branch',
                 isRequired: true,
                 startWithNewLine: true,
-                choices: []
+                choices: [],
+                defaultValue: ""
             },
             {
                 type: 'dropdown',
@@ -399,7 +439,8 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 requiredErrorText: 'Please enter Department',
                 isRequired: true,
                 startWithNewLine: true,
-                choices: []
+                choices: [],
+                defaultValue: ""
             },
             {
                 type: 'dropdown',
@@ -408,7 +449,8 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 requiredErrorText: 'Please enter Year',
                 isRequired: true,
                 startWithNewLine: true,
-                choices: []
+                choices: [],
+                defaultValue: ""
             },
             {
                 type: 'dropdown',
@@ -426,7 +468,8 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 requiredErrorText: 'Please enter City',
                 isRequired: true,
                 startWithNewLine: true,
-                choices: []
+                choices: [],
+                defaultValue: ""
             },
             {
                 type: 'dropdown',
@@ -435,81 +478,87 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 requiredErrorText: 'Please enter Course',
                 isRequired: true,
                 startWithNewLine: true,
-                choices: []
+                choices: [],
+                defaultValue: ""
             },
         ]
     };
 
     createDepartments(departments: any, selectedBranchId: any) {
-        let departmentsOptions = [<option key={0} value="">Select department</option>];
+        let departmentsOptions = [];
         for (let i = 0; i < departments.length; i++) {
             let brId = "" + departments[i].branch.id;
             if (selectedBranchId == brId) {
-                departmentsOptions.push(
-                    <option key={departments[i].id} value={departments[i].id}>{departments[i].name}</option>
-                );
+                departmentsOptions.push({
+                    value: departments[i].id,
+                    text: departments[i].name
+                });
             }
         }
         return departmentsOptions;
     }
 
     createBranches(branches: any) {
-        let branchesOptions = [<option key={0} value="">Select Branch</option>];
+        let branchesOptions = [];
         for (let i = 0; i < branches.length; i++) {
-            branchesOptions.push(
-                <option key={branches[i].id} value={branches[i].id}>{branches[i].branchName}</option>
-            );
+            branchesOptions.push({
+                value: branches[i].id,
+                text: branches[i].branchName
+            });
         }
         return branchesOptions;
     }
 
     createBatches(batches: any, selectedDepartmentId: any) {
-        let batchesOptions = [<option key={0} value="">Select Year</option>];
+        let batchesOptions = [];
         for (let i = 0; i < batches.length; i++) {
             let dptId = "" + batches[i].department.id;
             if (dptId == selectedDepartmentId) {
-                batchesOptions.push(
-                    <option key={batches[i].id} value={batches[i].id}>{batches[i].batch}</option>
-                );
+                batchesOptions.push({
+                    value: batches[i].id,
+                    text: batches[i].batch
+                });
             }
         }
         return batchesOptions;
     }
 
     createStates(states: any) {
-        let statesOptions = [<option key={0} value="">Select State</option>];
+        let statesOptions = [];
         for (let i = 0; i < states.length; i++) {
-            statesOptions.push(
-                <option key={states[i].id} value={states[i].id}>{states[i].branchName}</option>
-            );
+            statesOptions.push({
+                value: states[i].id,
+                text: states[i].stateName
+            });
         }
         return statesOptions;
     }
 
     createCities(cities: any, selectedStateId: any) {
-        let citiesOptions = [<option key={0} value="">Select City</option>];
+        let citiesOptions = [];
         for (let i = 0; i < cities.length; i++) {
             let ctId = "" + cities[i].state.id;
             if (selectedStateId == ctId) {
-                citiesOptions.push(
-                    <option key={cities[i].id} value={cities[i].id}>{cities[i].cityName}</option>
-                );
+                citiesOptions.push({
+                    value: cities[i].id,
+                    text: cities[i].cityName
+                });
             }
         }
         return citiesOptions;
     }
 
     createCourseOptions(courses: any) {
-        let coursesOptions = [<option key={""} value="">Select Course</option>];
+        let coursesOptions = [];
         for (let i = 0; i < courses.length; i++) {
             let course = courses[i];
-            coursesOptions.push(
-                <option key={courses[i].description} value={courses[i].description}>{courses[i].description}</option>
-            );
+            coursesOptions.push({
+                value: courses[i].description,
+                text: courses[i].description
+            });
         }
         return coursesOptions;
     }
-
 
     getStudentImage = (e: any) => {
         const { admissionData } = this.state;
@@ -668,7 +717,6 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
         });
     }
 
-
     saveAcademicHistory = (e: any) => {
         this.setState({
             submitted: true
@@ -752,7 +800,6 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
             return Promise.reject(`Could not save student: ${error}`);
         });
     }
-
 
     render12() {
         const { data: { createAdmissionDataCache, refetch }, addStudentMutation, addAcademicHistoryMutation, addCompetitiveExam, addDocument } = this.props;
@@ -901,9 +948,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
     }
 
     render() {
-        let data = this.createBranches(this.props.data.createAdmissionDataCache.branches);
-        console.log("branches", data);
-        // Survey.Survey.cssType = "bootstrap";
+        this.setChoices();
         return (
             <section className="xform-container">
                 <div className="student-profile-container">
@@ -925,7 +970,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                                 <div className="col-sm-6 col-xs-12 col-md-6 col-lg-12">
                                     <input type="file" accept="image/*" id="stImageUpload" onChange={this.getStudentImage} />
                                     <div>
-                                        <Survey.Survey json={this.ADMISSION_DETAILS} css={customCss} />
+                                        <Survey.Survey onValueChanged = {this.onAdmissionDetailsChanged} json={this.ADMISSION_DETAILS} css={customCss} />
                                     </div>
                                 </div>
                             </div>
