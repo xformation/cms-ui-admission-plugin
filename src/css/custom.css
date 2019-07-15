@@ -158,8 +158,8 @@
     display: flex;
     -ms-flex-direction: row;
     flex-direction: row;
-    -ms-flex-align: center;
-    align-items: center;
+    -ms-flex-align: flex-end;
+    align-items: flex-end;
     text-align: left;
     position: relative;
     overflow: visible;
@@ -167,15 +167,4 @@
 
 .grafana-style .form-control-container > div:last-child{
     width: 100%;
-}
-
-.grafana-style .error{
-    position: relative;
-    top: -10px;
-}
-
-.grafana-style .error + div .select-form-control,
-.grafana-style .error + .input-form-control{
-    position: relative;
-    top: -10px;
 }
