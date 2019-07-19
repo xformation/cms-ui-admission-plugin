@@ -83,6 +83,8 @@ type EditAdmissionProfileStates = {
 const customCss = {
     root: "form-container",
     header: "form-header",
+    headerError: "form-header-error",
+    headerNoError: "form-header-success",
     footer: "panel-footer card-footer text-right",
     body: "form-body",
     question: {

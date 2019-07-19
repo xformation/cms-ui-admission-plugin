@@ -103,6 +103,20 @@
     margin-bottom: 10px;
 }
 
+
+.xform-container .form-header-error{
+    background-color: #d44939 !important;
+}
+
+.xform-container .form-header-success{
+    background-color: #84bf48 !important;
+}
+
+.xform-container .form-header-error h3,
+.xform-container .form-header-success h3{
+    color: white !important;
+}
+
 @media (max-width: 991px) {
     .xform-container .right-part {
         border-left: none;
