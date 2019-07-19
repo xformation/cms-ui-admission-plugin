@@ -279,6 +279,28 @@ export type AdmissionEnquiryCountQueryType = {
   };
 };
 
+export type AdmissionApplicationCountQueryType = {
+  getAdmissionApplicationData: {
+    totalReceived: number;
+    totalInprocess: number;
+    totalDeclined: number;
+    totalAccepted: number;
+  };
+};
+
+export type SearchAdmissionApplicationOnTypeListType = {
+  searchAdmissionApplicationOnType: {
+    id: number;
+    admissionStatus: string;
+    course: string;
+    comments: string;
+    strAdmissionDate: string;
+    student: {
+      studentName: string;
+    };
+  };
+};
+
 export type SearchAdmissionOnTypeListType = {
   searchAdmissionOnType: {
     id: number;

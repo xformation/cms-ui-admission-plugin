@@ -2,8 +2,8 @@ import * as React from 'react';
 import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import { graphql, QueryProps, MutationFunc, compose } from 'react-apollo';
 
-import * as AdmissionEnquiryListQueryGql from './SearchAdmissionOnType.graphql';
-import { SearchAdmissionOnTypeListType, AdmissionEnquiryCountQueryType } from '../../types';
+import * as AdmissionApplicationListQueryGql from './SearchAdmissionApplicationOnType.graphql';
+import { SearchAdmissionApplicationOnTypeListType, AdmissionApplicationCountQueryType } from '../../types';
 import widthAdmissionDataloader from './withAdmissionDataloader';
 
 const w180 = {
@@ -12,17 +12,17 @@ const w180 = {
 };
 
 type AdmissionDataRootProps = RouteComponentProps<{
-  branchId: string;
+  academicyearId: string;
 }> & {
-  data: QueryProps & AdmissionEnquiryCountQueryType;
+  data: QueryProps & AdmissionApplicationCountQueryType;
 };
 
 type AdmissionDataPageProps = AdmissionDataRootProps & {
-  mutate: MutationFunc<SearchAdmissionOnTypeListType>
+  mutate: MutationFunc<SearchAdmissionApplicationOnTypeListType>
 };
 
 type AdmissionDataState = {
-  admissionEnquiryData: any
+  admissionApplicationData: any
 }
 
 
@@ -82,12 +82,12 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
   constructor(props: any) {
     super(props);
     this.state = {
-      admissionEnquiryData: {
-        branch: {
-          id: 1851 //1001
+      admissionApplicationData: {
+        academicyear: {
+          id: 1004 // 1851 //1001
         },
         mutateResult: [],
-        enquiryData: {}
+        applicationData: {}
       }
 
     };
@@ -96,7 +96,7 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
     this.onClickCheckbox = this.onClickCheckbox.bind(this);
     this.createNoRecordMessage = this.createNoRecordMessage.bind(this);
     this.showDetail = this.showDetail.bind(this);
-    this.createDetailsDiv = this.createDetailsDiv.bind(this);
+    // this.createDetailsDiv = this.createDetailsDiv.bind(this);
     this.back = this.back.bind(this);
   }
 
@@ -107,8 +107,8 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
   }
 
   checkAllAdmissions(e: any) {
-    const { admissionEnquiryData } = this.state;
-    const mutateResLength = admissionEnquiryData.mutateResult.length;
+    const { admissionApplicationData } = this.state;
+    const mutateResLength = admissionApplicationData.mutateResult.length;
     let chkAll = e.nativeEvent.target.checked;
     let els = document.querySelectorAll("input[type=checkbox]");
 
@@ -126,7 +126,7 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
     const retVal = [];
     for (let x = 0; x < mutateResLength; x++) {
       const tempObj = objAry[x];
-      const admissionArray = tempObj.data.searchAdmissionOnType;
+      const admissionArray = tempObj.data.searchAdmissionApplicationOnType;
       const length = admissionArray.length;
       if (length === 0) {
         retVal.push(
@@ -142,23 +142,23 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
     const retVal = [];
     for (let x = 0; x < mutateResLength; x++) {
       const tempObj = objAry[x];
-      const admissionArray = tempObj.data.searchAdmissionOnType;
+      const admissionArray = tempObj.data.searchAdmissionApplicationOnType;
       const length = admissionArray.length;
       for (let i = 0; i < length; i++) {
-        const admissionEnquiry = admissionArray[i];
+        const admissionApplication = admissionArray[i];
         retVal.push(
           <tr >
             <td>
-              <input onClick={(e: any) => this.onClickCheckbox(i, e)} checked={admissionEnquiry.isChecked} type="checkbox" name="" id={"chk" + admissionEnquiry.id} />
+              <input onClick={(e: any) => this.onClickCheckbox(i, e)} checked={admissionApplication.isChecked} type="checkbox" name="" id={"chk" + admissionApplication.id} />
             </td>
-            <td>{admissionEnquiry.id}</td>
-            <td>{admissionEnquiry.studentName}</td>
-            <td>{admissionEnquiry.mobileNumber}</td>
-            <td>{admissionEnquiry.status}</td>
-            <td>{admissionEnquiry.strEnquiryDate}</td>
+            <td>{admissionApplication.id}</td>
+            <td>{admissionApplication.admissionStatus}</td>
+            <td>{admissionApplication.course}</td>
+            <td>{admissionApplication.comments}</td>
+            <td>{admissionApplication.strAdmissionDate}</td>
             <td>
 
-              <button className="btn btn-primary" onClick={e => this.showDetail(admissionEnquiry)}>Details</button></td>
+              <button className="btn btn-primary" onClick={e => this.showDetail(admissionApplication)}>Details</button></td>
 
           </tr>
         );
@@ -169,10 +169,10 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
   }
 
   showDetail(obj: any) {
-    const { admissionEnquiryData } = this.state;
-    admissionEnquiryData.enquiryData = obj;
+    const { admissionApplicationData } = this.state;
+    admissionApplicationData.applicationData = obj;
     this.setState({
-      admissionEnquiryData: admissionEnquiryData
+      admissionApplicationData: admissionApplicationData
     });
 
     let detailDiv: any = document.querySelector("#admissionDetailShow");
@@ -383,35 +383,35 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
   onClick = (e: any) => {
     const { name, value } = e.nativeEvent.target;
     const { mutate } = this.props;
-    const { admissionEnquiryData } = this.state;
+    const { admissionApplicationData } = this.state;
     e.preventDefault();
     let admType = "";
     if (name === "btnTotalReceived") {
       admType = "RECEIVED"
-    } else if (name === "btnFollowup") {
-      admType = "FOLLOWUP"
+    } else if (name === "btnInprocess") {
+      admType = "INPROCESS"
     } else if (name === "btnDeclined") {
       admType = "DECLINED"
-    } else if (name === "btnConverted") {
-      admType = "CONVERTED"
+    } else if (name === "btnAccepted") {
+      admType = "ACCEPTED"
     }
     this.back();
     let btn: any = document.querySelector("#" + name);
     btn.setAttribute("disabled", true);
     return mutate({
       variables: {
-        admissionEnquiryType: admType,
-        branchId: admissionEnquiryData.branch.id,
+        admissionApplicationType: admType,
+        academicyearId: admissionApplicationData.academicyear.id,
       },
     }).then(data => {
       btn.removeAttribute("disabled");
       const aet = data;
-      admissionEnquiryData.mutateResult = [];
-      admissionEnquiryData.mutateResult.push(aet);
+      admissionApplicationData.mutateResult = [];
+      admissionApplicationData.mutateResult.push(aet);
       this.setState({
-        admissionEnquiryData: admissionEnquiryData
+        admissionApplicationData: admissionApplicationData
       });
-      console.log('Admission result :  ', admissionEnquiryData.mutateResult);
+      console.log('Admission result :  ', admissionApplicationData.mutateResult);
     }).catch((error: any) => {
       btn.removeAttribute("disabled");
       console.log('there was an error sending the admission mutation result ', error);
@@ -421,7 +421,7 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
   }
 
   render() {
-    const { admissionEnquiryData } = this.state;
+    const { admissionApplicationData } = this.state;
     return (
       <section className="border">
         <h3 className="bg-heading-admission p-1 mb-1">
@@ -431,21 +431,21 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
         <div className="inDashboard p-1">
           <div className="invoiceDashboard">
             <div className="invoiceHeader">
-              <h6 className="center">Total Enquiry</h6>
+              <h6 className="center">Received</h6>
               <a href=""><span className="ti-close m-r-1"></span></a>
               <a href=""><span className="ti-download"></span></a>
             </div>
-            <h2 className="fee-red"><strong>{this.props.data.getAdmissionData.totalAdmissions}</strong></h2>
+            <h2 className="fee-red"><strong>{this.props.data.getAdmissionApplicationData.totalReceived}</strong></h2>
             <button className="center btn btn-primary w50 p05 remainder" id="btnTotalReceived" name="btnTotalReceived" onClick={this.onClick}>View Info</button>
           </div>
           <div className="invoiceDashboard">
             <div className="invoiceHeader">
-              <h6 className="center">Follow Up</h6>
+              <h6 className="center">Inprocess</h6>
               <a href=""><span className="ti-close m-r-1"></span></a>
               <a href=""><span className="ti-download"></span></a>
             </div>
-            <h2 className="fee-red"><strong>{this.props.data.getAdmissionData.totalFollowup}</strong></h2>
-            <button className="center btn btn-primary w50 p05 remainder" id="btnFollowup" name="btnFollowup" onClick={this.onClick}>View Info</button>
+            <h2 className="fee-red"><strong>{this.props.data.getAdmissionApplicationData.totalInprocess}</strong></h2>
+            <button className="center btn btn-primary w50 p05 remainder" id="btnInprocess" name="btnInprocess" onClick={this.onClick}>View Info</button>
           </div>
           <div className="invoiceDashboard">
             <div className="invoiceHeader">
@@ -453,17 +453,19 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
               <a href=""><span className="ti-close m-r-1 "></span></a>
               <a href=""><span className="ti-download"></span></a>
             </div>
-            <h2 className="fee-orange"><strong>{this.props.data.getAdmissionData.totalDeclined}</strong></h2>
+            <h2 className="fee-orange"><strong>{this.props.data.getAdmissionApplicationData.totalDeclined}</strong></h2>
             <button className="center btn btn-primary w50 p05 remainder" id="btnDeclined" name="btnDeclined" onClick={this.onClick}>View Info</button>
+            {/* <button className="center btn btn-primary w50 p05 remainder" id="btnDeclined" name="btnDeclined" onClick={this.onClick}>View Info</button> */}
           </div>
           <div className="invoiceDashboard">
             <div className="invoiceHeader">
-              <h6 className="center">Converted</h6>
+              <h6 className="center">Accepted</h6>
               <a href=""><span className="ti-close m-r-1"></span></a>
               <a href=""><span className="ti-download"></span></a>
             </div>
-            <h2 className="fee-red"><strong>{this.props.data.getAdmissionData.totalConverted}</strong></h2>
-            <button className="center btn btn-primary w50 p05 remainder" id="btnConverted" name="btnConverted" onClick={this.onClick}>View Info</button>
+            <h2 className="fee-red"><strong>{this.props.data.getAdmissionApplicationData.totalAccepted}</strong></h2>
+            <button className="center btn btn-primary w50 p05 remainder" id="btnAccepted" name="btnAccepted" onClick={this.onClick}>View Info</button>
+            {/* <button className="center btn btn-primary w50 p05 remainder" id="btnConverted" name="btnConverted" onClick={this.onClick}>View Info</button> */}
 
           </div>
         </div>
@@ -487,16 +489,17 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
             </thead>
             <tbody>
               {
-                this.createAdmissionRows(this.state.admissionEnquiryData.mutateResult)
+                this.createAdmissionRows(this.state.admissionApplicationData.mutateResult)
               }
             </tbody>
           </table>
+
           {
-            this.createNoRecordMessage(this.state.admissionEnquiryData.mutateResult)
+            this.createNoRecordMessage(this.state.admissionApplicationData.mutateResult)
           }
         </div>
         {
-          this.createDetailsDiv(admissionEnquiryData.enquiryData)
+          this.createDetailsDiv(admissionApplicationData.applicationData)
         }
 
         <div className="hide" id="backDiv">
@@ -513,7 +516,7 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
 
 export default widthAdmissionDataloader(
   compose(
-    graphql<SearchAdmissionOnTypeListType, AdmissionDataRootProps>(AdmissionEnquiryListQueryGql, {
+    graphql<SearchAdmissionApplicationOnTypeListType, AdmissionDataRootProps>(AdmissionApplicationListQueryGql, {
       name: "mutate"
     })
   )

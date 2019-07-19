@@ -18,7 +18,7 @@ export default function init() {
       <ApolloProvider client={graphQLClient}>
         <BrowserRouter>
           <Switch>
-            <Route path="/plugins/xformation-cms-admission-panel/page/applications" component={AdmissionApplicationPage} />
+            <Route path="/plugins/ems-admission/page/applications" component={AdmissionApplicationPage} />
           </Switch>
         </BrowserRouter>
       </ApolloProvider>,

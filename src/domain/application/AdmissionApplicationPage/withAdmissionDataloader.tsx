@@ -1,23 +1,23 @@
-    
+
 import { RouteComponentProps } from 'react-router-dom';
 import { graphql, QueryProps } from "react-apollo";
-import * as GetAdmissionDataGql from './GetAdmissionData.graphql';
-import { ReactFunctionOrComponentClass, AdmissionEnquiryCountQueryType } from '../../types';
+import * as GetAdmissionApplicationDataGql from './GetAdmissionApplicationData.graphql';
+import { ReactFunctionOrComponentClass, AdmissionApplicationCountQueryType } from '../../types';
 import withLoadingHandler from '../../../components/withLoadingHandler';
 
 type withAdmissionCountPageDataLoaderProps = RouteComponentProps<{
-  branchId: string;
+  academicyearId: string;
 }>;
 
 type TargetComponentProps = {
-  data: QueryProps & AdmissionEnquiryCountQueryType;
+  data: QueryProps & AdmissionApplicationCountQueryType;
 };
 
 const withAdmissionDataloader = (TargetComponent: ReactFunctionOrComponentClass<TargetComponentProps>) => {
-  return graphql<AdmissionEnquiryCountQueryType, withAdmissionCountPageDataLoaderProps, TargetComponentProps>(GetAdmissionDataGql, {
+  return graphql<AdmissionApplicationCountQueryType, withAdmissionCountPageDataLoaderProps, TargetComponentProps>(GetAdmissionApplicationDataGql, {
     options: ({ match }) => ({
       variables: {
-        branchId: 1851
+        academicyearId: 1004
       }
     })
   })(withLoadingHandler(TargetComponent));

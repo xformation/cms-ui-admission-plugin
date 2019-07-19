@@ -1,0 +1,12 @@
+mutation searchAdmissionApplicationOnType($admissionApplicationType:String, $academicyearId:Long ){
+searchAdmissionApplicationOnType(admissionApplicationType:$admissionApplicationType,academicyearId:$academicyearId){
+id
+admissionStatus
+course
+comments
+strAdmissionDate
+student{
+id
+}
+    }
+  }

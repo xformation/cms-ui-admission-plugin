@@ -1,7 +1,7 @@
 {
   "type": "app",
   "name": "Admission",
-  "id": "xformation-cms-admission-panel",
+  "id": "ems-admission",
   "css": {
     "dark": "css/dark.css",
     "light": "css/light.css"

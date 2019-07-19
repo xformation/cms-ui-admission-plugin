@@ -430,7 +430,7 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
         </h3>
         {/* <div>
       <Link
-                to={`/plugins/xformation-cms-admission-panel/page/addadmission`}
+                to={`/plugins/ems-admission/page/addadmission`}
                 className="btn btn-primary" style={w180}>Create New Admission
                 </Link>
 

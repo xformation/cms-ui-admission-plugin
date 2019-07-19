@@ -17,7 +17,7 @@ export default function init() {
         <BrowserRouter>
           <Switch>
             <Route
-              path="/plugins/xformation-cms-admission-panel/page/applications"
+              path="/plugins/ems-admission/page/applications"
               component={AdmissionApplicationPage}
             />
             <Route
