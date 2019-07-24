@@ -1,12 +1,10 @@
 mutation searchAdmissionApplicationOnType($admissionApplicationType:String, $academicyearId:Long ){
 searchAdmissionApplicationOnType(admissionApplicationType:$admissionApplicationType,academicyearId:$academicyearId){
 id
-admissionStatus
+studentName
 course
+# admissionStatus
 comments
 strAdmissionDate
-student{
-id
-}
     }
   }

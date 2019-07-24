@@ -17,7 +17,7 @@ const withAdmissionDataloader = (TargetComponent: ReactFunctionOrComponentClass<
   return graphql<AdmissionApplicationCountQueryType, withAdmissionCountPageDataLoaderProps, TargetComponentProps>(GetAdmissionApplicationDataGql, {
     options: ({ match }) => ({
       variables: {
-        academicyearId: 1004
+        academicyearId: 1701
       }
     })
   })(withLoadingHandler(TargetComponent));

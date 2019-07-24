@@ -84,7 +84,7 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
     this.state = {
       admissionApplicationData: {
         academicyear: {
-          id: 1004 // 1851 //1001
+          id: 1701 // 1851 //1001
         },
         mutateResult: [],
         applicationData: {}
@@ -147,12 +147,12 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
       for (let i = 0; i < length; i++) {
         const admissionApplication = admissionArray[i];
         retVal.push(
-          <tr >
+          <tr key={admissionApplication.id}>
             <td>
               <input onClick={(e: any) => this.onClickCheckbox(i, e)} checked={admissionApplication.isChecked} type="checkbox" name="" id={"chk" + admissionApplication.id} />
             </td>
             <td>{admissionApplication.id}</td>
-            <td>{admissionApplication.admissionStatus}</td>
+            <td>{admissionApplication.studentName}</td>
             <td>{admissionApplication.course}</td>
             <td>{admissionApplication.comments}</td>
             <td>{admissionApplication.strAdmissionDate}</td>
@@ -345,10 +345,7 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
                         <span className="profile-label w-12">
                           Alternate Contact Number
           </span>
-                        {/* {obj.admissionApplication !== undefined && (
 
-                          <span >{obj.admissionApplication.student.alternateContactNumber}</span>
-                        )} */}
                         <span className="">{obj.alternateMobileNumber}</span>
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
@@ -479,7 +476,7 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
                 <th>
                   <input type="checkbox" onClick={(e: any) => this.checkAllAdmissions(e)} value="checkedall" name="" id="chkCheckedAll" />
                 </th>
-                <th>Enquiry ID</th>
+                <th>Admission ID</th>
                 <th>Name</th>
                 <th>Contact</th>
                 <th>Status</th>

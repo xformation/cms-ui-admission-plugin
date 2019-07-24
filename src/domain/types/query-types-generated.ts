@@ -291,13 +291,11 @@ export type AdmissionApplicationCountQueryType = {
 export type SearchAdmissionApplicationOnTypeListType = {
   searchAdmissionApplicationOnType: {
     id: number;
+    studentName: string;
     admissionStatus: string;
     course: string;
     comments: string;
     strAdmissionDate: string;
-    student: {
-      studentName: string;
-    };
   };
 };
 
