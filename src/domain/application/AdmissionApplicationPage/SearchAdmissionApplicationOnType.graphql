@@ -3,8 +3,8 @@ searchAdmissionApplicationOnType(admissionApplicationType:$admissionApplicationT
 id
 studentName
 course
-# admissionStatus
-comments
+admissionStatus
+# comments
 strAdmissionDate
     }
   }

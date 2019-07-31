@@ -154,7 +154,7 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
             <td>{admissionApplication.id}</td>
             <td>{admissionApplication.studentName}</td>
             <td>{admissionApplication.course}</td>
-            <td>{admissionApplication.comments}</td>
+            <td>{admissionApplication.admissionStatus}</td>
             <td>{admissionApplication.strAdmissionDate}</td>
             <td>
 

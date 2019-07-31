@@ -303,7 +303,7 @@ export type SearchAdmissionOnTypeListType = {
   searchAdmissionOnType: {
     id: number;
     studentName: string;
-    mobileNumber: string;
+    contactNumber: string;
     status: string;
     alternateMobileNumber: string;
     email: string;
@@ -321,21 +321,21 @@ export type SearchAdmissionOnTypeListType = {
         };
       };
     };
-    admissionApplication: {
-      admissionStatus: any;
-      student: {
-        studentMiddleName: string;
-        studentLastName: string;
-        fatherName: string;
-        fatherLastName: string;
-        motherName: string;
-        motherMiddleName: string;
-        motherLastName: string;
-        dateOfBirth: string;
-        sex: string;
-        alternateContactNumber: string;
-      };
-    };
+    // admissionApplication: {
+    //   admissionStatus: any;
+    //   student: {
+    //     studentMiddleName: string;
+    //     studentLastName: string;
+    //     fatherName: string;
+    //     fatherLastName: string;
+    //     motherName: string;
+    //     motherMiddleName: string;
+    //     motherLastName: string;
+    //     dateOfBirth: string;
+    //     sex: string;
+    //     alternateContactNumber: string;
+    //   };
+    // };
   };
 };
 

@@ -2,7 +2,7 @@ mutation searchAdmissionOnType($admissionEnquiryType:String, $branchId:Long ){
   searchAdmissionOnType(admissionEnquiryType:$admissionEnquiryType,branchId:$branchId){
     id,
     studentName,
-    mobileNumber,
+    contactNumber,
     status,
 
     alternateMobileNumber,
@@ -22,21 +22,21 @@ mutation searchAdmissionOnType($admissionEnquiryType:String, $branchId:Long ){
       }
 
     }
-    admissionApplication{
-      admissionStatus,
-      student{
-        studentMiddleName,
-        studentLastName,
-        fatherName,
-        fatherMiddleName,
-        fatherLastName,
-        motherName,
-        motherMiddleName,
-        motherLastName,
-        dateOfBirth,
-        sex,
-        alternateContactNumber
-      }
-    }
+    # admissionApplication{
+    #   admissionStatus,
+    #   student{
+    #     studentMiddleName,
+    #     studentLastName,
+    #     fatherName,
+    #     fatherMiddleName,
+    #     fatherLastName,
+    #     motherName,
+    #     motherMiddleName,
+    #     motherLastName,
+    #     dateOfBirth,
+    #     sex,
+    #     alternateContactNumber
+    #   }
+    # }
   }
 }

@@ -153,7 +153,7 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
             </td>
             <td>{admissionEnquiry.id}</td>
             <td>{admissionEnquiry.studentName}</td>
-            <td>{admissionEnquiry.mobileNumber}</td>
+            <td>{admissionEnquiry.contactNumber}</td>
             <td>{admissionEnquiry.status}</td>
             <td>{admissionEnquiry.strEnquiryDate}</td>
             <td>
@@ -229,49 +229,34 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-12">
                           Middle Name:
-        </span>
-                        {obj.admissionApplication !== undefined && (
-
-                          <span >{obj.admissionApplication.student.studentMiddleName}</span>
-                        )}
+                        </span>
+                        <span >{obj.studentMiddleName}</span>
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-10">
                           Last Name: </span>
-                        {obj.admissionApplication !== undefined && (
-
-                          <span >{obj.admissionApplication.student.studentLastName}</span>
-                        )}
-
+                        <span >{obj.studentLastName}</span>
                       </div>
                     </div>
                     <div className="row">
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-8">
                           Father's Name:
-        </span>
-                        {obj.admissionApplication !== undefined && (
-
-                          <span >{obj.admissionApplication.student.fatherName}</span>
+                           </span>
+                        <span >{obj.fatherName}</span>
                         )}
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-12">
                           Father's Middle Name:
         </span>
-                        {obj.admissionApplication !== undefined && (
-
-                          <span >{obj.admissionApplication.student.fatherMiddleName}</span>
-                        )}
+                        <span >{obj.fatherMiddleName}</span>
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-10">
                           Father's Last Name
         </span>
-                        {obj.admissionApplication !== undefined && (
-
-                          <span >{obj.admissionApplication.student.fatherLastName}</span>
-                        )}
+                        <span >{obj.fatherLastName}</span>
                       </div>
                     </div>
                     <div className="row">
@@ -279,28 +264,19 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
                         <span className="profile-label w-8">
                           Mother's Name:
         </span>
-                        {obj.admissionApplication !== undefined && (
-
-                          <span >{obj.admissionApplication.student.motherName}</span>
-                        )}
+                        <span >{obj.motherName}</span>
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-12">
                           Mother's Middle Name:
         </span>
-                        {obj.admissionApplication !== undefined && (
-
-                          <span >{obj.admissionApplication.student.motherMiddleName}</span>
-                        )}
+                        <span >{obj.motherMiddleName}</span>
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-10">
                           Mother's Last Name
         </span>
-                        {obj.admissionApplication !== undefined && (
-
-                          <span >{obj.admissionApplication.student.motherLastName}</span>
-                        )}
+                        <span >{obj.motherLastName}</span>
                       </div>
                     </div>
                   </div>
@@ -310,19 +286,13 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
                         <span className="profile-label w-8">
                           Date Of Birth
           </span>
-                        {obj.admissionApplication !== undefined && (
-
-                          <span>{obj.admissionApplication.student.dateOfBirth}</span>
-                        )}
+                        <span>{obj.dateOfBirth}</span>
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-12">
                           Sex
           </span>
-                        {obj.admissionApplication !== undefined && (
-
-                          <span >{obj.admissionApplication.student.sex}</span>
-                        )}
+                        <span >{obj.sex}</span>
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-10">
@@ -339,7 +309,7 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
                         <span className="profile-label w-8">
                           Contact Number
           </span>
-                        <span className="">{obj.mobileNumber}</span>
+                        <span className="">{obj.contactNumber}</span>
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-12">
