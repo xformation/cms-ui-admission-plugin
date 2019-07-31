@@ -292,6 +292,18 @@ export type SearchAdmissionApplicationOnTypeListType = {
   searchAdmissionApplicationOnType: {
     id: number;
     studentName: string;
+    studentMiddleName: String;
+    studentLastName: string;
+    fatherName: string;
+    fatherMiddleName: string;
+    fatherLastName: string;
+    motherName: string;
+    motherMiddleName: string;
+    motherLastName: string;
+    contactNumber: string;
+    alternateMobileNumber: string;
+    email: string;
+    sex: string;
     admissionStatus: string;
     course: string;
     comments: string;
