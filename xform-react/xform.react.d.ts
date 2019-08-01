@@ -477,7 +477,6 @@ export declare var defaultBootstrapMaterialCss: {
 export declare class Survey extends SurveyElementBase implements ISurveyCreator {
     static cssType: string;
     protected survey: ReactSurveyModel;
-    protected mergedCss: any;
     constructor(props: any);
     componentWillReceiveProps(nextProps: any): void;
     componentDidUpdate(): void;
@@ -512,6 +511,7 @@ export declare class SurveyCollapseForm extends Survey {
     toggleForm(): void;
     doRender(): JSX.Element;
     renderTitle(): JSX.Element;
+    protected setSurveyEvents(newProps: any): void;
 }
 
 export declare class ReactSurveyModel extends SurveyModel {
