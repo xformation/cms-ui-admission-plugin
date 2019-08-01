@@ -1,6 +1,6 @@
 import { RouteComponentProps } from 'react-router-dom';
 import { graphql, QueryProps } from "react-apollo";
-import * as LoadAdmissionDataCacheQueryGql from './LoadAdmissionDataCacheQuery.graphql';
+import * as LoadAdmissionDataCacheQueryGql from './_queries/LoadAdmissionDataCacheQuery.graphql';
 import {ReactFunctionOrComponentClass, LoadAdmissionDataCacheType} from '../../types';
 import withLoadingHandler from '../../../components/withLoadingHandler';
 

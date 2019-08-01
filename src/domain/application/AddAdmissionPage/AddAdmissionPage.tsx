@@ -4,29 +4,15 @@ import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import * as Survey from "xform-react";
 import "xform-react/xform.min.css";
 
-import * as AddStudentMutationGql from './AddStudentMutation.graphql'
-import * as AddAdmissionMutationGql from './AddAdmissionMutation.graphql';
-import * as AddCompetitiveExamMutationGql from './AddCompetitiveExamMutation.graphql';
-import * as AddDocumentMutationGql from './AddDocumentMutation.graphql';
-import * as AddAcademicHistoryMutationGql from './AddAcademicHistoryMutation.graphql';
-import PersonalData from './PersonalData';
-import AcademicHistory from './AcademicHistory';
-import Document from './Document';
+import * as AddDocumentMutationGql from './_queries/AddDocumentMutation.graphql';
+import * as AddAcademicHistoryMutationGql from './_queries/AddAcademicHistoryMutation.graphql';
+import * as AddPersonalDataMutationGql from './_queries/AddPersonalDataMutation.graphql';
 // import { AdmissionServices } from './_services';
 import {
     LoadAdmissionDataCacheType,
-    AddStudentMutation,
     AcademicHistoryAddMutationType,
-    CompetitiveAddMutationType,
-    AddAdmissionMutation,
     DocumentsAddMutationType,
-    AddAcademicHistoryInput,
-    AddCompetitiveExamInput,
-    AddDocumentsInput,
-    AddAdmissionInput,
-    AddStudentInput,
-    AddStudentMutationVariables,
-    StudentData,
+    AddAdmissionPersonalDetailsMutationType
 } from '../../types';
 
 // import withLoadingHandler from '../../../components/withLoadingHandler';
@@ -40,11 +26,9 @@ type AdmissionDataRootProps = RouteComponentProps<{
     }
 
 type AddAdmissionPageProps = AdmissionDataRootProps & {
-    addStudentMutation: MutationFunc<AddStudentMutation>;
     addAcademicHistoryMutation: MutationFunc<AcademicHistoryAddMutationType>;
-    addCompetitiveExam: MutationFunc<CompetitiveAddMutationType>;
     addDocument: MutationFunc<DocumentsAddMutationType>;
-    addAdmissionMutation: MutationFunc<AddAdmissionMutation>;
+    addPersonalDataMutation: MutationFunc<AddAdmissionPersonalDetailsMutationType>;
 };
 
 function onClickHeader(e: any) {
@@ -104,6 +88,10 @@ const customCss = {
 };
 
 class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmissionProfileStates>{
+    personalFormRef: any;
+    academicHistoryFormRef: any;
+    documentsFormRef: any;
+    admissionFormRef: any;
     constructor(props: AddAdmissionPageProps) {
         super(props);
         this.state = {
@@ -144,6 +132,19 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
         this.createCities = this.createCities.bind(this);
         this.createCourseOptions = this.createCourseOptions.bind(this);
         this.onAdmissionDetailsChanged = this.onAdmissionDetailsChanged.bind(this);
+        this.onCompletePersonalForm = this.onCompletePersonalForm.bind(this);
+        this.onCompleteAcademicHistoryForm = this.onCompleteAcademicHistoryForm.bind(this);
+        this.saveAllForm = this.saveAllForm.bind(this);
+        this.personalFormRef = React.createRef();
+        this.academicHistoryFormRef = React.createRef();
+        this.documentsFormRef = React.createRef();
+        this.admissionFormRef = React.createRef();
+    }
+
+    saveAllForm(){
+        console.log(this.personalFormRef);
+        this.personalFormRef.current.survey.completeLastPage();
+        this.academicHistoryFormRef.current.survey.completeLastPage();
     }
 
     onAdmissionDetailsChanged(sender: any, options: any){
@@ -269,6 +270,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
 
             {
                 type: "text",
+                inputType: "date",
                 name: 'dateOfBirth',
                 title: 'Date Of Birth',
                 requiredErrorText: 'Please enter Date Of Birth',
@@ -299,7 +301,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
             },
             {
                 type: "text",
-                name: 'studentContactNumber',
+                name: 'contactNumber',
                 title: 'Student Contact Number',
                 requiredErrorText: 'Please enter Student Contact Number',
                 isRequired: true,
@@ -307,7 +309,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
             },
             {
                 type: "text",
-                name: 'alternateContactNumber',
+                name: 'alternateMobileNumber',
                 title: 'Alternate Contact Number',
                 requiredErrorText: 'Please enter Alternate Contact Number',
                 isRequired: true,
@@ -315,7 +317,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
             },
             {
                 type: "text",
-                name: 'studentEmailAddress',
+                name: 'email',
                 title: 'Student Email',
                 requiredErrorText: 'Please enter Student Email',
                 isRequired: true,
@@ -371,17 +373,17 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
             },
             {
                 type: 'text',
-                name: 'testName',
-                title: 'Exam Name',
-                requiredErrorText: "Please enter Exam Name",
+                name: 'score',
+                title: 'Score',
+                requiredErrorText: "Please enter Score",
                 isRequired: true,
                 startWithNewLine: false,
             },
             {
                 type: 'text',
-                name: 'testScore',
-                title: 'Score',
-                requiredErrorText: "Please enter Score",
+                name: 'percentage',
+                title: 'Percentage',
+                requiredErrorText: "Please enter Percentage",
                 isRequired: true,
                 startWithNewLine: false,
             },
@@ -577,376 +579,39 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
         })
     }
 
-    onChange = (e: any) => {
-        const { name, value } = e.nativeEvent.target;
-        const { admissionData } = this.state;
-        if (name === "branch") {
-            this.setState({
-                admissionData: {
-                    ...admissionData,
-                    branch: {
-                        id: value
-                    },
-                    department: {
-                        id: ""
-                    },
-                    batch: {
-                        id: ""
-                    },
-                    state: {
-                        id: ""
-                    },
-                    city: {
-                        id: ""
-                    },
-                    course: {
-                        id: ""
-                    }
+    onCompletePersonalForm(result:any){
+        result.clear(false, true);
+        const { addPersonalDataMutation } = this.props;
+        return addPersonalDataMutation({
+            variables: { input: {
+                    ...result.data,
+                    countryId: 951
                 }
-            });
-        } else if (name === "department") {
-            this.setState({
-                admissionData: {
-                    ...admissionData,
-                    department: {
-                        id: value
-                    },
-                    batch: {
-                        id: ""
-                    },
-                    state: {
-                        id: ""
-                    },
-                    city: {
-                        id: ""
-                    },
-                    course: {
-                        id: ""
-                    }
-                }
-            });
-        } else if (name === "batch") {
-            this.setState({
-                admissionData: {
-                    ...admissionData,
-                    batch: {
-                        id: ""
-                    },
-                    state: {
-                        id: ""
-                    },
-                    city: {
-                        id: ""
-                    },
-                    course: {
-                        id: ""
-                    }
-                }
-            });
-        } else if (name === "state") {
-            this.setState({
-                admissionData: {
-                    ...admissionData,
-                    state: {
-                        id: ""
-                    },
-                    city: {
-                        id: ""
-                    },
-                    course: {
-                        id: ""
-                    }
-                }
-            });
-        } else if (name === "city") {
-            this.setState({
-                admissionData: {
-                    ...admissionData,
-                    city: {
-                        id: ""
-                    },
-                    course: {
-                        id: ""
-                    }
-                }
-            });
-        } else if (name === "course") {
-            this.setState({
-                admissionData: {
-                    ...admissionData,
-                    course: {
-                        id: ""
-                    }
-                }
-            });
-        } else {
-            this.setState({
-                admissionData: {
-                    ...admissionData,
-                    [name]: value
-                }
-            });
-        }
-    }
-
-    saveStudent = (e: any) => {
-        this.setState({
-            submitted: true
-        });
-        const { addStudentMutation } = this.props;
-        const { admissionData } = this.state;
-        e.preventDefault();
-        let dplStudentData = {
-            ...admissionData,
-            uploadPhoto: admissionData.uploadPhoto,
-            fileName: admissionData.fileName
-        };
-
-        let btn = e.target.querySelector("button[type='submit']");
-        btn.setAttribute("disabled", true);
-        let dataSavedMessage: any = document.querySelector(".data-saved-message");
-        dataSavedMessage.style.display = "none";
-        return addStudentMutation({
-            variables: { input: dplStudentData },
+            },
         }).then((data: any) => {
-            btn.removeAttribute("disabled");
-            dataSavedMessage.style.display = "inline-block";
+            console.log("success");
         }).catch((error: any) => {
-            btn.removeAttribute("disabled");
-            dataSavedMessage.style.display = "inline-block";
-            console.log('there was an error sending the update mutation', error);
-            return Promise.reject(`Could not save student: ${error}`);
+            console.log("failure");
         });
     }
 
-    saveAcademicHistory = (e: any) => {
-        this.setState({
-            submitted: true
-        });
+    onCompleteAcademicHistoryForm(result: any){
+        result.clear(false, true);
         const { addAcademicHistoryMutation } = this.props;
-        const { admissionData } = this.state;
-        e.preventDefault();
-        let dplAcademicHistoryData = {
-            ...admissionData
-        };
-
-        let btn = e.target.querySelector("button[type='submit']");
-        btn.setAttribute("disabled", true);
-        let dataSavedMessage: any = document.querySelector(".data-saved-message");
-        dataSavedMessage.style.display = "none";
         return addAcademicHistoryMutation({
-            variables: { input: dplAcademicHistoryData },
+            variables: { input: {
+                    ...result.data,
+                    enrollmentNo: parseInt(result.data.enrollmentNo),
+                    score: parseFloat(result.data.score),
+                    percentage: parseInt(result.data.percentage),
+                    studentId: 152
+                }
+            },
         }).then((data: any) => {
-            btn.removeAttribute("disabled");
-            dataSavedMessage.style.display = "inline-block";
+            console.log("success"); 
         }).catch((error: any) => {
-            btn.removeAttribute("disabled");
-            dataSavedMessage.style.display = "inline-block";
-            console.log('there was an error sending the update mutation', error);
-            return Promise.reject(`Could not save student: ${error}`);
+            console.log("failure");
         });
-    }
-
-    saveCompetiveExam = (e: any) => {
-        this.setState({
-            submitted: true
-        });
-        const { addCompetitiveExam } = this.props;
-        const { admissionData } = this.state;
-        e.preventDefault();
-        let dplCompetitiveExamData = {
-            ...admissionData
-        };
-
-        let btn = e.target.querySelector("button[type='submit']");
-        btn.setAttribute("disabled", true);
-        let dataSavedMessage: any = document.querySelector(".data-saved-message");
-        dataSavedMessage.style.display = "none";
-        return addCompetitiveExam({
-            variables: { input: dplCompetitiveExamData },
-        }).then((data: any) => {
-            btn.removeAttribute("disabled");
-            dataSavedMessage.style.display = "inline-block";
-        }).catch((error: any) => {
-            btn.removeAttribute("disabled");
-            dataSavedMessage.style.display = "inline-block";
-            console.log('there was an error sending the update mutation', error);
-            return Promise.reject(`Could not save student: ${error}`);
-        });
-    }
-
-    saveDocuments = (e: any) => {
-        this.setState({
-            submitted: true
-        });
-        const { addDocument } = this.props;
-        const { admissionData } = this.state;
-        e.preventDefault();
-        let dplDocumentData = {
-            ...admissionData
-        };
-
-        let btn = e.target.querySelector("button[type='submit']");
-        btn.setAttribute("disabled", true);
-        let dataSavedMessage: any = document.querySelector(".data-saved-message");
-        dataSavedMessage.style.display = "none";
-        return addDocument({
-            variables: { input: dplDocumentData },
-        }).then((data: any) => {
-            btn.removeAttribute("disabled");
-            dataSavedMessage.style.display = "inline-block";
-        }).catch((error: any) => {
-            btn.removeAttribute("disabled");
-            dataSavedMessage.style.display = "inline-block";
-            console.log('there was an error sending the update mutation', error);
-            return Promise.reject(`Could not save student: ${error}`);
-        });
-    }
-
-    render12() {
-        const { data: { createAdmissionDataCache, refetch }, addStudentMutation, addAcademicHistoryMutation, addCompetitiveExam, addDocument } = this.props;
-        const { admissionData, submitted } = this.state;
-        return (
-            <section className="">
-                <h3 className="bg-heading p-1 m-b-0">
-                    <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
-                    Application Form
-                </h3>
-                <div className="student-profile-container">
-                    <form className="gf-form-group" onSubmit={this.saveAcademicHistory}>
-                        <div className="row m-0">
-                            <div className="col-sm-12 col-xs-12 profile-header m-b-2">
-                                <div className="pull-left">Admission</div>
-                                <div className="pull-right">
-                                    <span className="m-r-2 data-saved-message" style={{ fontSize: "13px", color: "#AA0000", display: "none" }}>Data Saved</span>
-                                    <button className="btn bs" type="submit">Save</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row form-main-container m-0">
-                            <div className="col-lg-3 col-md-12 col-sm-12 col-xs-12 student-photo-container">
-                                <div className="row p-1">
-                                    <div className="col-md-6 col-lg-12 col-xs-12 col-sm-6 student-photo">
-                                        <img className="photo" id="stPhoto" src={admissionData.uploadPhoto}></img>
-                                    </div>
-
-                                    <div className="col-sm-6 col-xs-12 col-md-6 col-lg-12">
-
-                                        <input type="file" accept="image/*" id="stImageUpload" onChange={this.getStudentImage} ></input>
-
-                                        <div className="gf-form">
-                                            <span className="gf-form-label width-8">Admission No</span>
-                                            <input name="admissionNo" onChange={this.onChange} type="text" className="gf-form-input max-width-22" />
-                                        </div>
-
-                                        <div className="gf-form">
-                                            <span className="gf-form-label width-8">Branch</span>
-                                            <select required name="branch" id="branch" onChange={this.onChange} value={admissionData.branch.id} className="gf-form-input max-width-22">
-                                                {this.createBranches(this.props.data.createAdmissionDataCache.branches)}
-                                            </select>
-                                        </div>
-
-                                        <div className="gf-form">
-                                            <span className="gf-form-label width-8">Department</span>
-                                            <select name="department" id="department" onChange={this.onChange} value={admissionData.department.id} className="gf-form-input max-width-22">
-                                                {this.createDepartments(this.props.data.createAdmissionDataCache.departments, admissionData.branch.id)}
-                                            </select>
-                                        </div>
-
-                                        <div className="gf-form">
-                                            <span className="gf-form-label width-8">Year</span>
-                                            <select name="batch" id="batch" onChange={this.onChange} value={admissionData.batch.id} className="gf-form-input max-width-22">
-                                                {this.createBatches(this.props.data.createAdmissionDataCache.batches, admissionData.department.id)}
-                                            </select>
-                                        </div>
-
-                                        <div className="gf-form">
-                                            <span className="gf-form-label width-8">State</span>
-                                            <select name="state" id="state" onChange={this.onChange} value={admissionData.state.id} className="gf-form-input max-width-22">
-                                                {this.createStates(this.props.data.createAdmissionDataCache.states)}
-                                            </select>
-                                        </div>
-
-                                        <div className="gf-form">
-                                            <span className="gf-form-label width-8">City</span>
-                                            <select name="city" id="city" onChange={this.onChange} value={admissionData.city.id} className="gf-form-input max-width-22">
-                                                {this.createCities(this.props.data.createAdmissionDataCache.cities, admissionData.state.id)}
-                                            </select>
-                                        </div>
-
-                                        <div className="gf-form">
-                                            <span className="gf-form-label width-8">Course</span>
-                                            <select name="course" id="course" onChange={this.onChange} value={admissionData.course.id} className="gf-form-input max-width-22">
-                                                {this.createCourseOptions(this.props.data.createAdmissionDataCache.courses)}
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div className="col-lg-9 col-md-12 col-sm-12 col-xs-12 student-profile-form">
-
-                                <div className="collapse-container">
-                                    <div className="collapse-header">
-                                        <div className="collapse-title">Personal Details</div>
-                                        <div className="collapse-icon" onClick={onClickHeader} >
-                                            <i className="fa fa-fw fa-plus"></i>
-                                            <i className="fa fa-fw fa-minus"></i>
-                                        </div>
-                                        <div className="clear-both"></div>
-                                    </div>
-                                    <PersonalData modelData={admissionData} onChange={(name: any, value: any) => {
-                                        this.setState({
-                                            admissionData: {
-                                                ...admissionData,
-                                                [name]: value
-                                            }
-                                        });
-                                    }} />
-                                </div>
-                                <div className="collapse-container">
-                                    <div className="collapse-header">
-                                        <div className="collapse-title">Academic History</div>
-                                        <div className="collapse-icon" onClick={onClickHeader}>
-                                            <i className="fa fa-fw fa-plus"></i>
-                                            <i className="fa fa-fw fa-minus"></i>
-                                        </div>
-                                        <div className="clear-both"></div>
-                                    </div>
-                                    <AcademicHistory modelData={admissionData} onChange={(name: any, value: any) => {
-                                        this.setState({
-                                            admissionData: {
-                                                ...admissionData,
-                                                [name]: value
-                                            }
-                                        });
-                                    }} />
-                                </div>
-                                <div className="collapse-container">
-                                    <div className="collapse-header">
-                                        <div className="collapse-title">Documents</div>
-                                        <div className="collapse-icon" onClick={onClickHeader}>
-                                            <i className="fa fa-fw fa-plus"></i>
-                                            <i className="fa fa-fw fa-minus"></i>
-                                        </div>
-                                        <div className="clear-both"></div>
-                                    </div>
-                                    <Document modelData={admissionData} onChange={(name: any, value: any) => {
-                                        this.setState({
-                                            admissionData: {
-                                                ...admissionData,
-                                                [name]: value
-                                            }
-                                        });
-                                    }} />
-                                </div>
-
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </section>
-        );
     }
 
     render() {
@@ -959,7 +624,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                             <div className="pull-left">Admin - Add Admission</div>
                             <div className="pull-right">
                                 <span className="m-r-2 data-saved-message" style={{ fontSize: "13px", color: "#AA0000", display: "none" }}>Data Saved</span>
-                                <button className="btn bs" type="submit">Save</button>
+                                <button className="btn bs" type="submit" onClick={this.saveAllForm}>Save</button>
                             </div>
                         </div>
                     </div>
@@ -972,20 +637,20 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                                 <div className="col-sm-6 col-xs-12 col-md-6 col-lg-12">
                                     <input type="file" accept="image/*" id="stImageUpload" onChange={this.getStudentImage} />
                                     <div>
-                                        <Survey.Survey onValueChanged = {this.onAdmissionDetailsChanged} json={this.ADMISSION_DETAILS} css={customCss} />
+                                        <Survey.Survey onValueChanged = {this.onAdmissionDetailsChanged} json={this.ADMISSION_DETAILS} css={customCss} ref={this.admissionFormRef}/>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className="col-lg-9 col-md-12 col-sm-12 col-xs-12 right-part custom-style">
                             <div>
-                                <Survey.SurveyCollapseForm json={this.PERSONAL} css={customCss} />
+                                <Survey.SurveyCollapseForm json={this.PERSONAL} css={customCss} onComplete = {this.onCompletePersonalForm} ref={this.personalFormRef}/>
                             </div>
                             <div>
-                                <Survey.SurveyCollapseForm json={this.ACADEMIC_HISTORY} css={customCss} />
+                                <Survey.SurveyCollapseForm json={this.ACADEMIC_HISTORY} css={customCss} onComplete={this.onCompleteAcademicHistoryForm} showCompletedPage={false} ref={this.academicHistoryFormRef}/>
                             </div>
                             <div>
-                                <Survey.SurveyCollapseForm json={this.DOCUMENTS} css={customCss} />
+                                <Survey.SurveyCollapseForm json={this.DOCUMENTS} css={customCss} showCompletedPage={false} ref={this.documentsFormRef}/>
                             </div>
                         </div>
                     </div>
@@ -995,29 +660,18 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
     }
 }
 
-// export default withRouter(
-//     graphql<AddStudentMutation, AddStudentPageOwnProps>(AddStudentMutationGql)(
-//         AddStudentPage
-//     )
-// );
-
 export default withAdmissionDataCacheLoader(
 
     compose(
-
-        graphql<AddStudentMutation, AdmissionDataRootProps>(AddStudentMutationGql, {
-            name: "addStudentMutation",
-        }),
         graphql<AcademicHistoryAddMutationType, AdmissionDataRootProps>(AddAcademicHistoryMutationGql, {
             name: "addAcademicHistoryMutation",
-        }),
-        graphql<CompetitiveAddMutationType, AdmissionDataRootProps>(AddCompetitiveExamMutationGql, {
-            name: "addCompetitiveExam",
         }),
         graphql<DocumentsAddMutationType, AdmissionDataRootProps>(AddDocumentMutationGql, {
             name: "addDocument",
         }),
-
+        graphql<AddAdmissionPersonalDetailsMutationType, AdmissionDataRootProps>(AddPersonalDataMutationGql, {
+            name: "addPersonalDataMutation"
+        })
 
     )
 

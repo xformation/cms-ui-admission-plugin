@@ -1,51 +1,3 @@
-export type AddAdmissionInput = {
-  studentName: string | null;
-  mobileNumber: string | null;
-  alternateMobileNumber: string | null;
-  email: string | null;
-  courseApplyingFor: string | null;
-  modeOfEnquiry: string | null;
-  status: string | null;
-  description: string | null;
-  enquiryDate: Date | null;
-  updatedOn: Date | null;
-  updatedBy: Date | null;
-  branch: {
-    branchName?: any | null;
-  };
-  admissionApplication: {
-    admissionApplication?: any | null;
-  };
-};
-
-export type AddAdmissionMutationVariables = {
-  input: AddAdmissionInput;
-};
-
-export type AddAdmissionMutation = {
-  addAdmissionEnquiry: {
-    admissionEnquiry: {
-      id: number;
-      studentName: string;
-      mobileNumber: number;
-      alternateMobileNumber: number;
-      email: string;
-      courseApplyingFor: string;
-      modeOfEnquiry: string;
-      status: string;
-      description: string;
-      enquiryDate: string;
-      updatedOn: any;
-      updatedBy: any;
-      branch: {
-        branchName: any;
-      };
-      admissionApplication: {
-        admissionApplication: any;
-      };
-    };
-  };
-};
 
 export type AdmissionQueryVariables = {
   admissionEnquiryId: number;
@@ -689,6 +641,28 @@ export type StudentData = {
   department: {
     name: any;
   };
+};
+
+export type AddAdmissionPersonalDetailsMutationType = {
+  addAdmissionPersonaldetails: {
+    admissionPersonaldetails: {
+      studentName: string;
+      studentMiddleName: string;
+      studentLastName: string;
+      fatherName: string;
+      fatherMiddleName: string;
+      fatherLastName: string;
+      motherName: string;
+      motherMiddleName: string;
+      motherLastName: string;
+      contactNumber: string;
+      alternateMobileNumber: string;
+      dateOfBirth: Date;
+      email: string;
+      sex: string;
+      countryId: number;
+    }
+  }
 };
 
 /* tslint:enable */
