@@ -1,5 +1,6 @@
 mutation addAdmissionPersonaldetails($input: AddAdmissionPersonalDetailsInput!) {
   addAdmissionPersonaldetails(input: $input) {
+    id
     studentName
     studentMiddleName
     studentLastName

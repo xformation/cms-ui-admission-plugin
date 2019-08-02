@@ -585,13 +585,13 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
         return addPersonalDataMutation({
             variables: { input: {
                     ...result.data,
-                    countryId: 951
+                    // countryId: 1101
                 }
             },
         }).then((data: any) => {
-            console.log("success");
+            console.log("success", data);
         }).catch((error: any) => {
-            console.log("failure");
+            console.log("failure", error);
         });
     }
 

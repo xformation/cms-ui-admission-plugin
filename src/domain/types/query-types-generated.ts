@@ -1,4 +1,3 @@
-
 export type AdmissionQueryVariables = {
   admissionEnquiryId: number;
 };
@@ -646,6 +645,7 @@ export type StudentData = {
 export type AddAdmissionPersonalDetailsMutationType = {
   addAdmissionPersonaldetails: {
     admissionPersonaldetails: {
+      id: number;
       studentName: string;
       studentMiddleName: string;
       studentLastName: string;
@@ -661,8 +661,8 @@ export type AddAdmissionPersonalDetailsMutationType = {
       email: string;
       sex: string;
       countryId: number;
-    }
-  }
+    };
+  };
 };
 
 /* tslint:enable */
