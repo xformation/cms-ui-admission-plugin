@@ -80,7 +80,7 @@ const customCss = {
         control: "select-form-control",
     },
     navigation: {
-        complete: "btn bs"
+        complete: "btn bs d-none"
     },
     error: {
         root: "error"
@@ -88,6 +88,9 @@ const customCss = {
 };
 
 class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmissionProfileStates>{
+    isActive: boolean = false;
+    totalResult: any;
+    cumulativeResult: any;
     personalFormRef: any;
     academicHistoryFormRef: any;
     documentsFormRef: any;
@@ -134,6 +137,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
         this.onAdmissionDetailsChanged = this.onAdmissionDetailsChanged.bind(this);
         this.onCompletePersonalForm = this.onCompletePersonalForm.bind(this);
         this.onCompleteAcademicHistoryForm = this.onCompleteAcademicHistoryForm.bind(this);
+        this.onCompleteAdmissionDetailsForm = this.onCompleteAdmissionDetailsForm.bind(this);
         this.saveAllForm = this.saveAllForm.bind(this);
         this.personalFormRef = React.createRef();
         this.academicHistoryFormRef = React.createRef();
@@ -141,54 +145,28 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
         this.admissionFormRef = React.createRef();
     }
 
-    saveAllForm(){
-        console.log(this.personalFormRef);
-        this.personalFormRef.current.survey.completeLastPage();
-        this.academicHistoryFormRef.current.survey.completeLastPage();
-    }
-
     onAdmissionDetailsChanged(sender: any, options: any){
         let { admissionData } = this.state;
+        let department = sender.getQuestionByName("department");
+        let batch = sender.getQuestionByName("batch");
         switch (options.name) {
             case "branch":
-                this.ADMISSION_DETAILS.elements[1].defaultValue = options.value;
-                this.ADMISSION_DETAILS.elements[2].defaultValue = "";
-                this.ADMISSION_DETAILS.elements[3].defaultValue = "";
+                department.value = "";
+                department.choices = this.createDepartments(this.props.data.createAdmissionDataCache.departments, options.value);
+                batch.value = "";
+                batch.choices = [];
                 break;
             case "department":
-                this.ADMISSION_DETAILS.elements[2].defaultValue = options.value;
-                this.ADMISSION_DETAILS.elements[3].defaultValue = "";
-                break;
-            case "batch":
-                this.ADMISSION_DETAILS.elements[3].defaultValue = options.value;
+                batch.value = "";
+                batch.choices = this.createBatches(this.props.data.createAdmissionDataCache.batches, department.value)
                 break;
             case "state":
-                this.ADMISSION_DETAILS.elements[4].defaultValue = options.value;
-                this.ADMISSION_DETAILS.elements[5].defaultValue = "";
-                break;
-            case "city":
-                this.ADMISSION_DETAILS.elements[5].defaultValue = options.value;
-                break;
-            case "course":
-                this.ADMISSION_DETAILS.elements[6].defaultValue = options.value;
+                let city = sender.getQuestionByName("city");
+                let state = sender.getQuestionByName("state");
+                city.value = "";
+                city.choices = this.createCities(this.props.data.createAdmissionDataCache.cities, state.value);
                 break;
         }
-        this.forceUpdate();
-    }
-
-    setChoices(){
-        let branches = this.createBranches(this.props.data.createAdmissionDataCache.branches);
-        let departments = this.createDepartments(this.props.data.createAdmissionDataCache.departments, this.ADMISSION_DETAILS.elements[1].defaultValue);
-        let batches = this.createBatches(this.props.data.createAdmissionDataCache.batches, this.ADMISSION_DETAILS.elements[2].defaultValue);
-        let states = this.createStates(this.props.data.createAdmissionDataCache.states);
-        let cities = this.createCities(this.props.data.createAdmissionDataCache.cities, this.ADMISSION_DETAILS.elements[4].defaultValue);
-        let course = this.createCourseOptions(this.props.data.createAdmissionDataCache.courses);
-        this.ADMISSION_DETAILS.elements[1].choices = branches;
-        this.ADMISSION_DETAILS.elements[2].choices = departments;
-        this.ADMISSION_DETAILS.elements[3].choices = batches;
-        this.ADMISSION_DETAILS.elements[4].choices = states;
-        this.ADMISSION_DETAILS.elements[5].choices = cities;
-        this.ADMISSION_DETAILS.elements[6].choices = course;
     }
 
     PERSONAL = {
@@ -224,7 +202,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'fatherName',
                 title: 'Father Name',
                 requiredErrorText: 'Please enter Father Name',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
             {
@@ -232,7 +210,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'fatherMiddleName',
                 title: 'Father Middle Name',
                 requiredErrorText: 'Please enter Father Middle Name',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
             {
@@ -240,7 +218,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'fatherLastName',
                 title: 'Father Last Name',
                 requiredErrorText: 'Please enter Father Last Name',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
             {
@@ -248,7 +226,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'motherName',
                 title: 'Mother Name',
                 requiredErrorText: 'Please enter Mother Name',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
             {
@@ -256,7 +234,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'motherMiddleName',
                 title: 'Mother Middle Name',
                 requiredErrorText: 'Please enter Mother Middle Name',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
             {
@@ -264,7 +242,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'motherLastName',
                 title: 'mother Last Name',
                 requiredErrorText: 'Please enter mother Last Name',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
 
@@ -274,7 +252,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'dateOfBirth',
                 title: 'Date Of Birth',
                 requiredErrorText: 'Please enter Date Of Birth',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
             {
@@ -282,7 +260,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'sex',
                 title: 'Gender',
                 requiredErrorText: 'Please enter Gender',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
                 choices: [
                     {
@@ -304,7 +282,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'contactNumber',
                 title: 'Student Contact Number',
                 requiredErrorText: 'Please enter Student Contact Number',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
             {
@@ -312,7 +290,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'alternateMobileNumber',
                 title: 'Alternate Contact Number',
                 requiredErrorText: 'Please enter Alternate Contact Number',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
             {
@@ -320,7 +298,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'email',
                 title: 'Student Email',
                 requiredErrorText: 'Please enter Student Email',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
 
@@ -336,7 +314,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'qualification',
                 title: 'Highest Qualification',
                 requiredErrorText: "Please enter Highest Qualification",
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
             {
@@ -344,7 +322,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'yearOfPassing',
                 title: 'Year',
                 requiredErrorText: "Please enter Year",
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
             {
@@ -352,7 +330,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'institution',
                 title: 'Institution',
                 requiredErrorText: "Please enter Institution",
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
             {
@@ -360,7 +338,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'university',
                 title: 'Board/University',
                 requiredErrorText: "Please enter Board/University",
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
             {
@@ -368,7 +346,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'enrollmentNo',
                 title: 'Enrollment No',
                 requiredErrorText: "Please enter Enrollment No",
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
             {
@@ -376,7 +354,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'score',
                 title: 'Score',
                 requiredErrorText: "Please enter Score",
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
             {
@@ -384,7 +362,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'percentage',
                 title: 'Percentage',
                 requiredErrorText: "Please enter Percentage",
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: false,
             },
         ]
@@ -398,7 +376,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 type: 'text',
                 name: 'documentName',
                 title: 'Document Name',
-                isRequired: true,
+                isRequired: this.isActive,
                 requiredErrorText: 'Please enter Document Name',
                 startWithNewLine: false,
             },
@@ -406,7 +384,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 type: 'text',
                 name: 'upload',
                 title: 'Upload',
-                isRequired: true,
+                isRequired: this.isActive,
                 requiredErrorText: 'Please enter Upload',
                 startWithNewLine: false,
             },
@@ -421,7 +399,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 type: "text",
                 name: "admissionNo",
                 title: "Admission No",
-                isRequired: true,
+                isRequired: this.isActive,
                 maxLength: 50,
                 startWithNewLine: true,
                 requiredErrorText: "Please enter Admission No"
@@ -431,9 +409,9 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'branch',
                 title: 'Branch',
                 requiredErrorText: 'Please enter Branch',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: true,
-                choices: [],
+                choices: this.createBranches(this.props.data.createAdmissionDataCache.branches),
                 defaultValue: ""
             },
             {
@@ -441,7 +419,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'department',
                 title: 'Department',
                 requiredErrorText: 'Please enter Department',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: true,
                 choices: [],
                 defaultValue: ""
@@ -451,7 +429,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'batch',
                 title: 'Year',
                 requiredErrorText: 'Please enter Year',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: true,
                 choices: [],
                 defaultValue: ""
@@ -461,16 +439,16 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'state',
                 title: 'State',
                 requiredErrorText: 'Please enter State',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: true,
-                choices: []
+                choices: this.createStates(this.props.data.createAdmissionDataCache.states)
             },
             {
                 type: 'dropdown',
                 name: 'city',
                 title: 'City',
                 requiredErrorText: 'Please enter City',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: true,
                 choices: [],
                 defaultValue: ""
@@ -480,9 +458,9 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                 name: 'course',
                 title: 'Course',
                 requiredErrorText: 'Please enter Course',
-                isRequired: true,
+                isRequired: this.isActive,
                 startWithNewLine: true,
-                choices: [],
+                choices: this.createCourseOptions(this.props.data.createAdmissionDataCache.courses),
                 defaultValue: ""
             },
         ]
@@ -582,40 +560,78 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
     onCompletePersonalForm(result:any){
         result.clear(false, true);
         const { addPersonalDataMutation } = this.props;
-        return addPersonalDataMutation({
-            variables: { input: {
-                    ...result.data,
-                    // countryId: 1101
-                }
-            },
-        }).then((data: any) => {
-            console.log("success", data);
-        }).catch((error: any) => {
-            console.log("failure", error);
-        });
+        this.totalResult += 1;
+        this.cumulativeResult = {
+            ...this.cumulativeResult,
+            ...result.data
+        };
+        if(this.totalResult === 3){
+            console.log(this.cumulativeResult);
+            alert("done");
+        }
+        // return addPersonalDataMutation({
+        //     variables: { input: {
+        //             ...result.data,
+        //             // countryId: 1101
+        //         }
+        //     },
+        // }).then((data: any) => {
+        //     console.log("success", data);
+        // }).catch((error: any) => {
+        //     console.log("failure", error);
+        // });
     }
 
     onCompleteAcademicHistoryForm(result: any){
         result.clear(false, true);
         const { addAcademicHistoryMutation } = this.props;
-        return addAcademicHistoryMutation({
-            variables: { input: {
-                    ...result.data,
-                    enrollmentNo: parseInt(result.data.enrollmentNo),
-                    score: parseFloat(result.data.score),
-                    percentage: parseInt(result.data.percentage),
-                    studentId: 152
-                }
-            },
-        }).then((data: any) => {
-            console.log("success"); 
-        }).catch((error: any) => {
-            console.log("failure");
-        });
+        this.totalResult += 1;
+        this.cumulativeResult = {
+            ...this.cumulativeResult,
+            ...result.data
+        };
+        if(this.totalResult === 3){
+            console.log(this.cumulativeResult);
+            alert("done");
+        }
+        // return addAcademicHistoryMutation({
+        //     variables: { input: {
+        //             ...result.data,
+        //             enrollmentNo: parseInt(result.data.enrollmentNo),
+        //             score: parseFloat(result.data.score),
+        //             percentage: parseInt(result.data.percentage),
+        //             studentId: 152
+        //         }
+        //     },
+        // }).then((data: any) => {
+        //     console.log("success"); 
+        // }).catch((error: any) => {
+        //     console.log("failure");
+        // });
+    }
+
+    onCompleteAdmissionDetailsForm(result: any){
+        result.clear(false, true);
+        this.totalResult += 1;
+        this.cumulativeResult = {
+            ...this.cumulativeResult,
+            ...result.data
+        };
+        if(this.totalResult === 3){
+            console.log(this.cumulativeResult);
+            alert("done");
+        }
+    }
+
+    saveAllForm(){
+        this.totalResult = 0;
+        this.cumulativeResult = {};
+        this.admissionFormRef.current.survey.completeLastPage();
+        this.personalFormRef.current.survey.completeLastPage();
+        this.academicHistoryFormRef.current.survey.completeLastPage();
     }
 
     render() {
-        this.setChoices();
         return (
             <section className="xform-container">
                 <div className="student-profile-container">
@@ -637,7 +653,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, EditAdmiss
                                 <div className="col-sm-6 col-xs-12 col-md-6 col-lg-12">
                                     <input type="file" accept="image/*" id="stImageUpload" onChange={this.getStudentImage} />
                                     <div>
-                                        <Survey.Survey onValueChanged = {this.onAdmissionDetailsChanged} json={this.ADMISSION_DETAILS} css={customCss} ref={this.admissionFormRef}/>
+                                        <Survey.Survey onValueChanged = {this.onAdmissionDetailsChanged} json={this.ADMISSION_DETAILS} css={customCss} ref={this.admissionFormRef} onComplete={this.onCompleteAdmissionDetailsForm}/>
                                     </div>
                                 </div>
                             </div>

@@ -3,6 +3,10 @@
     background: white;
 }
 
+.d-none{
+    display: none !important;
+}
+
 .xform-container .right-part {
     border-left: 1px solid #ababab;
 }
