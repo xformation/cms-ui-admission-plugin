@@ -259,6 +259,34 @@ export type SearchAdmissionApplicationOnTypeListType = {
     course: string;
     comments: string;
     strAdmissionDate: string;
+    academicHistory: {
+      id: number;
+      qualification: string;
+      yearOfPassing: string;
+      institution: string;
+      university: string;
+      enrollmentNo: number;
+      score: number;
+      percentage: number;
+    };
+    batch: {
+      batch: any;
+    };
+    department: {
+      name: any;
+    };
+    branch: {
+      branchName: string;
+      city: {
+        cityName: string;
+      };
+      state: {
+        stateName: string;
+        country: {
+          countryName: string;
+        };
+      };
+    };
   };
 };
 

@@ -18,5 +18,32 @@ searchAdmissionApplicationOnType(admissionApplicationType:$admissionApplicationT
     course
     comments
     strAdmissionDate
+    academicHistory{
+      id
+      qualification
+      yearOfPassing
+      institution
+      university
+      enrollmentNo
+      score
+    }
+    batch{
+      batch
+    }
+    department{
+      name
+    }
+    branch{
+      branchName
+      city{
+        cityName
+      }
+      state{
+        stateName
+        country{
+          countryName
+        }
+      }
+    }
     }
   }

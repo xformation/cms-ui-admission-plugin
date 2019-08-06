@@ -205,11 +205,11 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
             <h5 className="bg-grey head-prime text-uppercase p--512">Enquiry <span className="dark-text">
               {obj.id}</span></h5>
             <div className="btn-group btn-adm m-4">
-              <button className="btn btn-primary">Approve</button>
-              <button className="btn btn-primary">Followup</button>
-              <button className="btn btn-primary">Decline</button>
-              <button className="btn btn-primary">Edit</button>
-              <button className="btn btn-primary">Print</button>
+              <button className="btn btn-primary disabled">Approve</button>
+              <button className="btn btn-primary disabled">Followup</button>
+              <button className="btn btn-primary disabled">Decline</button>
+              <button className="btn btn-primary disabled">Edit</button>
+              <button className="btn btn-primary disabled">Print</button>
               <button className="btn btn-primary" id="btnBack" name="btnBack" onClick={this.back}>Back</button>
             </div>
           </div>
@@ -244,7 +244,6 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
                           Father's Name:
                            </span>
                         <span >{obj.fatherName}</span>
-                        )}
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-12">
@@ -332,16 +331,11 @@ class AdmissionEnquiryPage extends React.Component<AdmissionDataPageProps, Admis
                 </div>
               </span>
 
-              Academic History
-
-              <div><p className="h2">In Progress</p></div>
-
-              Enrollment
+              {/* Enrollment
               <div><p className="h2">In Progress</p></div>
 
               Documents
-
-              <div><p className="h2">In Progress</p></div>
+              <div><p className="h2">In Progress</p></div> */}
 
             </Tabs>
           </div>

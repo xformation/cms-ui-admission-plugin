@@ -205,11 +205,11 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
             <h5 className="bg-grey head-prime text-uppercase p--512">Application <span className="dark-text">
               {obj.id}</span></h5>
             <div className="btn-group btn-adm m-4">
-              <button className="btn btn-primary">Approve</button>
-              <button className="btn btn-primary">Followup</button>
-              <button className="btn btn-primary">Decline</button>
-              <button className="btn btn-primary">Edit</button>
-              <button className="btn btn-primary">Print</button>
+              <button className="btn btn-primary disabled">Approve</button>
+              <button className="btn btn-primary disabled">Followup</button>
+              <button className="btn btn-primary disabled">Decline</button>
+              <button className="btn btn-primary disabled">Edit</button>
+              <button className="btn btn-primary disabled">Print</button>
               <button className="btn btn-primary" id="btnBack" name="btnBack" onClick={this.back}>Back</button>
             </div>
           </div>
@@ -223,13 +223,13 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-8">
                           Student Name:
-        </span>
+                        </span>
                         <span className="">{obj.studentName}</span>
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
                         <span className="profile-label w-12">
                           Middle Name:
-        </span>
+                        </span>
                         <span className="">{obj.studentMiddleName}</span>
                       </div>
                       <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
@@ -324,10 +324,128 @@ class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, A
 
               Academic History
 
-              <div><p className="h2">In Progress</p></div>
+              <div className="p-2">
+                  <div className="details-container">
+                    <div className="row">
+                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
+                        <span className="profile-label w-8">
+                          Qualification:
+                        </span>
+                        {obj.academicHistory !== undefined && (
+
+                          <span >{obj.academicHistory.qualification}</span>
+                        )}
+                      </div>
+                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
+                        <span className="profile-label w-10">
+                          Year:
+                        </span>
+                        {obj.academicHistory !== undefined && (
+
+                          <span >{obj.academicHistory.yearOfPassing}</span>
+                        )}
+                      </div>
+                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
+                        <span className="profile-label w-8">
+                          Institution: </span>
+                        {obj.academicHistory !== undefined && (
+
+                          <span >{obj.academicHistory.institution}</span>
+                        )}
+
+                      </div>
+                    </div>
+                     <div className="row">
+                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
+                        <span className="profile-label w-8">
+                          University:
+                        </span>
+                        {obj.academicHistory !== undefined && (
+
+                          <span >{obj.academicHistory.university}</span>
+                        )}
+                      </div>
+                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
+                        <span className="profile-label w-10">
+                          Enrollment Number:
+                        </span>
+                        {obj.academicHistory !== undefined && (
+
+                          <span >{obj.academicHistory.enrollmentNo}</span>
+                        )}
+                      </div>
+                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
+                        <span className="profile-label w-8">
+                          Score: </span>
+                        {obj.academicHistory !== undefined && (
+
+                          <span >{obj.academicHistory.score}</span>
+                        )}
+
+                      </div>
+                    </div>
+                  </div>
+               </div>
 
               Enrollment
-              <div><p className="h2">In Progress</p></div>
+              <div className="p-2">
+                  <div className="details-container">
+                    <div className="row">
+                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
+                        <span className="profile-label w-8">
+                          Branch:
+                        </span>
+                        {obj.branch !== undefined && (
+
+                          <span >{obj.branch.branchName}</span>
+                        )}
+                      </div>
+                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
+                        <span className="profile-label w-8">
+                          Department:
+                        </span>
+                        {obj.department !== undefined && (
+
+                          <span >{obj.department.name}</span>
+                        )}
+                      </div>
+                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
+                        <span className="profile-label w-8">
+                          Year: </span>
+                        {obj.batch !== undefined && (
+
+                          <span >{obj.batch.batch}</span>
+                        )}
+
+                      </div>
+                    </div>
+                     <div className="row">
+                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
+                        <span className="profile-label w-8">
+                          State:
+                        </span>
+                        {obj.branch !== undefined && (
+
+                          <span >{obj.branch.state.stateName}</span>
+                        )}
+                      </div>
+                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
+                        <span className="profile-label w-8">
+                          City:
+                        </span>
+                       {obj.branch !== undefined && (
+
+                          <span >{obj.branch.city.cityName}</span>
+                        )}
+                      </div>
+                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
+                        <span className="profile-label w-8">
+                          Course: </span>
+                         <span className="">{obj.course}</span>
+                      </div>
+                    </div>
+                  </div>
+               </div>
 
               Documents
 
