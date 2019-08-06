@@ -693,4 +693,40 @@ export type AddAdmissionPersonalDetailsMutationType = {
   };
 };
 
+export type AddAdmissionApplicationMutation = {
+  addAdmissionApplication: {
+    admissionApplication: {
+      admissionStatus: string,
+      studentName: string,
+      studentMiddleName: string,
+      studentLastName: string,
+      fatherName: string,
+      fatherMiddleName: string,
+      fatherLastName: string,
+      motherName: string,
+      motherMiddleName: string,
+      motherLastName: string,
+      contactNumber: string,
+      alternateMobileNumber: string,
+      dateOfBirth: string,
+      email: string,
+      sex: string,
+      comments: string,
+      applicationId: string,
+      course: string,
+      admissionDate: string,
+      admissionEnquiryId: string,
+      academicHistoryId: string,
+      documentsId: string,
+      branchId: string,
+      batchId: string,
+      stateId: string,
+      cityId: string,
+      countryId: string,
+      departmentId: string,
+      academicyearId: string,
+    }
+  }
+}
+
 /* tslint:enable */

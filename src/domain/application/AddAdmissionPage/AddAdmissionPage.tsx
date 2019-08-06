@@ -5,14 +5,12 @@ import * as Survey from "xform-react";
 import "xform-react/xform.min.css";
 
 import * as AddDocumentMutationGql from './_queries/AddDocumentMutation.graphql';
-import * as AddAcademicHistoryMutationGql from './_queries/AddAcademicHistoryMutation.graphql';
-import * as AddPersonalDataMutationGql from './_queries/AddPersonalDataMutation.graphql';
+import * as AddAdmissionApplicationMutationGql from './_queries/AddAdmissionApplicationMutation.graphql';
 // import { AdmissionServices } from './_services';
 import {
     LoadAdmissionDataCacheType,
-    AcademicHistoryAddMutationType,
     DocumentsAddMutationType,
-    AddAdmissionPersonalDetailsMutationType
+    AddAdmissionApplicationMutation
 } from '../../types';
 
 // import withLoadingHandler from '../../../components/withLoadingHandler';
@@ -26,9 +24,8 @@ type AdmissionDataRootProps = RouteComponentProps<{
     }
 
 type AddAdmissionPageProps = AdmissionDataRootProps & {
-    addAcademicHistoryMutation: MutationFunc<AcademicHistoryAddMutationType>;
     addDocument: MutationFunc<DocumentsAddMutationType>;
-    addPersonalDataMutation: MutationFunc<AddAdmissionPersonalDetailsMutationType>;
+    addAdmissionApplicationMutation: MutationFunc<AddAdmissionApplicationMutation>;
 };
 
 function onClickHeader(e: any) {
@@ -143,6 +140,7 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, AddAdmissi
         this.onCompleteAdmissionDetailsForm = this.onCompleteAdmissionDetailsForm.bind(this);
         this.saveAllForm = this.saveAllForm.bind(this);
         this.handleRadioChange = this.handleRadioChange.bind(this);
+        this.sendData = this.sendData.bind(this);
         this.personalFormRef = React.createRef();
         this.academicHistoryFormRef = React.createRef();
         this.documentsFormRef = React.createRef();
@@ -579,55 +577,26 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, AddAdmissi
 
     onCompletePersonalForm(result: any) {
         result.clear(false, true);
-        const { addPersonalDataMutation } = this.props;
         this.totalResult += 1;
         this.cumulativeResult = {
             ...this.cumulativeResult,
             ...result.data
         };
         if (this.totalResult === 3) {
-            console.log(this.cumulativeResult);
-            alert("done");
+            this.sendData();
         }
-        // return addPersonalDataMutation({
-        //     variables: { input: {
-        //             ...result.data,
-        //             // countryId: 1101
-        //         }
-        //     },
-        // }).then((data: any) => {
-        //     console.log("success", data);
-        // }).catch((error: any) => {
-        //     console.log("failure", error);
-        // });
     }
 
     onCompleteAcademicHistoryForm(result: any) {
         result.clear(false, true);
-        const { addAcademicHistoryMutation } = this.props;
         this.totalResult += 1;
         this.cumulativeResult = {
             ...this.cumulativeResult,
             ...result.data
         };
         if (this.totalResult === 3) {
-            console.log(this.cumulativeResult);
-            alert("done");
+            this.sendData();
         }
-        // return addAcademicHistoryMutation({
-        //     variables: { input: {
-        //             ...result.data,
-        //             enrollmentNo: parseInt(result.data.enrollmentNo),
-        //             score: parseFloat(result.data.score),
-        //             percentage: parseInt(result.data.percentage),
-        //             studentId: 152
-        //         }
-        //     },
-        // }).then((data: any) => {
-        //     console.log("success"); 
-        // }).catch((error: any) => {
-        //     console.log("failure");
-        // });
     }
 
     onCompleteAdmissionDetailsForm(result: any) {
@@ -638,9 +607,22 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, AddAdmissi
             ...result.data
         };
         if (this.totalResult === 3) {
-            console.log(this.cumulativeResult);
-            alert("done");
+            this.sendData();
         }
+    }
+
+    sendData(){
+        const { addAdmissionApplicationMutation } = this.props;
+        return addAdmissionApplicationMutation({
+            variables: { input: {
+                    ...this.cumulativeResult
+                }
+            },
+        }).then((data: any) => {
+            console.log("success"); 
+        }).catch((error: any) => {
+            console.log("failure");
+        });
     }
 
     saveAllForm() {
@@ -705,16 +687,12 @@ class AddAdmissionPage extends React.Component<AddAdmissionPageProps, AddAdmissi
 export default withAdmissionDataCacheLoader(
 
     compose(
-        graphql<AcademicHistoryAddMutationType, AdmissionDataRootProps>(AddAcademicHistoryMutationGql, {
-            name: "addAcademicHistoryMutation",
-        }),
         graphql<DocumentsAddMutationType, AdmissionDataRootProps>(AddDocumentMutationGql, {
             name: "addDocument",
         }),
-        graphql<AddAdmissionPersonalDetailsMutationType, AdmissionDataRootProps>(AddPersonalDataMutationGql, {
-            name: "addPersonalDataMutation"
+        graphql<AddAdmissionApplicationMutation, AdmissionDataRootProps>(AddAdmissionApplicationMutationGql, {
+            name: "addAdmissionApplicationMutation"
         })
-
     )
 
         (AddAdmissionPage) as any
