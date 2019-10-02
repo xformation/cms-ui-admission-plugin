@@ -81,10 +81,11 @@ class Tabs extends React.Component<{}, any> {
 class AdmissionApplicationPage extends React.Component<AdmissionDataPageProps, AdmissionDataState> {
   constructor(props: any) {
     super(props);
+    const params = new URLSearchParams(location.search);
     this.state = {
       admissionApplicationData: {
         academicyear: {
-          id: 1701 // 1851 //1001
+          id: params.get('ayid')
         },
         mutateResult: [],
         applicationData: {}

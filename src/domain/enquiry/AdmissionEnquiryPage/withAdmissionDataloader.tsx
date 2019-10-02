@@ -14,10 +14,15 @@ type TargetComponentProps = {
 };
 
 const withAdmissionDataloader = (TargetComponent: ReactFunctionOrComponentClass<TargetComponentProps>) => {
+  const params = new URLSearchParams(location.search);
+  let bId = params.get('bid') ;
+  if(bId == null || bId == undefined) {
+    bId = "0";
+  } 
   return graphql<AdmissionEnquiryCountQueryType, withAdmissionCountPageDataLoaderProps, TargetComponentProps>(GetAdmissionDataGql, {
     options: ({ match }) => ({
       variables: {
-        branchId: 1851
+        branchId: bId //1851
       }
     })
   })(withLoadingHandler(TargetComponent));

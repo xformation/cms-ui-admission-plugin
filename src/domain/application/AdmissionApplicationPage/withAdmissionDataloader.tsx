@@ -14,10 +14,15 @@ type TargetComponentProps = {
 };
 
 const withAdmissionDataloader = (TargetComponent: ReactFunctionOrComponentClass<TargetComponentProps>) => {
+  const params = new URLSearchParams(location.search);
+  let ayId = params.get('ayid') ;
+  if(ayId == null || ayId == undefined) {
+    ayId = "0";
+  } 
   return graphql<AdmissionApplicationCountQueryType, withAdmissionCountPageDataLoaderProps, TargetComponentProps>(GetAdmissionApplicationDataGql, {
     options: ({ match }) => ({
       variables: {
-        academicyearId: 1701
+        academicyearId: ayId
       }
     })
   })(withLoadingHandler(TargetComponent));
