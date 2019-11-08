@@ -613,8 +613,8 @@ class AddAdmissionPage extends React.Component<any, AddAdmissionPageStates>{
     }
 
     sendData(){
-        const { addAdmissionApplicationMutation } = this.props;
-        return addAdmissionApplicationMutation({
+        const {  addAdmissionApplicationMutation  } = this.props;
+        return  addAdmissionApplicationMutation ({
             variables: { input: {
                     ...this.cumulativeResult
                 }

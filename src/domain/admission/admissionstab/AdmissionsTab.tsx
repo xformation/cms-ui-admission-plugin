@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from 'react'
 // import { graphql, QueryProps, MutationFunc, compose } from 'react-apollo';
 import { Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap'
 import AddAdmissionPage from '../addadmission/AddAdmissionPage';

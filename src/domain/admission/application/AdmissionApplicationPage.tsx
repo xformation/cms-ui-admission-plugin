@@ -453,7 +453,7 @@ class AdmissionApplicationPage extends React.Component<any, AdmissionDataState> 
 
   onClick = (e: any) => {
     const { name, value } = e.nativeEvent.target;
-    const { mutate } = this.props;
+    const { SEARCH_ADMISSION_APLICATION } = this.props;
     const { admissionApplicationData } = this.state;
     e.preventDefault();
     let admType = "";
@@ -469,7 +469,7 @@ class AdmissionApplicationPage extends React.Component<any, AdmissionDataState> 
     this.back();
     let btn: any = document.querySelector("#" + name);
     btn.setAttribute("disabled", true);
-    return mutate({
+    return SEARCH_ADMISSION_APLICATION({
       variables: {
         admissionApplicationType: admType,
         academicyearId: admissionApplicationData.academicyear.id,
@@ -493,6 +493,7 @@ class AdmissionApplicationPage extends React.Component<any, AdmissionDataState> 
 
   render() {
     const { admissionApplicationData } = this.state;
+    const { getAdmissionApplicationData } = this.props
     return (
       <section className="border">
         <h3 className="bg-heading-admission p-1 mb-1">
@@ -585,17 +586,17 @@ class AdmissionApplicationPage extends React.Component<any, AdmissionDataState> 
 }
 
 
-export default graphql(CREATE_ADMISSION_DATA_CACHE, {
+export default graphql(GET_ADMISSIONAPPLICATION_DATA, {
   options: ({ }) => ({
     variables: {
-      // academicYearId: 1701,
+       academicYearId: 1701,
       // branchId: 1851
     }
   })
 }) (withLoadingHandler(
 
   compose(
-    graphql(GET_ADMISSIONAPPLICATION_DATA,  { name: "getAdmissionApplicationData" }),
+    // graphql(GET_ADMISSIONAPPLICATION_DATA,  { name: "getAdmissionApplicationData" }),
     graphql(SEARCH_ADMISSION_APLICATION , { name: "searchAdmissionApplicationOnType" }),
    
   )

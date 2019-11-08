@@ -128,7 +128,7 @@ class AdmissionEnquiryPage extends React.Component<any, AdmissionDataState> {
     const retVal = [];
     for (let x = 0; x < mutateResLength; x++) {
       const tempObj = objAry[x];
-      const admissionArray = tempObj.data.searchAdmissionOnType;
+      const admissionArray = tempObj.data.SEARCH_ADMISSION;
       const length = admissionArray.length;
       if (length === 0) {
         retVal.push(
@@ -144,7 +144,7 @@ class AdmissionEnquiryPage extends React.Component<any, AdmissionDataState> {
     const retVal = [];
     for (let x = 0; x < mutateResLength; x++) {
       const tempObj = objAry[x];
-      const admissionArray = tempObj.data.searchAdmissionOnType;
+      const admissionArray = tempObj.data.SEARCH_ADMISSION;
       const length = admissionArray.length;
       for (let i = 0; i < length; i++) {
         const admissionEnquiry = admissionArray[i];
@@ -348,7 +348,7 @@ class AdmissionEnquiryPage extends React.Component<any, AdmissionDataState> {
 
   onClick = (e: any) => {
     const { name, value } = e.nativeEvent.target;
-    const { mutate } = this.props;
+    const { SEARCH_ADMISSION } = this.props;
     const { admissionEnquiryData } = this.state;
     e.preventDefault();
     let admType = "";
@@ -364,7 +364,7 @@ class AdmissionEnquiryPage extends React.Component<any, AdmissionDataState> {
     this.back();
     let btn: any = document.querySelector("#" + name);
     btn.setAttribute("disabled", true);
-    return mutate({
+    return SEARCH_ADMISSION({
       variables: {
         admissionEnquiryType: admType,
         branchId: admissionEnquiryData.branch.id,
@@ -484,17 +484,17 @@ class AdmissionEnquiryPage extends React.Component<any, AdmissionDataState> {
 }
 
 
-export default graphql(CREATE_ADMISSION_DATA_CACHE, {
+export default graphql(GET_ADMISSION_DATA, {
   options: ({ }) => ({
     variables: {
-      // academicYearId: 1701,
-      // branchId: 1851
+      //  academicYearId: 1701,
+      branchId: 1851
     }
   })
 }) (withLoadingHandler(
 
   compose(
-    graphql(GET_ADMISSION_DATA,  { name: "getAdmissionData" }),
+    // graphql(GET_ADMISSION_DATA,  { name: "getAdmissionData" }),
     graphql(SEARCH_ADMISSION , { name: "searchAdmissionOnType" }),
    
   )
