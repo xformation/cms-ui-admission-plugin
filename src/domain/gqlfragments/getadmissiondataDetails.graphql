@@ -1,3 +1,0 @@
-fragment getadmissiondataDetails on getAdmissionData {
-  ...getadmissiondata
-}

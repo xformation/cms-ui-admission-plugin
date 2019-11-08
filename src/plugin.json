@@ -7,7 +7,7 @@
     "light": "css/light.css"
   },
   "info": {
-    "description": "cms for grafana",
+    "description": "EMS Admission Plugin",
     "author": {
       "name": "Synectiks",
       "url": "https://xformation.com"
@@ -23,31 +23,10 @@
   "includes": [
     {
       "type": "page",
-      "name": "Home",
-      "addToNav": false,
-      "defaultNav": false,
-      "component": "WelcomePage"
-    },
-    {
-      "type": "page",
-      "name": "Applications",
+      "name": "admissionstab",
       "addToNav": true,
       "defaultNav": true,
-      "component": "ApplicationsPage"
-    },
-    {
-      "type": "page",
-      "name": "Enquiries",
-      "addToNav": true,
-      "defaultNav": true,
-      "component": "EnquiriesPage"
-    },
-    {
-      "type": "page",
-      "name": "AddAdmission",
-      "addToNav": true,
-      "defaultNav": false,
-      "component": "AddAdmissionPage"
+      "component": "AdmissionsTab"
     }
   ],
   "dependencies": {

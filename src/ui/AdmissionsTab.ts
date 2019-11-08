@@ -1,7 +1,7 @@
 import init from '../domain/admission/admissionstab/AdmissionsTabApp';
 
-export class ApplicationsPage {
-  static templateUrl = '/partials/applications.html';
+export class AdmissionsTab {
+  static templateUrl = '/partials/admissionstab.html';
   constructor() {
     init();
   }

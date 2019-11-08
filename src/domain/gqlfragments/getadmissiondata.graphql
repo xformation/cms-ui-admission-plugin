@@ -1,6 +1,0 @@
-fragment getadmissiondata on getAdmissionData {
-    totalAdmissions
-    totalFollowup
-    totalDeclined
-    totalConverted
-}
