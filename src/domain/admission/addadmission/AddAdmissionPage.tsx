@@ -5,6 +5,8 @@ import * as Survey from "xform-react";
 import "xform-react/xform.min.css";
 import {ADD_ADM_APPLICATION, ADD_DOCUMENT, CREATE_ADMISSION_DATA_CACHE } from '../_queries'
 import withLoadingHandler from '../withLoadingHandler';
+import '../../../css/custom.css';
+
 // import * as AddDocumentMutationGql from './_queries/AddDocumentMutation.graphql';
 // import * as AddAdmissionApplicationMutationGql from './_queries/AddAdmissionApplicationMutation.graphql';
 // import { AdmissionServices } from './_services';
