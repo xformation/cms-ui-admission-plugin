@@ -1,3 +1,3 @@
-import {AdmissionsTab} from './ui/AdmissionsTab';
+import {AdmissionMainClass} from './ui/AdmissionMainClass';
 
-export {AdmissionsTab};
+export {AdmissionMainClass};

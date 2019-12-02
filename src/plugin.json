@@ -7,7 +7,7 @@
     "light": "css/light.css"
   },
   "info": {
-    "description": "EMS Admission Plugin",
+    "description": "Admission Plugin",
     "author": {
       "name": "Synectiks",
       "url": "https://xformation.com"
@@ -23,10 +23,10 @@
   "includes": [
     {
       "type": "page",
-      "name": "admissionstab",
+      "name": "Home",
       "addToNav": true,
       "defaultNav": true,
-      "component": "AdmissionsTab"
+      "component": "AdmissionMainClass"
     }
   ],
   "dependencies": {

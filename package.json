@@ -47,12 +47,14 @@
     "react-bootstrap-date-picker": "^5.1.0",
     "react-datepicker": "^1.8.0",
     "react-dom": "^16.2.0",
+    "react-icons": "^3.8.0",
     "react-router-dom": "^4.1.1",
     "reactstrap": "^8.1.1",
     "slate": "^0.33.7",
     "slate-plain-serializer": "^0.5.13",
     "slate-react": "^0.12.4",
-    "typings": "^2.1.1"
+    "typings": "^2.1.1",
+    "xform-react": "^1.0.1"
   },
   "devDependencies": {
     "@types/grafana": "github:CorpGlory/types-grafana",
