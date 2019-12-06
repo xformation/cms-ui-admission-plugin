@@ -1,31 +1,51 @@
 import * as React from 'react';
-// import { graphql, QueryProps, MutationFunc, compose } from 'react-apollo';
-import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
-import { graphql, MutationFunc } from 'react-apollo';
-// import '../../../css/college-settings.css';
-// import CollegeInfo  from './college/AddCollegePage/CollegeInfo';
-// import {CollegeBranches} from './branch/CollegeBranches';
-// import { any } from 'prop-types';
-import NewAdmissionEnquiryPage from './NewEnquiry';
+import { graphql, MutationFunc, withApollo } from 'react-apollo';
 
-export default class AdmissionEnquiry extends React.Component<any, any> {
+import NewAdmissionEnquiryPage from './NewEnquiry';
+import { GET_ADMISSION_ENQUIRY_LIST } from '../_queries';
+import  {EnquiryGrid} from './EnquiryGrid'
+class AdmissionEnquiry extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
         this.state = {
             activeTab: 0,
+            enquiryList: null
         };
         this.toggleTab = this.toggleTab.bind(this);
     }
 
-    toggleTab(tabNo: any) {
+    async toggleTab(tabNo: any) {
+        let bid = 34;
+        let aid = 56;
+        let eqs = null;
+        if(tabNo === 2){
+            eqs = 'FOLLOWUP';
+        }else if(tabNo === 3){
+            eqs = 'DECLINED';
+        }else if(tabNo === 4){
+            eqs = 'CONVERTED_TO_ADMISSION';
+        }
         this.setState({
-            activeTab: tabNo,
+            enquiryList: null 
+        });
+        const { data } = await this.props.client.query({
+            query: GET_ADMISSION_ENQUIRY_LIST,
+            variables: { 
+                branchId: bid,
+                academicYearId: aid,
+                enquiryStatus: eqs
+             },
+             fetchPolicy: 'no-cache'
+        })
+        this.setState({
+            enquiryList: data,
+            activeTab: tabNo
         });
     }
 
     render() {
-        const { activeTab } = this.state;
+        const { activeTab, enquiryList } = this.state;
         return (
             <section className="tab-container row vertical-tab-container">
                 <Nav tabs className="pl-3 pl-3 mb-4 mt-4 col-sm-2">
@@ -61,20 +81,38 @@ export default class AdmissionEnquiry extends React.Component<any, any> {
                         <NewAdmissionEnquiryPage></NewAdmissionEnquiryPage>
                     </TabPane>
                     <TabPane tabId={1}>
-                        {/* <CollegeBranches /> */}
+                        {
+                            enquiryList !== null && (
+                                <EnquiryGrid type="Total Enquiries" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList}></EnquiryGrid>
+                            )
+                        }                        
                     </TabPane>
                     <TabPane tabId={2}>
-                        Test
+                        {
+                            enquiryList !== null && (
+                                <EnquiryGrid type="Total Follow Up" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList}></EnquiryGrid>
+                            )
+                        } 
                     </TabPane>
                     <TabPane tabId={3}>
-                        Test
+                        {
+                            enquiryList !== null && (
+                                <EnquiryGrid type="Total Declined" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList}></EnquiryGrid>
+                            )
+                        } 
                     </TabPane>
                     <TabPane tabId={4}>
-                        Test
+                        {
+                            enquiryList !== null && (
+                                <EnquiryGrid type="Total Admission Granted" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList}></EnquiryGrid>
+                            )
+                        } 
                     </TabPane>
                     
                 </TabContent>
             </section>
         );
     }
-}
+};
+
+export default withApollo(AdmissionEnquiry)
