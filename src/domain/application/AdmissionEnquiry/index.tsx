@@ -2,15 +2,15 @@ import * as React from 'react';
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import { graphql, MutationFunc, withApollo } from 'react-apollo';
 
-import NewAdmissionEnquiryPage from './NewEnquiry';
 import { GET_ADMISSION_ENQUIRY_LIST } from '../_queries';
+import NewAdmissionEnquiryPage from './NewEnquiry';
 import  {EnquiryGrid} from './EnquiryGrid'
 class AdmissionEnquiry extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
         this.state = {
             activeTab: 0,
-            enquiryList: null
+            enquiryList: null,
         };
         this.toggleTab = this.toggleTab.bind(this);
     }
@@ -27,25 +27,30 @@ class AdmissionEnquiry extends React.Component<any, any> {
             eqs = 'CONVERTED_TO_ADMISSION';
         }
         this.setState({
-            enquiryList: null 
+            enquiryList: null,
         });
-        const { data } = await this.props.client.query({
-            query: GET_ADMISSION_ENQUIRY_LIST,
-            variables: { 
-                branchId: bid,
-                academicYearId: aid,
-                enquiryStatus: eqs
-             },
-             fetchPolicy: 'no-cache'
-        })
+        if(tabNo === 1 || tabNo === 2 || tabNo === 3 || tabNo === 4){
+            const { data } = await this.props.client.query({
+                query: GET_ADMISSION_ENQUIRY_LIST,
+                variables: { 
+                    branchId: bid,
+                    academicYearId: aid,
+                    enquiryStatus: eqs
+                 },
+                 fetchPolicy: 'no-cache'
+            })
+            this.setState({
+                enquiryList: data,
+            });
+        }
+        
         this.setState({
-            enquiryList: data,
             activeTab: tabNo
         });
     }
 
     render() {
-        const { activeTab, enquiryList } = this.state;
+        const { activeTab, enquiryList} = this.state;
         return (
             <section className="tab-container row vertical-tab-container">
                 <Nav tabs className="pl-3 pl-3 mb-4 mt-4 col-sm-2">
