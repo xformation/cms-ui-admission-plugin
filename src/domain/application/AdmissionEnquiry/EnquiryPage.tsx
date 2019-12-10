@@ -1,30 +1,35 @@
 import * as React from 'react';
-import { graphql, QueryProps, MutationFunc, compose } from 'react-apollo';
-// import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
+import { graphql, compose, withApollo } from 'react-apollo';
 import {MessageBox} from '../Message/MessageBox'
 import { SAVE_ADMISSION_ENQUIRY } from '../_queries';
 import {commonFunctions} from '../_utilites/common.functions';
 import  "../../../css/custom.css";
+import * as moment from 'moment';
 
 type AdmissionEnquiryState = {
-    enquiryStaticData: any,
-    admissionEnquiryData: any
+    operationType: any,
+    admissionEnquiryData: any 
 };
 
 const ERROR_MESSAGE_MANDATORY_FIELD_MISSING = "Mandatory fields missing";
 const ERROR_MESSAGE_INVALID_EMAIL_ID = "Invalid email id";
+const ERROR_MESSAGE_SERVER_SIDE_ERROR = "Due to some error in admission service, admission enquiry could not be saved. Please check admission service logs";
+const SUCCESS_MESSAGE_ADMISSION_ENQUIRY_ADDED = "New admission enquiry saved successfully";
+const SUCCESS_MESSAGE_ADMISSION_ENQUIRY_UPDATED = "Admission enquiry updated successfully";
+
 export interface NewAdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement>{
-    [staticData: string]: any;
+    [operationType: string] : any;
 }
 
-class NewAdmissionEnquiryPage<T = {[staticData: string]: any}> extends React.Component<NewAdmissionEnquiryProps, AdmissionEnquiryState>{
+class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, AdmissionEnquiryState>{
     
     constructor(props: NewAdmissionEnquiryProps) {
         super(props);
         this.state = {
-            enquiryStaticData: this.props.staticData,
+            operationType: this.props.operationType,
             admissionEnquiryData: {
                 errorMessage:"",
+                successMessage:"",
                 studentName: "",
                 studentMiddleName: "",
                 studentLastName: "",
@@ -47,7 +52,8 @@ class NewAdmissionEnquiryPage<T = {[staticData: string]: any}> extends React.Com
             },
         };
         this.changeTextBoxBorderToError = this.changeTextBoxBorderToError.bind(this);
-        this.restoreTextBoxBorderToNormal = this.restoreTextBoxBorderToNormal.bind(this);    
+        this.restoreTextBoxBorderToNormal = this.restoreTextBoxBorderToNormal.bind(this);
+        this.addAdmissionEnquiry = this.addAdmissionEnquiry.bind(this);
     }
     
     changeTextBoxBorderToError(textBoxValue: any, objName: any){
@@ -71,6 +77,7 @@ class NewAdmissionEnquiryPage<T = {[staticData: string]: any}> extends React.Com
         const { name, value } = e.nativeEvent.target;
         const { admissionEnquiryData } = this.state;
         admissionEnquiryData.errorMessage = "";
+        admissionEnquiryData.successMessage = "";
         this.setState({
             admissionEnquiryData: {
                 ...admissionEnquiryData,
@@ -105,16 +112,73 @@ class NewAdmissionEnquiryPage<T = {[staticData: string]: any}> extends React.Com
         this.setState({
             admissionEnquiryData: admissionEnquiryData
         });
+        let dob = null;
+        if(admissionEnquiryData.dateOfBirth !== undefined && admissionEnquiryData.dateOfBirth !== null 
+            && admissionEnquiryData.dateOfBirth.trim() !== "" ){
+                dob = moment(admissionEnquiryData.dateOfBirth, "YYYY-MM-DD").format("DD-MM-YYYY");
+        }
+        console.log("Operation type : ",this.state.operationType);
+        if(this.state.operationType === "ADD"){
+            this.addAdmissionEnquiry(dob);
+        }
+        
+    }
+
+    async addAdmissionEnquiry(dob: any){
+        const { admissionEnquiryData } = this.state;
+        let admissionEnquiryInput = {
+            studentName: admissionEnquiryData.studentName,
+            studentMiddleName: admissionEnquiryData.studentMiddleName,
+            studentLastName: admissionEnquiryData.studentLastName,
+            cellPhoneNo: admissionEnquiryData.cellPhoneNo,
+            landLinePhoneNo: admissionEnquiryData.landLinePhoneNo,
+            emailId: admissionEnquiryData.emailId,
+            strDateOfBirth: dob,
+            gender: admissionEnquiryData.gender,
+            highestQualification: admissionEnquiryData.highestQualification,
+            modeOfEnquiry: admissionEnquiryData.modeOfEnquiry,
+            comments: admissionEnquiryData.comments,
+        };
+
+        let btn = document.querySelector("#btnSave");
+        btn && btn.setAttribute("disabled", "true");
+        let exitCode = 0;
+        await this.props.client.mutate({
+            mutation: SAVE_ADMISSION_ENQUIRY,
+            variables: { 
+                input: admissionEnquiryInput
+             },
+             fetchPolicy: 'no-cache'
+        }).then((resp: any) => {
+            console.log("Success in saveAdmissionEnquiryMutation. Exit code : ",resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.exitCode);
+            exitCode = resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.exitCode;
+        }).catch((error: any) => {
+            exitCode = 1;
+            console.log('Error in saveAdmissionEnquiryMutation : ', error);
+        });
+        btn && btn.removeAttribute("disabled");
+        if(exitCode === 0 ){
+            admissionEnquiryData.successMessage = SUCCESS_MESSAGE_ADMISSION_ENQUIRY_ADDED;
+        }else {
+            admissionEnquiryData.errorMessage = ERROR_MESSAGE_SERVER_SIDE_ERROR;
+        }
+        this.setState({
+            admissionEnquiryData: admissionEnquiryData
+        });
     }
 
     render() {
-        const {staticData} = this.props
-        const {admissionEnquiryData} = this.state;
+        const {operationType, admissionEnquiryData} = this.state;
         return (
             <main>
                 {
                     admissionEnquiryData.errorMessage !== ""  ? 
                         <MessageBox id="mbox" message={admissionEnquiryData.errorMessage} activeTab={2}/>        
+                        : null
+                }
+                {
+                    admissionEnquiryData.successMessage !== ""  ? 
+                        <MessageBox id="mbox" message={admissionEnquiryData.successMessage} activeTab={1}/>        
                         : null
                 }
                 <div className="row col-sm-12 col-xs-12 m-b-2">
@@ -154,7 +218,7 @@ class NewAdmissionEnquiryPage<T = {[staticData: string]: any}> extends React.Com
                     </div>
                     <div className="col-sm-4">
                         <h6 >Gender</h6>
-                        <select name="gender" id="gender" className="gf-form-input max-width-22">
+                        <select name="gender" id="gender" onChange={this.onChange} value={admissionEnquiryData.gender} className="gf-form-input max-width-22">
                             <option key={""} value={""}>Select Gender</option>
                             <option key={"MALE"} value={"MALE"}>MALE</option>
                             <option key={"FEMALE"} value={"FEMALE"}>FEMALE</option>
@@ -170,7 +234,7 @@ class NewAdmissionEnquiryPage<T = {[staticData: string]: any}> extends React.Com
                 <div className="row col-sm-12 col-xs-12 m-b-2">
                     <div className="col-sm-4">
                         <h6 >Mode Of Enquiry</h6>
-                        <select name="modeOfEnquiry" id="modeOfEnquiry" className="gf-form-input max-width-22">
+                        <select name="modeOfEnquiry" id="modeOfEnquiry" onChange={this.onChange} value={admissionEnquiryData.modeOfEnquiry} className="gf-form-input max-width-22">
                             <option key={""} value={""}>Select Mode Of Enquiry</option>
                             <option key={"INPERSON"} value={"INPERSON"}>INPERSON</option>
                             <option key={"TELEPHONE"} value={"TELEPHONE"}>TELEPHONE</option>
@@ -183,12 +247,11 @@ class NewAdmissionEnquiryPage<T = {[staticData: string]: any}> extends React.Com
                     </div>
                 </div>
                 <div className="m-t-1 text-right">
-                    <button className="btn btn-primary border-bottom" onClick={this.saveEnquiry}>Save</button>
+                    <button id="btnSave" className="btn btn-primary border-bottom" onClick={this.saveEnquiry}>Save</button>
                 </div>
             </main>
         );
     }
 }
 
-
-export default NewAdmissionEnquiryPage;
+export default withApollo(AdmissionEnquiryPage)

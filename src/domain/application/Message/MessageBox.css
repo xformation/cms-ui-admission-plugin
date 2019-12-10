@@ -5,7 +5,7 @@
   font-size: 0.8rem;
 }
 .success {
-  background: rgba(13, 211, 23, 0.986);
+  background: #09c512fb;
 }
 .error {
   background: rgba(221, 55, 55, 1);

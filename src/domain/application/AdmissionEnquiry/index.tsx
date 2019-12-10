@@ -3,7 +3,7 @@ import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import { graphql, MutationFunc, withApollo } from 'react-apollo';
 
 import { GET_ADMISSION_ENQUIRY_LIST } from '../_queries';
-import NewAdmissionEnquiryPage from './NewEnquiry';
+import AdmissionEnquiryPage from './EnquiryPage';
 import  {EnquiryGrid} from './EnquiryGrid'
 class AdmissionEnquiry extends React.Component<any, any> {
     constructor(props: any) {
@@ -19,7 +19,9 @@ class AdmissionEnquiry extends React.Component<any, any> {
         let bid = 34; //localStorage.getItem("branchId");
         let aid = 56; //localStorage.getItem("academicYearId");
         let eqs = null; 
-        if(tabNo === 2){
+        if(tabNo === 1){
+            eqs = 'RECEIVED';
+        }else if(tabNo === 2){
             eqs = 'FOLLOWUP';
         }else if(tabNo === 3){
             eqs = 'DECLINED';
@@ -29,7 +31,7 @@ class AdmissionEnquiry extends React.Component<any, any> {
         this.setState({
             enquiryList: null,
         });
-        if(tabNo === 1 || tabNo === 2 || tabNo === 3 || tabNo === 4){
+        if(tabNo === 1 || tabNo === 2 || tabNo === 3 || tabNo === 4 || tabNo === 5){
             const { data } = await this.props.client.query({
                 query: GET_ADMISSION_ENQUIRY_LIST,
                 variables: { 
@@ -61,7 +63,7 @@ class AdmissionEnquiry extends React.Component<any, any> {
                     </NavItem>
                     <NavItem className="cursor-pointer">
                         <NavLink className={`vertical-nav-link ${activeTab === 1 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(1); }} >
-                            Total Enquiry
+                            Received
                         </NavLink>
                     </NavItem>
                     <NavItem className="cursor-pointer">
@@ -79,18 +81,22 @@ class AdmissionEnquiry extends React.Component<any, any> {
                             Admission Granted
                         </NavLink>
                     </NavItem>
-                    
+                    <NavItem className="cursor-pointer">
+                        <NavLink className={`vertical-nav-link ${activeTab === 5 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(5); }} >
+                            Total Enquiry
+                        </NavLink>
+                    </NavItem>
                 </Nav>
                 <TabContent activeTab={activeTab} className="col-sm-9 border-left p-t-1">
                     <TabPane tabId={0}>
-                        <NewAdmissionEnquiryPage></NewAdmissionEnquiryPage>
+                        <AdmissionEnquiryPage operationType="ADD"></AdmissionEnquiryPage>
                     </TabPane>
                     <TabPane tabId={1}>
                         {
                             enquiryList !== null && (
-                                <EnquiryGrid type="Total Enquiries" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList}></EnquiryGrid>
+                                <EnquiryGrid type="Total Received" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList}></EnquiryGrid>
                             )
-                        }                        
+                        } 
                     </TabPane>
                     <TabPane tabId={2}>
                         {
@@ -113,7 +119,13 @@ class AdmissionEnquiry extends React.Component<any, any> {
                             )
                         } 
                     </TabPane>
-                    
+                    <TabPane tabId={5}>
+                        {
+                            enquiryList !== null && (
+                                <EnquiryGrid type="Total Enquiries" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList}></EnquiryGrid>
+                            )
+                        }                        
+                    </TabPane>
                 </TabContent>
             </section>
         );
