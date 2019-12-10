@@ -1,88 +1,23 @@
 import * as React from 'react';
 import { graphql, QueryProps, MutationFunc, compose } from 'react-apollo';
-import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
-// import {MessageBox} from '../Message/MessageBox'
+// import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
+import {MessageBox} from '../Message/MessageBox'
 import { SAVE_ADMISSION_ENQUIRY } from '../_queries';
-import { JsonMissingTypeErrorBase } from 'xform-react';
-import "../Message/MessageBox.css";
-
+import {commonFunctions} from '../_utilites/common.functions';
+import  "../../../css/custom.css";
 
 type AdmissionEnquiryState = {
     enquiryStaticData: any,
-    admissionEnquiryData: any,
-    // departments: any,
-    // branches: any,
-    // batches: any,
-    // states: any,
-    // cities: any,
-    // courses: any,
-    // submitted: any,
-    // uploadPhoto: any,
-    // fileName: any,
-    // activeRadio: any
+    admissionEnquiryData: any
 };
 
+const ERROR_MESSAGE_MANDATORY_FIELD_MISSING = "Mandatory fields missing";
+const ERROR_MESSAGE_INVALID_EMAIL_ID = "Invalid email id";
 export interface NewAdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement>{
     [staticData: string]: any;
 }
-interface MsgProps extends React.HTMLAttributes<HTMLElement> {
-    id?: string | any;
-    // messageType: any;
-    message?: string | any;
-    activeTab?: string | any;
-    messageOnClose?: string | any;
-}
-
-class MessageBox extends React.Component<MsgProps, any> {
-    constructor(props: MsgProps) {
-        super(props);
-        this.state = {
-            activeState: this.props.activeTab,
-            message : this.props.message,
-            messageOnClose: this.props.messageOnClose
-        };
-        this.closeDiv = this.closeDiv.bind(this);
-    }
-
-    closeDiv() {
-        this.setState({
-          activeState: -1,
-        });
-    }
-    
-
-    render() {
-        // const {message} = this.props
-        const {activeState, message, messageOnClose} = this.state;
-        return (
-            <main>
-                <div className={`${activeState === -1 ? 'info msgbox-border form-h5' : 'hide'}`}>
-                    <div>{messageOnClose}</div>
-                </div>
-                <div className={`${activeState === 0 ? 'info msgbox-border form-h5 msgbox-width-height' : 'hide'}`}>
-                    <div>{message}</div>
-                    <hr className='msgbox-hr'></hr>
-                </div>
-                <div className={`${activeState === 1 ? 'success msgbox-border msgbox-padding msgbox-width-height text' : 'hide'}`}>
-                    <div><input onClick={this.closeDiv} className="msgbox-close fa-info-circle" type="button" value="x"></input>{message}</div>
-                </div>
-                <div className={`${activeState === 2 ? 'error msgbox-border msgbox-padding msgbox-width-height text' : 'hide'}`}>
-                    <div><input onClick={this.closeDiv} className="msgbox-close fa-info-circle" type="button" value="x"></input>{message}</div>
-                </div>
-            </main>
-            
-            
-        );
-    }
-}
-
 
 class NewAdmissionEnquiryPage<T = {[staticData: string]: any}> extends React.Component<NewAdmissionEnquiryProps, AdmissionEnquiryState>{
-    
-    
-    
-    
-    
     
     constructor(props: NewAdmissionEnquiryProps) {
         super(props);
@@ -108,43 +43,41 @@ class NewAdmissionEnquiryPage<T = {[staticData: string]: any}> extends React.Com
                 },
                 department: {
                     id: ""
-                },
-                // state: {
-                //     id: ""
-                // },
-                // city: {
-                //     id: ""
-                // },
-                // course: {
-                //     id: ""
-                // }
+                }
             },
-            // departments: [],
-            // branches: [],
-            // batches: [],
-            // states: [],
-            // cities: [],
-            // courses: [],
-            // submitted: false,
-            // uploadPhoto: null,
-            // fileName: "",
-            // activeRadio: "draft"
         };
-    
-        
+        this.changeTextBoxBorderToError = this.changeTextBoxBorderToError.bind(this);
+        this.restoreTextBoxBorderToNormal = this.restoreTextBoxBorderToNormal.bind(this);    
     }
     
+    changeTextBoxBorderToError(textBoxValue: any, objName: any){
+        if(textBoxValue.trim() === ""){
+            const obj: any = document.querySelector("#"+objName);
+            obj.className = "gf-form-input max-width-18 input-textbox-error";
+        }
+        if(objName === "emailId"){
+            const obj: any = document.querySelector("#"+objName);
+            obj.className = "gf-form-input max-width-18 input-textbox-error";
+        }
+    }
+    
+    restoreTextBoxBorderToNormal(objName: any){
+        const obj: any = document.querySelector("#"+objName);
+        obj.className = "gf-form-input max-width-18";
+    }
+
     onChange = (e: any) => {
+        e.preventDefault();
         const { name, value } = e.nativeEvent.target;
         const { admissionEnquiryData } = this.state;
-        e.preventDefault();
+        admissionEnquiryData.errorMessage = "";
         this.setState({
             admissionEnquiryData: {
                 ...admissionEnquiryData,
                 [name]: value
             }
         });
-        
+        this.restoreTextBoxBorderToNormal(name);
     }
 
     saveEnquiry = (e: any) => {
@@ -156,7 +89,18 @@ class NewAdmissionEnquiryPage<T = {[staticData: string]: any}> extends React.Com
         if(admissionEnquiryData.studentName.trim() === "" 
                 || admissionEnquiryData.studentLastName.trim() === ""
                 || admissionEnquiryData.comments.trim() === ""){
-            admissionEnquiryData.errorMessage = "Mandatory fields missing";
+            admissionEnquiryData.errorMessage = ERROR_MESSAGE_MANDATORY_FIELD_MISSING;
+            this.changeTextBoxBorderToError(admissionEnquiryData.studentName, "studentName");
+            this.changeTextBoxBorderToError(admissionEnquiryData.studentLastName, "studentLastName");
+            this.changeTextBoxBorderToError(admissionEnquiryData.comments, "comments");
+            return;
+        }
+        if(admissionEnquiryData.emailId !== ""){
+            if(!commonFunctions.validateEmail(admissionEnquiryData.emailId)){
+                admissionEnquiryData.errorMessage = ERROR_MESSAGE_INVALID_EMAIL_ID;
+                this.changeTextBoxBorderToError(admissionEnquiryData.emailId, "emailId");
+                return;
+            } 
         }
         this.setState({
             admissionEnquiryData: admissionEnquiryData
@@ -169,49 +113,44 @@ class NewAdmissionEnquiryPage<T = {[staticData: string]: any}> extends React.Com
         return (
             <main>
                 {
-                    admissionEnquiryData.errorMessage !== ""  && (
-                        <MessageBox id="mbox" message={admissionEnquiryData.errorMessage} activeTab={2}></MessageBox>        
-                    )
-                }
-                {
-                    admissionEnquiryData.errorMessage === ""  && (
-                        <MessageBox id="mbox" message={"New enquiry"} activeTab={0}></MessageBox>        
-                    )
+                    admissionEnquiryData.errorMessage !== ""  ? 
+                        <MessageBox id="mbox" message={admissionEnquiryData.errorMessage} activeTab={2}/>        
+                        : null
                 }
                 <div className="row col-sm-12 col-xs-12 m-b-2">
                     <div className="col-sm-4">
                         <h6>First Name <span style={{ color: 'red' }}> * </span> </h6>
-                        <input type="text" className="gf-form-input max-width-18" placeholder="Student First Name" maxLength={255} name="studentName" onChange={this.onChange}  value={admissionEnquiryData.studentName}/>
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Student First Name" maxLength={255} name="studentName" id="studentName" onChange={this.onChange}  value={admissionEnquiryData.studentName}/>
                     </div>
                     <div className="col-sm-4">
                         <h6 >Middle Name</h6>
-                        <input type="text" className="gf-form-input max-width-18" placeholder="Student Middle Name" maxLength={255} name="studentMiddleName"  onChange={this.onChange} value={admissionEnquiryData.studentMiddleName}/>
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Student Middle Name" maxLength={255} name="studentMiddleName" id="studentMiddleName"  onChange={this.onChange} value={admissionEnquiryData.studentMiddleName}/>
                     </div>
                     <div className="col-sm-4">
                         <h6 >Last Name <span style={{ color: 'red' }}> * </span></h6>
-                        <input type="text" className="gf-form-input max-width-18" placeholder="Student Last Name" maxLength={255} name="studentLastName"  onChange={this.onChange} value={admissionEnquiryData.studentLastName}/>
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Student Last Name" maxLength={255} name="studentLastName" id="studentLastName"  onChange={this.onChange} value={admissionEnquiryData.studentLastName}/>
                     </div>
                 </div>
 
                 <div className="row col-sm-12 col-xs-12 m-b-2">
                     <div className="col-sm-4">
                         <h6 >Cell Phone No</h6>
-                        <input type="text" className="gf-form-input max-width-18" placeholder="Cell Phone No" maxLength={255}  name="cellPhoneNo"  onChange={this.onChange} value={admissionEnquiryData.cellPhoneNo}/>
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Cell Phone No" maxLength={255}  name="cellPhoneNo" id="cellPhoneNo"  onChange={this.onChange} value={admissionEnquiryData.cellPhoneNo}/>
                     </div>
                     <div className="col-sm-4">
                         <h6 >Land Line Phone No</h6>
-                        <input type="text" className="gf-form-input max-width-18" placeholder="Land Line Phone No" maxLength={255}  name="landLinePhoneNo" onChange={this.onChange} value={admissionEnquiryData.landLinePhoneNo} />
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Land Line Phone No" maxLength={255}  name="landLinePhoneNo" id="landLinePhoneNo" onChange={this.onChange} value={admissionEnquiryData.landLinePhoneNo} />
                     </div>
                     <div className="col-sm-4">
                         <h6 >Email Id</h6>
-                        <input type="text" className="gf-form-input max-width-18" placeholder="Email Id" maxLength={255}  name="emailId"  onChange={this.onChange} value={admissionEnquiryData.emailId}/>
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Email Id" maxLength={255}  name="emailId" id="emailId"  onChange={this.onChange} value={admissionEnquiryData.emailId}/>
                     </div>
                 </div>
 
                 <div className="row col-sm-12 col-xs-12 m-b-2">
                     <div className="col-sm-4">
                         <h6 >Date Of Birth</h6>
-                        <input type="date" id="dateOfBirth" name="dateOfBirth" maxLength={8}  onChange={this.onChange} value={admissionEnquiryData.dateOfBirth}></input> 
+                        <input type="date" name="dateOfBirth" id="dateOfBirth"  maxLength={8}  onChange={this.onChange} value={admissionEnquiryData.dateOfBirth}></input> 
                     </div>
                     <div className="col-sm-4">
                         <h6 >Gender</h6>
@@ -224,7 +163,7 @@ class NewAdmissionEnquiryPage<T = {[staticData: string]: any}> extends React.Com
                     </div>
                     <div className="col-sm-4">
                         <h6 >Highest Qualification</h6>
-                        <input type="text" className="gf-form-input max-width-18" placeholder="Highest Qualification" maxLength={255} name="highestQualification" onChange={this.onChange} value={admissionEnquiryData.highestQualification} />
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Highest Qualification" maxLength={255} name="highestQualification" id="highestQualification" onChange={this.onChange} value={admissionEnquiryData.highestQualification} />
                     </div>
                 </div>
 
@@ -240,7 +179,7 @@ class NewAdmissionEnquiryPage<T = {[staticData: string]: any}> extends React.Com
                     </div>
                     <div className="col-sm-4">
                         <h6 >Comments <span style={{ color: 'red' }}> * </span></h6>
-                        <textarea rows={3} className="gf-form-input max-width-18" placeholder="comments" maxLength={5000}  name="comments"  onChange={this.onChange} value={admissionEnquiryData.comments}/>
+                        <textarea rows={3} className="gf-form-input max-width-18" placeholder="comments" maxLength={5000}  name="comments" id="comments"  onChange={this.onChange} value={admissionEnquiryData.comments}/>
                     </div>
                 </div>
                 <div className="m-t-1 text-right">

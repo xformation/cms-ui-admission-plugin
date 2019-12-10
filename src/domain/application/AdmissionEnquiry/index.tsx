@@ -16,9 +16,9 @@ class AdmissionEnquiry extends React.Component<any, any> {
     }
 
     async toggleTab(tabNo: any) {
-        let bid = 34;
-        let aid = 56;
-        let eqs = null;
+        let bid = 34; //localStorage.getItem("branchId");
+        let aid = 56; //localStorage.getItem("academicYearId");
+        let eqs = null; 
         if(tabNo === 2){
             eqs = 'FOLLOWUP';
         }else if(tabNo === 3){
