@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import AdmissionEnquiryPage from './EnquiryPage';
 
 export interface AdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement>{
     [data: string]: any;
@@ -12,8 +14,19 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
         this.state = {
             list: this.props.data,
             totalRecords: this.props.totalRecords,
-            type: this.props.type
+            type: this.props.type,
+            isModalOpen: false,
+            enquiryObj: {}
         };
+    }
+
+
+    showDetail(e: any, bShow: boolean, enquiryObj: any) {
+        e && e.preventDefault();
+        this.setState(() => ({
+            isModalOpen: bShow,
+            enquiryObj: enquiryObj
+        }));
     }
 
     createRows(objAry: any) {
@@ -35,7 +48,7 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
                 <td>{admissionEnquiry.enquiryStatus}</td>
                 <td>{admissionEnquiry.strEnquiryDate}</td>
                 <td>
-                  {/* <button className="btn btn-primary" onClick={e => this.showDetail(admissionEnquiry)}>Details</button> */}
+                  <button className="btn btn-primary" onClick={e => this.showDetail(e, true, admissionEnquiry)}>Edit</button>
                 </td>
     
               </tr>
@@ -46,9 +59,18 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
 
     render() {
         const {data} = this.props
-        const {list, totalRecords, type} = this.state;
+        const {list, totalRecords, type, isModalOpen, enquiryObj} = this.state;
         return (
             <main>
+                <Modal isOpen={isModalOpen} className="react-strap-modal-container">
+                    <ModalHeader>Edit Admission Enquiry</ModalHeader>
+                    <ModalBody className="modal-content">
+                        <AdmissionEnquiryPage operationType="EDIT" enquiryObject={enquiryObj}></AdmissionEnquiryPage>
+                        <div className="text-center" style={{marginLeft:'222px', marginTop:'-34px'}}>
+                            <button className="btn btn-danger border-bottom" onClick={(e) => this.showDetail(e, false, {})}>Cancel</button>
+                        </div>
+                    </ModalBody>
+                </Modal>
                 <div className="pull-right col-sm-12 col-xs-12 profile-header m-b-2">
                     <span style={{ fontSize: "13px", color: "Blue"}}>{type} : {totalRecords}</span>
                 </div>
@@ -63,7 +85,7 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
                                 <th>Email Id</th>
                                 <th>Status</th>
                                 <th>Date</th>
-                                <th>Details</th>
+                                <th>Edit</th>
                             </tr>
                         </thead>
                         <tbody>
