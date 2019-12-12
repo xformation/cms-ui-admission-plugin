@@ -12,6 +12,7 @@ type AdmissionEnquiryState = {
     admissionEnquiryData: any,
     academicYearId: any,
     branchId: any,
+    dob: any,
 };
 
 const ERROR_MESSAGE_MANDATORY_FIELD_MISSING = "Mandatory fields missing";
@@ -34,6 +35,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
             operationType: this.props.operationType,
             academicYearId: 56,
             branchId: 34,
+            dob: "",
             admissionEnquiryData: {
                 errorMessage:"",
                 successMessage:"",
@@ -77,7 +79,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     onChange = (e: any) => {
         e.preventDefault();
         const { name, value } = e.nativeEvent.target;
-        const { admissionEnquiryData, enquiryObject, operationType } = this.state;
+        const { admissionEnquiryData, enquiryObject, operationType, dob } = this.state;
         admissionEnquiryData.errorMessage = "";
         admissionEnquiryData.successMessage = "";
         if(operationType === "ADD"){
@@ -94,6 +96,13 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                     [name]: value
                 }
             });
+            if(name === "dateOfBirth"){
+                console.log("dob for update : ",value);
+                let dob = moment(value, "YYYY-MM-DD").format("YYYY-MM-DD");
+                this.setState({
+                    dob: dob
+                }); 
+            }
         }
         
         this.restoreTextBoxBorderToNormal(name);
@@ -268,7 +277,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     }
 
     render() {
-        const {operationType, admissionEnquiryData, enquiryObject} = this.state;
+        const {operationType, admissionEnquiryData, enquiryObject, dob} = this.state;
         return (
             <main>
                 {
@@ -318,7 +327,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                             this.props.operationType === "ADD" ?
                                 <input type="date" name="dateOfBirth" id="dateOfBirth"  maxLength={8}  onChange={this.onChange} value={admissionEnquiryData.dateOfBirth}></input>  
                             :
-                            <input type="date" name="dateOfBirth" id="dateOfBirth" style={{width:'139px'}} maxLength={8}  onChange={this.onChange} value={moment(enquiryObject.strDateOfBirth, "DD-MM-YYYY").format("YYYY-MM-DD")}></input> 
+                            <input type="date" name="dateOfBirth" id="dateOfBirth" style={{width:'139px'}} maxLength={8}  onChange={this.onChange} value={dob !== "" ? dob : moment(enquiryObject.strDateOfBirth, "DD-MM-YYYY").format("YYYY-MM-DD")}></input> 
                         }
                         
                     </div>

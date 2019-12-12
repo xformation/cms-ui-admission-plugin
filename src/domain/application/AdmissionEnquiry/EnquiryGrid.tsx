@@ -84,7 +84,7 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
                                 <th>Land Line Phone No</th>
                                 <th>Email Id</th>
                                 <th>Status</th>
-                                <th>Date</th>
+                                <th>Enquiry Date</th>
                                 <th>Edit</th>
                             </tr>
                         </thead>
