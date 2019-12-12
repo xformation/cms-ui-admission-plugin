@@ -22,7 +22,6 @@ export const GET_ADMISSION_ENQUIRY_LIST = gql`
       gender
       highestQualification
       modeOfEnquiry
-      enquiryDate
       comments
       branchId
       departmentId
@@ -34,9 +33,10 @@ export const GET_ADMISSION_ENQUIRY_LIST = gql`
       academicYearId
       enquiryStatus
       strDateOfBirth
-      strEnquiryDate
       exitCode
       exitDescription
+      strCreatedOn
+      strUpdatedOn
     }
   }
 `;

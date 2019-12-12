@@ -38,15 +38,20 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
         const retVal = [];
           for (let i = 0; i < mutateResLength; i++) {
             const admissionEnquiry = objAry.getAdmissionEnquiryList[i];
+            let dob = null;
+            // if(admissionEnquiry.strDateOfBirth !== undefined && admissionEnquiry.strDateOfBirth !== null 
+            //     && admissionEnquiry.strDateOfBirth.trim() !== "" ){
+            //         dob = moment(enquiryObject.dateOfBirth, "YYYY-MM-DD").format("DD-MM-YYYY");
+            // }
             retVal.push(
               <tr >
                 <td>{admissionEnquiry.id}</td>
-                <td>{admissionEnquiry.studentName}</td>
-                <td>{admissionEnquiry.landLinePhoneNo}</td>
+                <td>{admissionEnquiry.studentName}&nbsp;{admissionEnquiry.studentMiddleName}&nbsp;{admissionEnquiry.studentLastName} </td>
                 <td>{admissionEnquiry.cellPhoneNo}</td>
+                <td>{admissionEnquiry.landLinePhoneNo}</td>
                 <td>{admissionEnquiry.emailId}</td>
                 <td>{admissionEnquiry.enquiryStatus}</td>
-                <td>{admissionEnquiry.strEnquiryDate}</td>
+                <td>{admissionEnquiry.strCreatedOn}</td>
                 <td>
                   <button className="btn btn-primary" onClick={e => this.showDetail(e, true, admissionEnquiry)}>Edit</button>
                 </td>
@@ -65,7 +70,7 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
                 <Modal isOpen={isModalOpen} className="react-strap-modal-container">
                     <ModalHeader>Edit Admission Enquiry</ModalHeader>
                     <ModalBody className="modal-content">
-                        <AdmissionEnquiryPage operationType="EDIT" enquiryObject={enquiryObj}></AdmissionEnquiryPage>
+                        <AdmissionEnquiryPage operationType={"EDIT"} enquiryObject={enquiryObj}></AdmissionEnquiryPage>
                         <div className="text-center" style={{marginLeft:'222px', marginTop:'-34px'}}>
                             <button className="btn btn-danger border-bottom" onClick={(e) => this.showDetail(e, false, {})}>Cancel</button>
                         </div>
@@ -79,9 +84,9 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
                         <thead>
                             <tr>
                                 <th>Enquiry Id</th>
-                                <th>Name</th>
-                                <th>Land Line No</th>
-                                <th>Cell No</th>
+                                <th>Student Name</th>
+                                <th>Cell Phone No</th>
+                                <th>Land Line Phone No</th>
                                 <th>Email Id</th>
                                 <th>Status</th>
                                 <th>Date</th>

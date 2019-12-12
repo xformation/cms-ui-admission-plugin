@@ -89,7 +89,7 @@ class AdmissionEnquiry extends React.Component<any, any> {
                 </Nav>
                 <TabContent activeTab={activeTab} className="col-sm-9 border-left p-t-1">
                     <TabPane tabId={0}>
-                        <AdmissionEnquiryPage operationType="ADD"></AdmissionEnquiryPage>
+                        <AdmissionEnquiryPage operationType={"ADD"} ></AdmissionEnquiryPage>
                     </TabPane>
                     <TabPane tabId={1}>
                         {

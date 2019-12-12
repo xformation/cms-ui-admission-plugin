@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { graphql, compose, withApollo } from 'react-apollo';
+import { withApollo } from 'react-apollo';
 import {MessageBox} from '../Message/MessageBox'
 import { SAVE_ADMISSION_ENQUIRY } from '../_queries';
 import {commonFunctions} from '../_utilites/common.functions';
@@ -9,7 +9,9 @@ import * as moment from 'moment';
 type AdmissionEnquiryState = {
     operationType: any,
     enquiryObject: any,
-    admissionEnquiryData: any 
+    admissionEnquiryData: any,
+    academicYearId: any,
+    branchId: any,
 };
 
 const ERROR_MESSAGE_MANDATORY_FIELD_MISSING = "Mandatory fields missing";
@@ -30,6 +32,8 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
         this.state = {
             enquiryObject: this.props.enquiryObject,
             operationType: this.props.operationType,
+            academicYearId: 56,
+            branchId: 34,
             admissionEnquiryData: {
                 errorMessage:"",
                 successMessage:"",
@@ -43,12 +47,6 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                 modeOfEnquiry: "",
                 highestQualification: "",
                 comments: "",
-                academicYear: {
-                    id: ""
-                },
-                branch: {
-                    id: ""
-                },
                 department: {
                     id: ""
                 }
@@ -57,6 +55,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
         this.changeTextBoxBorderToError = this.changeTextBoxBorderToError.bind(this);
         this.restoreTextBoxBorderToNormal = this.restoreTextBoxBorderToNormal.bind(this);
         this.addAdmissionEnquiry = this.addAdmissionEnquiry.bind(this);
+        
     }
     
     changeTextBoxBorderToError(textBoxValue: any, objName: any){
@@ -101,7 +100,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     }
 
     saveEnquiry = (e: any) => {
-        const { admissionEnquiryData, enquiryObject, operationType } = this.state;
+        const { admissionEnquiryData, enquiryObject, operationType, academicYearId, branchId } = this.state;
         admissionEnquiryData.errorMessage = "";
         this.setState({
             admissionEnquiryData: admissionEnquiryData
@@ -171,7 +170,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     }
 
     async addAdmissionEnquiry(dob: any){
-        const { admissionEnquiryData } = this.state;
+        const { admissionEnquiryData, academicYearId, branchId } = this.state;
         let admissionEnquiryInput = {
             studentName: admissionEnquiryData.studentName,
             studentMiddleName: admissionEnquiryData.studentMiddleName,
@@ -184,6 +183,8 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
             highestQualification: admissionEnquiryData.highestQualification,
             modeOfEnquiry: admissionEnquiryData.modeOfEnquiry,
             comments: admissionEnquiryData.comments,
+            academicYearId: academicYearId,
+            branchId: branchId
         };
 
         let btn = document.querySelector("#btnSave");
@@ -214,7 +215,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     }
 
     async updateAdmissionEnquiry(){
-        const { admissionEnquiryData, enquiryObject } = this.state;
+        const { admissionEnquiryData, enquiryObject, academicYearId, branchId } = this.state;
         let dob = null;
         if(enquiryObject.dateOfBirth !== undefined && enquiryObject.dateOfBirth !== null 
             && enquiryObject.dateOfBirth.trim() !== "" ){
@@ -234,6 +235,8 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
             modeOfEnquiry: enquiryObject.modeOfEnquiry,
             enquiryStatus: enquiryObject.enquiryStatus,
             comments: enquiryObject.comments,
+            academicYearId: academicYearId,
+            branchId: branchId
         };
 
         let btn = document.querySelector("#btnUpdate");
@@ -312,10 +315,10 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                     <div className="col-sm-4">
                         <h6 >Date Of Birth</h6>
                         {
-                            operationType === "ADD" ?
-                                <input type="date" name="dateOfBirth" id="dateOfBirth"  maxLength={8}  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.dateOfBirth : enquiryObject.dateOfBirth}></input>  
+                            this.props.operationType === "ADD" ?
+                                <input type="date" name="dateOfBirth" id="dateOfBirth"  maxLength={8}  onChange={this.onChange} value={admissionEnquiryData.dateOfBirth}></input>  
                             :
-                            <input type="date" name="dateOfBirth" id="dateOfBirth" style={{width:'139px'}} maxLength={8}  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.dateOfBirth : enquiryObject.dateOfBirth}></input> 
+                            <input type="date" name="dateOfBirth" id="dateOfBirth" style={{width:'139px'}} maxLength={8}  onChange={this.onChange} value={enquiryObject.dateOfBirth}></input> 
                         }
                         
                     </div>
