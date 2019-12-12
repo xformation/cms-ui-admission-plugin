@@ -38,11 +38,6 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
         const retVal = [];
           for (let i = 0; i < mutateResLength; i++) {
             const admissionEnquiry = objAry.getAdmissionEnquiryList[i];
-            let dob = null;
-            // if(admissionEnquiry.strDateOfBirth !== undefined && admissionEnquiry.strDateOfBirth !== null 
-            //     && admissionEnquiry.strDateOfBirth.trim() !== "" ){
-            //         dob = moment(enquiryObject.dateOfBirth, "YYYY-MM-DD").format("DD-MM-YYYY");
-            // }
             retVal.push(
               <tr >
                 <td>{admissionEnquiry.id}</td>

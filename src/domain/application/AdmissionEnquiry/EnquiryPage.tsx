@@ -318,7 +318,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                             this.props.operationType === "ADD" ?
                                 <input type="date" name="dateOfBirth" id="dateOfBirth"  maxLength={8}  onChange={this.onChange} value={admissionEnquiryData.dateOfBirth}></input>  
                             :
-                            <input type="date" name="dateOfBirth" id="dateOfBirth" style={{width:'139px'}} maxLength={8}  onChange={this.onChange} value={enquiryObject.dateOfBirth}></input> 
+                            <input type="date" name="dateOfBirth" id="dateOfBirth" style={{width:'139px'}} maxLength={8}  onChange={this.onChange} value={moment(enquiryObject.strDateOfBirth, "DD-MM-YYYY").format("YYYY-MM-DD")}></input> 
                         }
                         
                     </div>
