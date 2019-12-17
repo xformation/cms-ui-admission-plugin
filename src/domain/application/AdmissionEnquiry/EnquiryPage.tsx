@@ -23,6 +23,7 @@ const ERROR_MESSAGE_INVALID_EMAIL_ID = "Invalid email id";
 const ERROR_MESSAGE_SERVER_SIDE_ERROR = "Due to some error in admission service, admission enquiry could not be saved. Please check admission service logs";
 const SUCCESS_MESSAGE_ADMISSION_ENQUIRY_ADDED = "New admission enquiry saved successfully";
 const SUCCESS_MESSAGE_ADMISSION_ENQUIRY_UPDATED = "Admission enquiry updated successfully";
+const SUCCESS_MESSAGE_ADMISSION_GRANTED = "Admission granted";
 
 export interface NewAdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement>{
     origin?: any,
@@ -298,7 +299,10 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
         });
         btn && btn.removeAttribute("disabled");
         if(exitCode === 0 ){
-            admissionEnquiryData.successMessage = SUCCESS_MESSAGE_ADMISSION_ENQUIRY_UPDATED;
+            origin !== "ADMISSION_PAGE" ? admissionEnquiryData.successMessage = SUCCESS_MESSAGE_ADMISSION_ENQUIRY_UPDATED : 
+            admissionEnquiryData.successMessage = SUCCESS_MESSAGE_ADMISSION_GRANTED
+            // admissionEnquiryData.successMessage = SUCCESS_MESSAGE_ADMISSION_ENQUIRY_UPDATED;
+        
         }else {
             admissionEnquiryData.errorMessage = ERROR_MESSAGE_SERVER_SIDE_ERROR;
         }
