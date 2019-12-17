@@ -670,7 +670,7 @@ class AddAdmissionPage extends React.Component<any, AddAdmissionPageStates>{
                             </div>
                         </div>
                         <div className="col-lg-9 col-md-12 col-sm-12 col-xs-12 right-part custom-style">
-                            <div>
+                            {/* <div>
                                 <Survey.SurveyCollapseForm json={this.PERSONAL} css={customCss} onComplete={this.onCompletePersonalForm} ref={this.personalFormRef} />
                             </div>
                             <div>
@@ -678,7 +678,7 @@ class AddAdmissionPage extends React.Component<any, AddAdmissionPageStates>{
                             </div>
                             <div>
                                 <Survey.SurveyCollapseForm json={this.DOCUMENTS} css={customCss} showCompletedPage={false} ref={this.documentsFormRef} />
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

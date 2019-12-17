@@ -94,35 +94,35 @@ class AdmissionEnquiry extends React.Component<any, any> {
                     <TabPane tabId={1}>
                         {
                             enquiryList !== null && (
-                                <EnquiryGrid type="Total Received" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList}></EnquiryGrid>
+                                <EnquiryGrid type="Total Received" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList}></EnquiryGrid>
                             )
                         } 
                     </TabPane>
                     <TabPane tabId={2}>
                         {
                             enquiryList !== null && (
-                                <EnquiryGrid type="Total Follow Up" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList}></EnquiryGrid>
+                                <EnquiryGrid type="Total Follow Up" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList}></EnquiryGrid>
                             )
                         } 
                     </TabPane>
                     <TabPane tabId={3}>
                         {
                             enquiryList !== null && (
-                                <EnquiryGrid type="Total Declined" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList}></EnquiryGrid>
+                                <EnquiryGrid type="Total Declined" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList}></EnquiryGrid>
                             )
                         } 
                     </TabPane>
                     <TabPane tabId={4}>
                         {
                             enquiryList !== null && (
-                                <EnquiryGrid type="Total Admission Granted" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList}></EnquiryGrid>
+                                <EnquiryGrid type="Total Admission Granted" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList}></EnquiryGrid>
                             )
                         } 
                     </TabPane>
                     <TabPane tabId={5}>
                         {
                             enquiryList !== null && (
-                                <EnquiryGrid type="Total Enquiries" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList}></EnquiryGrid>
+                                <EnquiryGrid type="Total Enquiries" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList}></EnquiryGrid>
                             )
                         }                        
                     </TabPane>

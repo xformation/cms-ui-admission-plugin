@@ -1,16 +1,13 @@
 import * as React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import AdmissionEnquiryPage from './EnquiryPage';
-
 
 export interface AdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement>{
     [data: string]: any;
     totalRecords?: number | string;
     type?: string;
-    source?: string;
 }
 
-export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<AdmissionEnquiryProps, any> {
+export class AdmissionGrid<T = {[data: string]: any}> extends React.Component<AdmissionEnquiryProps, any> {
     constructor(props: AdmissionEnquiryProps) {
         super(props);
         this.state = {
@@ -18,33 +15,28 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
             totalRecords: this.props.totalRecords,
             type: this.props.type,
             isModalOpen: false,
-            enquiryObj: {},
-            source: this.props.source
+            enquiryObj: {}
         };
-        
     }
 
-    
 
     showDetail(e: any, bShow: boolean, enquiryObj: any) {
         e && e.preventDefault();
         this.setState(() => ({
             isModalOpen: bShow,
-            enquiryObj: enquiryObj,
-            source: this.props.source
+            enquiryObj: enquiryObj
         }));
     }
 
     createRows(objAry: any) {
-        const { source } = this.state;
-        console.log("createRows() - Enquiry list on Grid page:  ", objAry);
+        console.log("3 - Enquiry list ", objAry.getAdmissionEnquiryList);
         if(objAry === undefined || objAry === null) {
             return;
         }
-        const mutateResLength = objAry.length;
+        const mutateResLength = objAry.getAdmissionEnquiryList.length;
         const retVal = [];
           for (let i = 0; i < mutateResLength; i++) {
-            const admissionEnquiry = objAry[i];
+            const admissionEnquiry = objAry.getAdmissionEnquiryList[i];
             retVal.push(
               <tr >
                 <td>{admissionEnquiry.id}</td>
@@ -55,13 +47,7 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
                 <td>{admissionEnquiry.enquiryStatus}</td>
                 <td>{admissionEnquiry.strCreatedOn}</td>
                 <td>
-                    {
-                        admissionEnquiry.enquiryStatus !== "CONVERTED_TO_ADMISSION" && admissionEnquiry.enquiryStatus !== "DECLINED" && (
-                            <button className="btn btn-primary" onClick={e => this.showDetail(e, true, admissionEnquiry)}>{source !== "ADMISSION_PAGE" ? 'Edit' : 'Convert To Admission'}</button>
-                        )
-                        
-                    }
-                    
+                  <button className="btn btn-primary" onClick={e => this.showDetail(e, true, admissionEnquiry)}>Edit</button>
                 </td>
     
               </tr>
@@ -72,13 +58,13 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
 
     render() {
         const {data} = this.props
-        const {list, totalRecords, type, isModalOpen, enquiryObj, source} = this.state;
+        const {list, totalRecords, type, isModalOpen, enquiryObj} = this.state;
         return (
             <main>
                 <Modal isOpen={isModalOpen} className="react-strap-modal-container">
                     <ModalHeader>Edit Admission Enquiry</ModalHeader>
                     <ModalBody className="modal-content">
-                        <AdmissionEnquiryPage operationType={"EDIT"} enquiryObject={enquiryObj} origin={source}></AdmissionEnquiryPage>
+                        {/* <AdmissionApplicationPage operationType={"EDIT"} enquiryObject={enquiryObj}></AdmissionApplicationPage> */}
                         <div className="text-center" style={{marginLeft:'222px', marginTop:'-34px'}}>
                             <button className="btn btn-danger border-bottom" onClick={(e) => this.showDetail(e, false, {})}>Cancel</button>
                         </div>
@@ -91,13 +77,13 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
                     <table id="admissionEnquiryTable" className="striped-table fwidth bg-white p-2">
                         <thead>
                             <tr>
-                                <th>Enquiry Id</th>
-                                <th>Student Name</th>
-                                <th>Cell Phone No</th>
-                                <th>Land Line Phone No</th>
-                                <th>Email Id</th>
+                                <th>Admission No</th>
+                                <th>Source of Application</th>
+                                <th>Source ID</th>
+                                <th>Application Date</th>
+                                <th>Admission Granted Date</th>
                                 <th>Status</th>
-                                <th>Enquiry Date</th>
+                                <th>Comments</th>
                                 <th>Edit</th>
                             </tr>
                         </thead>
@@ -111,4 +97,4 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
     }
 }
 
-export default EnquiryGrid;
+export default AdmissionGrid;

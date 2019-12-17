@@ -5,6 +5,8 @@ import { SAVE_ADMISSION_ENQUIRY } from '../_queries';
 import {commonFunctions} from '../_utilites/common.functions';
 import  "../../../css/custom.css";
 import * as moment from 'moment';
+import wsAdmissionServiceSingletonClient from '../../../wsAdmissionServiceClient';
+// import {Websocket} from 'react-websocket';
 
 type AdmissionEnquiryState = {
     operationType: any,
@@ -13,6 +15,7 @@ type AdmissionEnquiryState = {
     academicYearId: any,
     branchId: any,
     dob: any,
+    origin: any
 };
 
 const ERROR_MESSAGE_MANDATORY_FIELD_MISSING = "Mandatory fields missing";
@@ -22,6 +25,7 @@ const SUCCESS_MESSAGE_ADMISSION_ENQUIRY_ADDED = "New admission enquiry saved suc
 const SUCCESS_MESSAGE_ADMISSION_ENQUIRY_UPDATED = "Admission enquiry updated successfully";
 
 export interface NewAdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement>{
+    origin?: any,
     enquiryObject?: any;
     [operationType: string] : any;
 }
@@ -31,6 +35,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     constructor(props: NewAdmissionEnquiryProps) {
         super(props);
         this.state = {
+            origin: this.props.origin,
             enquiryObject: this.props.enquiryObject,
             operationType: this.props.operationType,
             academicYearId: 56,
@@ -57,9 +62,31 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
         this.changeTextBoxBorderToError = this.changeTextBoxBorderToError.bind(this);
         this.restoreTextBoxBorderToNormal = this.restoreTextBoxBorderToNormal.bind(this);
         this.addAdmissionEnquiry = this.addAdmissionEnquiry.bind(this);
-        
+        this.registerSocket = this.registerSocket.bind(this);
     }
     
+    registerSocket() {
+        // let self = this;
+        let socket = wsAdmissionServiceSingletonClient.getInstance();
+
+        socket.onmessage = (response: any) => {
+          let message = JSON.parse(response.data);
+          console.log("message received from server");
+        }
+    
+        socket.onopen = () => {
+           console.log("websocket connection open with admission service");
+        //    socket.subscribe('/topic/greetings', function (greeting: any) {
+        //         console.log(JSON.parse(greeting.body).content);
+        //    });
+            
+        }
+    
+        window.onbeforeunload = () => {
+            console.log("websocket connection is going to be closed with admission service");
+        }
+    }
+
     changeTextBoxBorderToError(textBoxValue: any, objName: any){
         if(textBoxValue.trim() === ""){
             const obj: any = document.querySelector("#"+objName);
@@ -199,6 +226,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
         let btn = document.querySelector("#btnSave");
         btn && btn.setAttribute("disabled", "true");
         let exitCode = 0;
+        
         await this.props.client.mutate({
             mutation: SAVE_ADMISSION_ENQUIRY,
             variables: { 
@@ -224,7 +252,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     }
 
     async updateAdmissionEnquiry(){
-        const { admissionEnquiryData, enquiryObject, academicYearId, branchId } = this.state;
+        const { admissionEnquiryData, enquiryObject, academicYearId, branchId, origin } = this.state;
         let dob = null;
         if(enquiryObject.dateOfBirth !== undefined && enquiryObject.dateOfBirth !== null 
             && enquiryObject.dateOfBirth.trim() !== "" ){
@@ -242,13 +270,17 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
             gender: enquiryObject.gender,
             highestQualification: enquiryObject.highestQualification,
             modeOfEnquiry: enquiryObject.modeOfEnquiry,
-            enquiryStatus: enquiryObject.enquiryStatus,
+            enquiryStatus: origin !== "ADMISSION_PAGE" ? enquiryObject.enquiryStatus : "CONVERTED_TO_ADMISSION",
+            transactionSource: origin !== "ADMISSION_PAGE" ? null : origin,
             comments: enquiryObject.comments,
             academicYearId: academicYearId,
             branchId: branchId
         };
 
         let btn = document.querySelector("#btnUpdate");
+        if(origin === "ADMISSION_PAGE"){
+            btn = document.querySelector("#btnConvertToAdmission");
+        }
         btn && btn.setAttribute("disabled", "true");
         let exitCode = 0;
         await this.props.client.mutate({
@@ -274,10 +306,11 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
             admissionEnquiryData: admissionEnquiryData,
             enquiryObject: enquiryObject
         });
+        this.registerSocket();
     }
 
     render() {
-        const {operationType, admissionEnquiryData, enquiryObject, dob} = this.state;
+        const {operationType, admissionEnquiryData, enquiryObject, dob, origin} = this.state;
         return (
             <main>
                 {
@@ -293,30 +326,30 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                 <div className="row col-sm-12 col-xs-12 m-b-2">
                     <div className="col-sm-4">
                         <h6>First Name <span style={{ color: 'red' }}> * </span> </h6>
-                        <input type="text" className="gf-form-input max-width-18" placeholder="Student First Name" maxLength={255} name="studentName" id="studentName" onChange={this.onChange}  value={operationType === "ADD" ? admissionEnquiryData.studentName : enquiryObject.studentName}/>
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Student First Name" maxLength={255} disabled={origin === "ADMISSION_PAGE" ? true : false} name="studentName" id="studentName" onChange={this.onChange}  value={operationType === "ADD" ? admissionEnquiryData.studentName : enquiryObject.studentName}/>
                     </div>
                     <div className="col-sm-4">
                         <h6 >Middle Name</h6>
-                        <input type="text" className="gf-form-input max-width-18" placeholder="Student Middle Name" maxLength={255} name="studentMiddleName" id="studentMiddleName"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.studentMiddleName : enquiryObject.studentMiddleName}/>
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Student Middle Name" maxLength={255} disabled={origin === "ADMISSION_PAGE" ? true : false} name="studentMiddleName" id="studentMiddleName"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.studentMiddleName : enquiryObject.studentMiddleName}/>
                     </div>
                     <div className="col-sm-4">
                         <h6 >Last Name <span style={{ color: 'red' }}> * </span></h6>
-                        <input type="text" className="gf-form-input max-width-18" placeholder="Student Last Name" maxLength={255} name="studentLastName" id="studentLastName"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.studentLastName : enquiryObject.studentLastName}/>
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Student Last Name" maxLength={255} disabled={origin === "ADMISSION_PAGE" ? true : false} name="studentLastName" id="studentLastName"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.studentLastName : enquiryObject.studentLastName}/>
                     </div>
                 </div>
 
                 <div className="row col-sm-12 col-xs-12 m-b-2">
                     <div className="col-sm-4">
                         <h6 >Cell Phone No</h6>
-                        <input type="text" className="gf-form-input max-width-18" placeholder="Cell Phone No" maxLength={255}  name="cellPhoneNo" id="cellPhoneNo"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.cellPhoneNo : enquiryObject.cellPhoneNo}/>
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Cell Phone No" maxLength={255}  disabled={origin === "ADMISSION_PAGE" ? true : false} name="cellPhoneNo" id="cellPhoneNo"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.cellPhoneNo : enquiryObject.cellPhoneNo}/>
                     </div>
                     <div className="col-sm-4">
                         <h6 >Land Line Phone No</h6>
-                        <input type="text" className="gf-form-input max-width-18" placeholder="Land Line Phone No" maxLength={255}  name="landLinePhoneNo" id="landLinePhoneNo" onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.landLinePhoneNo : enquiryObject.landLinePhoneNo} />
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Land Line Phone No" maxLength={255}  disabled={origin === "ADMISSION_PAGE" ? true : false} name="landLinePhoneNo" id="landLinePhoneNo" onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.landLinePhoneNo : enquiryObject.landLinePhoneNo} />
                     </div>
                     <div className="col-sm-4">
                         <h6 >Email Id</h6>
-                        <input type="text" className="gf-form-input max-width-18" placeholder="Email Id" maxLength={255}  name="emailId" id="emailId"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.emailId : enquiryObject.emailId}/>
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Email Id" maxLength={255}  disabled={origin === "ADMISSION_PAGE" ? true : false} name="emailId" id="emailId"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.emailId : enquiryObject.emailId}/>
                     </div>
                 </div>
 
@@ -325,15 +358,15 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                         <h6 >Date Of Birth</h6>
                         {
                             this.props.operationType === "ADD" ?
-                                <input type="date" name="dateOfBirth" id="dateOfBirth"  maxLength={8}  onChange={this.onChange} value={admissionEnquiryData.dateOfBirth}></input>  
+                                <input type="date" disabled={origin === "ADMISSION_PAGE" ? true : false} name="dateOfBirth" id="dateOfBirth"  maxLength={8}  onChange={this.onChange} value={admissionEnquiryData.dateOfBirth}></input>  
                             :
-                            <input type="date" name="dateOfBirth" id="dateOfBirth" style={{width:'139px'}} maxLength={8}  onChange={this.onChange} value={dob !== "" ? dob : moment(enquiryObject.strDateOfBirth, "DD-MM-YYYY").format("YYYY-MM-DD")}></input> 
+                            <input type="date" disabled={origin === "ADMISSION_PAGE" ? true : false} name="dateOfBirth" id="dateOfBirth" style={{width:'139px'}} maxLength={8}  onChange={this.onChange} value={dob !== "" ? dob : moment(enquiryObject.strDateOfBirth, "DD-MM-YYYY").format("YYYY-MM-DD")}></input> 
                         }
                         
                     </div>
                     <div className="col-sm-4">
                         <h6 >Gender</h6>
-                        <select name="gender" id="gender" onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.gender : enquiryObject.gender} className="gf-form-input max-width-22">
+                        <select name="gender" disabled={origin === "ADMISSION_PAGE" ? true : false} id="gender" onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.gender : enquiryObject.gender} className="gf-form-input max-width-22">
                             <option key={""} value={""}>Select Gender</option> 
                             <option key={"MALE"} value={"MALE"}>MALE</option>
                             <option key={"FEMALE"} value={"FEMALE"}>FEMALE</option>
@@ -342,14 +375,14 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                     </div>
                     <div className="col-sm-4">
                         <h6 >Highest Qualification</h6>
-                        <input type="text" className="gf-form-input max-width-18" placeholder="Highest Qualification" maxLength={255} name="highestQualification" id="highestQualification" onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.highestQualification : enquiryObject.highestQualification} />
+                        <input type="text" disabled={origin === "ADMISSION_PAGE" ? true : false} className="gf-form-input max-width-18" placeholder="Highest Qualification" maxLength={255} name="highestQualification" id="highestQualification" onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.highestQualification : enquiryObject.highestQualification} />
                     </div>
                 </div>
 
                 <div className="row col-sm-12 col-xs-12 m-b-2">
                     <div className="col-sm-4">
                         <h6 >Mode Of Enquiry</h6>
-                        <select name="modeOfEnquiry" id="modeOfEnquiry" onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.modeOfEnquiry : enquiryObject.modeOfEnquiry} className="gf-form-input max-width-22">
+                        <select name="modeOfEnquiry" id="modeOfEnquiry" disabled={origin === "ADMISSION_PAGE" ? true : false} onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.modeOfEnquiry : enquiryObject.modeOfEnquiry} className="gf-form-input max-width-22">
                             <option key={""} value={""}>Select Mode Of Enquiry</option>
                             <option key={"INPERSON"} value={"INPERSON"}>INPERSON</option>
                             <option key={"TELEPHONE"} value={"TELEPHONE"}>TELEPHONE</option>
@@ -360,7 +393,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                         operationType === "EDIT" && (
                             <div className="col-sm-4">
                                 <h6 >Enquiry Status</h6>
-                                <select name="enquiryStatus" id="enquiryStatus" onChange={this.onChange} value={enquiryObject.enquiryStatus} className="gf-form-input max-width-22">
+                                <select name="enquiryStatus" id="enquiryStatus" disabled={origin === "ADMISSION_PAGE" ? true : false} onChange={this.onChange} value={enquiryObject.enquiryStatus} className="gf-form-input max-width-22">
                                     <option key={""} value={""}>Select Enquiry Status</option>
                                     <option key={"RECEIVED"} value={"RECEIVED"}>RECEIVED</option>
                                     <option key={"FOLLOWUP"} value={"FOLLOWUP"}>FOLLOWUP</option>
@@ -372,7 +405,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                     }
                     <div className="col-sm-4">
                         <h6 >Comments <span style={{ color: 'red' }}> * </span></h6>
-                        <textarea rows={3} className="gf-form-input max-width-18" placeholder="comments" maxLength={5000}  name="comments" id="comments"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.comments : enquiryObject.comments}/>
+                        <textarea rows={3} disabled={origin === "ADMISSION_PAGE" ? true : false} className="gf-form-input max-width-18" placeholder="comments" maxLength={5000}  name="comments" id="comments"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.comments : enquiryObject.comments}/>
                     </div>
                 </div>
                 {
@@ -381,9 +414,14 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                         <button id="btnSave" className="btn btn-primary border-bottom" onClick={this.saveEnquiry}>Save</button>
                     </div>
                     :
-                    <div className="m-t-1 text-center">
-                        <button id="btnUpdate" className="btn btn-success border-bottom" onClick={this.saveEnquiry}>Update</button>
-                    </div>
+                    origin !== "ADMISSION_PAGE" ?
+                        <div className="m-t-1 text-center">
+                            <button id="btnUpdate" className="btn btn-primary border-bottom" onClick={this.saveEnquiry}>Update</button>
+                        </div>
+                        :
+                        <div className="m-t-1 text-center">
+                            <button id="btnConvertToAdmission" className="btn btn-primary border-bottom" style={{width:'164px', marginLeft:'-59px'}} onClick={this.saveEnquiry} >Convert to Admission</button>
+                        </div>
                 }
                 
             </main>

@@ -4,7 +4,6 @@ import {withRouter, RouteComponentProps, Link} from 'react-router-dom';
 import {TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import AdmissionEnquiry from './AdmissionEnquiry';
 import AdmissionApplication from './AdmissionApplication';
-import Admission from './Admission';
 import { FaUserGraduate } from 'react-icons/fa';
 
 export default class TabPage extends React.Component<any, any> {
@@ -40,11 +39,7 @@ export default class TabPage extends React.Component<any, any> {
               Admission Applications
             </NavLink>
           </NavItem>
-          <NavItem className="cursor-pointer">
-            <NavLink className={`${activeTab === 2 ? 'active' : ''}`} onClick={() => { this.toggleTab(2); }} >
-              Admission
-            </NavLink>
-          </NavItem>
+          
         </Nav>
         <TabContent activeTab={activeTab} className="border-right">
           <TabPane tabId={0}>
@@ -53,9 +48,7 @@ export default class TabPage extends React.Component<any, any> {
           <TabPane tabId={1}>
             <AdmissionApplication />
           </TabPane>
-          <TabPane tabId={2}>
-            <Admission />
-          </TabPane>
+          
         </TabContent>
       </section>
     );
