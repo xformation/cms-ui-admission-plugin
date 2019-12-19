@@ -15,7 +15,8 @@ type AdmissionEnquiryState = {
     academicYearId: any,
     branchId: any,
     dob: any,
-    origin: any
+    origin: any,
+    sourceOfApplication: any
 };
 
 const ERROR_MESSAGE_MANDATORY_FIELD_MISSING = "Mandatory fields missing";
@@ -26,6 +27,7 @@ const SUCCESS_MESSAGE_ADMISSION_ENQUIRY_UPDATED = "Admission enquiry updated suc
 const SUCCESS_MESSAGE_ADMISSION_GRANTED = "Admission granted";
 
 export interface NewAdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement>{
+    sourceOfApplication?: any,
     origin?: any,
     enquiryObject?: any;
     [operationType: string] : any;
@@ -36,6 +38,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     constructor(props: NewAdmissionEnquiryProps) {
         super(props);
         this.state = {
+            sourceOfApplication: this.props.sourceOfApplication,
             origin: this.props.origin,
             enquiryObject: this.props.enquiryObject,
             operationType: this.props.operationType,
@@ -68,19 +71,16 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     
     registerSocket() {
         // let self = this;
-        let socket = wsAdmissionServiceSingletonClient.getInstance();
+        const socket = wsAdmissionServiceSingletonClient.getInstance();
 
         socket.onmessage = (response: any) => {
-          let message = JSON.parse(response.data);
-          console.log("message received from server");
+        //   let message = JSON.parse(response.data);
+          console.log("message received from server ::: ", response);
         }
     
         socket.onopen = () => {
            console.log("websocket connection open with admission service");
-        //    socket.subscribe('/topic/greetings', function (greeting: any) {
-        //         console.log(JSON.parse(greeting.body).content);
-        //    });
-            
+           socket.send("helo");
         }
     
         window.onbeforeunload = () => {
@@ -137,7 +137,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     }
 
     saveEnquiry = (e: any) => {
-        const { admissionEnquiryData, enquiryObject, operationType, academicYearId, branchId } = this.state;
+        const { admissionEnquiryData, enquiryObject, operationType, sourceOfApplication, academicYearId, branchId } = this.state;
         admissionEnquiryData.errorMessage = "";
         this.setState({
             admissionEnquiryData: admissionEnquiryData
@@ -180,14 +180,14 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                     this.changeTextBoxBorderToError(enquiryObject.comments, "comments");
                     return;
             }
-            if(enquiryObject.emailId !== ""){
+            if(enquiryObject.emailId !== "" && enquiryObject.emailId !== null && enquiryObject.emailId !== undefined){
                 if(!commonFunctions.validateEmail(enquiryObject.emailId)){
                     admissionEnquiryData.errorMessage = ERROR_MESSAGE_INVALID_EMAIL_ID;
                     this.changeTextBoxBorderToError(enquiryObject.emailId, "emailId");
                     return;
                 } 
             }
-            if(enquiryObject.enquiryStatus.trim() === ""){
+            if(enquiryObject.enquiryStatus !== null && enquiryObject.enquiryStatus.trim() === ""){
                     admissionEnquiryData.errorMessage = ERROR_MESSAGE_MANDATORY_FIELD_MISSING;
                     this.changeTextBoxBorderToError(enquiryObject.enquiryStatus, "enquiryStatus");
                     return;
@@ -253,7 +253,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     }
 
     async updateAdmissionEnquiry(){
-        const { admissionEnquiryData, enquiryObject, academicYearId, branchId, origin } = this.state;
+        const { admissionEnquiryData, enquiryObject, academicYearId, branchId, origin, sourceOfApplication } = this.state;
         let dob = null;
         if(enquiryObject.dateOfBirth !== undefined && enquiryObject.dateOfBirth !== null 
             && enquiryObject.dateOfBirth.trim() !== "" ){
@@ -275,7 +275,8 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
             transactionSource: origin !== "ADMISSION_PAGE" ? null : origin,
             comments: enquiryObject.comments,
             academicYearId: academicYearId,
-            branchId: branchId
+            branchId: branchId,
+            sourceOfApplication: sourceOfApplication
         };
 
         let btn = document.querySelector("#btnUpdate");
@@ -300,9 +301,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
         btn && btn.removeAttribute("disabled");
         if(exitCode === 0 ){
             origin !== "ADMISSION_PAGE" ? admissionEnquiryData.successMessage = SUCCESS_MESSAGE_ADMISSION_ENQUIRY_UPDATED : 
-            admissionEnquiryData.successMessage = SUCCESS_MESSAGE_ADMISSION_GRANTED
-            // admissionEnquiryData.successMessage = SUCCESS_MESSAGE_ADMISSION_ENQUIRY_UPDATED;
-        
+            admissionEnquiryData.successMessage = SUCCESS_MESSAGE_ADMISSION_GRANTED;
         }else {
             admissionEnquiryData.errorMessage = ERROR_MESSAGE_SERVER_SIDE_ERROR;
         }
@@ -314,7 +313,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     }
 
     render() {
-        const {operationType, admissionEnquiryData, enquiryObject, dob, origin} = this.state;
+        const {operationType, admissionEnquiryData, enquiryObject, dob, origin, sourceOfApplication} = this.state;
         return (
             <main>
                 {
@@ -424,7 +423,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                         </div>
                         :
                         <div className="m-t-1 text-center">
-                            <button id="btnConvertToAdmission" className="btn btn-primary border-bottom" style={{width:'164px', marginLeft:'-59px'}} onClick={this.saveEnquiry} >Convert to Admission</button>
+                            <button id="btnConvertToAdmission" className="btn btn-primary border-bottom" style={{width:'164px', marginLeft:'-59px'}} onClick={this.saveEnquiry} >{sourceOfApplication === "STUDENT_PROFILE" ? "Grant Admission" : "Convert to Admission"} </button>
                         </div>
                 }
                 

@@ -5,7 +5,7 @@ import { SAVE_ADMISSION_ENQUIRY } from '../_queries';
 import {commonFunctions} from '../_utilites/common.functions';
 import  "../../../css/custom.css";
 import * as moment from 'moment';
-import { GET_ADMISSION_ENQUIRY_LIST } from '../_queries';
+import { GET_ADMISSION_ENQUIRY_LIST, GET_STUDENT_LIST } from '../_queries';
 import  {EnquiryGrid} from '../AdmissionEnquiry/EnquiryGrid' 
 
 type AdmissionState = {
@@ -53,7 +53,7 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
         this.addAdmissionEnquiry = this.addAdmissionEnquiry.bind(this);
         this.getData = this.getData.bind(this);
         this.getEnquiryData = this.getEnquiryData.bind(this);
-        
+        this.getStudentData = this.getStudentData.bind(this);
     }
     
     onChange = (e: any) => {
@@ -92,8 +92,6 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
         commonFunctions.restoreTextBoxBorderToNormal(name);
     }
 
-    
-
     async getEnquiryData(){
         let bid = 34; 
         let aid = 56; 
@@ -124,15 +122,45 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
             enquiryList: retVal,
             noEnquiryRecordFoundMsg: msg
         });
+    }
+
+    async getStudentData(){
+        let bid = 34; 
+        let aid = 56; 
+        const { data } = await this.props.client.query({
+            query: GET_STUDENT_LIST,
+            variables: { 
+                branchId: bid,
+                academicYearId: aid
+             },
+             fetchPolicy: 'no-cache'
+        })
+        const listLength = data.getStudentList.length;
+        const retVal = [];
+        for (let i = 0; i < listLength; i++) {
+            const admissionEnquiry = data.getStudentList[i];
+            // if(admissionEnquiry.enquiryStatus === "RECEIVED" || admissionEnquiry.enquiryStatus === "FOLLOWUP"){
+                console.log("Student profile data on admission page : ",admissionEnquiry.id);
+                retVal.push(admissionEnquiry);      
+            // }
+        }
+        let msg = ""
+        if(retVal.length === 0){
+            msg = "No Record Found";
+        }
+        this.setState({
+            enquiryList: retVal,
+            noEnquiryRecordFoundMsg: msg
+        });
 
     }
 
     getData(source: any){
         if(source === "ADMISSION_ENQUIRY" ){
             this.getEnquiryData();
-        }else {
-            // getStudentProfileData();
-        }
+        }else if(source === "STUDENT_PROFILE" ){
+            this.getStudentData();
+        } 
     }
 
     saveAdmission = (e: any) => {
@@ -272,7 +300,8 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
             enquiryStatus: editAdmissionObject.enquiryStatus,
             comments: editAdmissionObject.comments,
             academicYearId: academicYearId,
-            branchId: branchId
+            branchId: branchId,
+            sourceOfApplication: admissionApplicationData.sourceOfApplication
         };
 
         let btn = document.querySelector("#btnUpdate");
@@ -333,7 +362,7 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
 
                 <div className="row col-sm-12 col-xs-12 m-b-2">
                     {enquiryList !== null && enquiryList.length > 0 ?
-                        <EnquiryGrid source="ADMISSION_PAGE" type="Total Enquiries" totalRecords={enquiryList !== null ? enquiryList.length : 0} data={enquiryList}></EnquiryGrid>
+                        <EnquiryGrid sourceOfApplication={admissionApplicationData.sourceOfApplication} source="ADMISSION_PAGE" type="Total Enquiries" totalRecords={enquiryList !== null ? enquiryList.length : 0} data={enquiryList}></EnquiryGrid>
                     :<span style={{ color: 'red' }}> {noEnquiryRecordFoundMsg} </span> 
                     }
                 </div>

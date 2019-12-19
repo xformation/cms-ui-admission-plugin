@@ -60,7 +60,7 @@ class AdmissionApplication extends React.Component<any, any> {
                             New Admission
                         </NavLink>
                     </NavItem>
-                    <NavItem className="cursor-pointer">
+                    {/* <NavItem className="cursor-pointer">
                         <NavLink className={`vertical-nav-link ${activeTab === 1 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(1); }} >
                             Received
                         </NavLink>
@@ -79,40 +79,12 @@ class AdmissionApplication extends React.Component<any, any> {
                         <NavLink className={`vertical-nav-link ${activeTab === 4 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(4); }} >
                             Accepted
                         </NavLink>
-                    </NavItem>
+                    </NavItem> */}
                     
                 </Nav>
                 <TabContent activeTab={activeTab} className="col-sm-9 border-left p-t-1">
                     <TabPane tabId={0}>
                         <AdmissionPage operationType={"ADD"} ></AdmissionPage>
-                    </TabPane>
-                    <TabPane tabId={1}>
-                        {
-                            admissionList !== null && (
-                                <AdmissionGrid type="Total Received" totalRecords={admissionList.getAdmissionadmissionList.length} data={admissionList}></AdmissionGrid>
-                            )
-                        } 
-                    </TabPane>
-                    <TabPane tabId={2}>
-                        {
-                            admissionList !== null && (
-                                <AdmissionGrid type="Total In-Progress" totalRecords={admissionList.getAdmissionadmissionList.length} data={admissionList}></AdmissionGrid>
-                            )
-                        } 
-                    </TabPane>
-                    <TabPane tabId={3}>
-                        {
-                            admissionList !== null && (
-                                <AdmissionGrid type="Total Declined" totalRecords={admissionList.getAdmissionadmissionList.length} data={admissionList}></AdmissionGrid>
-                            )
-                        } 
-                    </TabPane>
-                    <TabPane tabId={4}>
-                        {
-                            admissionList !== null && (
-                                <AdmissionGrid type="Total Accepted" totalRecords={admissionList.getAdmissionadmissionList.length} data={admissionList}></AdmissionGrid>
-                            )
-                        } 
                     </TabPane>
                     
                     

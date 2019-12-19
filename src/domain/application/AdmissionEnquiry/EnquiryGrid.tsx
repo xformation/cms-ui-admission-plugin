@@ -2,12 +2,12 @@ import * as React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import AdmissionEnquiryPage from './EnquiryPage';
 
-
 export interface AdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement>{
     [data: string]: any;
     totalRecords?: number | string;
     type?: string;
     source?: string;
+    sourceOfApplication?: string;
 }
 
 export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<AdmissionEnquiryProps, any> {
@@ -19,7 +19,8 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
             type: this.props.type,
             isModalOpen: false,
             enquiryObj: {},
-            source: this.props.source
+            source: this.props.source,
+            sourceOfApplication: this.props.sourceOfApplication,
         };
         
     }
@@ -31,7 +32,8 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
         this.setState(() => ({
             isModalOpen: bShow,
             enquiryObj: enquiryObj,
-            source: this.props.source
+            source: this.props.source,
+            sourceOfApplication: this.props.sourceOfApplication
         }));
     }
 
@@ -59,11 +61,8 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
                         admissionEnquiry.enquiryStatus !== "CONVERTED_TO_ADMISSION" && admissionEnquiry.enquiryStatus !== "DECLINED" && (
                             <button className="btn btn-primary" onClick={e => this.showDetail(e, true, admissionEnquiry)}>{source !== "ADMISSION_PAGE" ? 'Edit' : 'Convert To Admission'}</button>
                         )
-                        
                     }
-                    
                 </td>
-    
               </tr>
             );
           }
@@ -72,20 +71,24 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
 
     render() {
         const {data} = this.props
-        const {list, totalRecords, type, isModalOpen, enquiryObj, source} = this.state;
+        const {list, totalRecords, type, isModalOpen, enquiryObj, source, sourceOfApplication} = this.state;
         return (
             <main>
                 <Modal isOpen={isModalOpen} className="react-strap-modal-container">
-                    <ModalHeader>Edit Admission Enquiry</ModalHeader>
+                    <ModalHeader>{source !== 'ADMISSION_PAGE' ? 'Edit Admission Enquiry' : 'Grant Admission'} </ModalHeader>
                     <ModalBody className="modal-content">
-                        <AdmissionEnquiryPage operationType={"EDIT"} enquiryObject={enquiryObj} origin={source}></AdmissionEnquiryPage>
+                        <AdmissionEnquiryPage operationType={"EDIT"} enquiryObject={enquiryObj} origin={source} sourceOfApplication={sourceOfApplication}></AdmissionEnquiryPage>
                         <div className="text-center" style={{marginLeft:'222px', marginTop:'-34px'}}>
                             <button className="btn btn-danger border-bottom" onClick={(e) => this.showDetail(e, false, {})}>Cancel</button>
                         </div>
                     </ModalBody>
                 </Modal>
                 <div className="pull-right col-sm-12 col-xs-12 profile-header m-b-2">
-                    <span style={{ fontSize: "13px", color: "Blue"}}>{type} : {totalRecords}</span>
+                    {
+                        source !== 'ADMISSION_PAGE' && (
+                            <span style={{ fontSize: "13px", color: "Blue"}}>{type} : {totalRecords}</span>
+                        )
+                    }
                 </div>
                 <div style={{width:'100%', height:'250px', overflow:'auto'}}>
                     <table id="admissionEnquiryTable" className="striped-table fwidth bg-white p-2">
