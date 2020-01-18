@@ -1,16 +1,16 @@
 import * as React from 'react';
-// import { graphql, QueryProps, MutationFunc, compose } from 'react-apollo';
-import {withRouter, RouteComponentProps, Link} from 'react-router-dom';
 import {TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import AdmissionEnquiry from './AdmissionEnquiry';
 import AdmissionApplication from './AdmissionApplication';
 import { FaUserGraduate } from 'react-icons/fa';
+import {config} from '../../config';
 
 export default class TabPage extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
       activeTab: 0,
+      user: null,
     };
     this.toggleTab = this.toggleTab.bind(this);
   }
@@ -21,8 +21,24 @@ export default class TabPage extends React.Component<any, any> {
     });
   }
 
+  async componentDidMount(){
+    try{
+      const response = await fetch(config.LOGGED_IN_USER_URL);
+      if (!response.ok) {
+        console.log("Response error : ",response.statusText);
+        return;
+      }
+      const json = await response.json();
+      this.setState({ user: json });
+    }catch(error){
+      console.log("Fetch user error: ",error);
+    }
+
+    console.log(" USER -- ",this.state.user); 
+  }
+
   render() {
-    const {activeTab} = this.state;
+    const {activeTab, user} = this.state;
     return (
       <section className="tab-container">
         <div className="tab-flex p-1">
@@ -43,7 +59,12 @@ export default class TabPage extends React.Component<any, any> {
         </Nav>
         <TabContent activeTab={activeTab} className="border-right">
           <TabPane tabId={0}>
-            <AdmissionEnquiry />
+            {
+              user !== null && (
+                <AdmissionEnquiry user={user}/>
+              )
+            }
+            
           </TabPane>
           <TabPane tabId={1}>
             <AdmissionApplication />

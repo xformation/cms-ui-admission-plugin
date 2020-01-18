@@ -8,6 +8,7 @@ export interface AdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement>
     type?: string;
     source?: string;
     sourceOfApplication?: string;
+    user?: any;
 }
 
 export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<AdmissionEnquiryProps, any> {
@@ -21,8 +22,9 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
             enquiryObj: {},
             source: this.props.source,
             sourceOfApplication: this.props.sourceOfApplication,
+            user: this.props.user,
         };
-        
+        this.updateEnquiryList = this.updateEnquiryList.bind(this);
     }
 
     
@@ -69,15 +71,21 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
         return retVal;
     }
 
+    async updateEnquiryList(updatedEnquiryList: any){
+        this.setState({
+            list: updatedEnquiryList,
+        });
+    }
+
     render() {
         const {data} = this.props
-        const {list, totalRecords, type, isModalOpen, enquiryObj, source, sourceOfApplication} = this.state;
+        const {list, totalRecords, type, isModalOpen, enquiryObj, source, sourceOfApplication, user} = this.state;
         return (
             <main>
                 <Modal isOpen={isModalOpen} className="react-strap-modal-container">
                     <ModalHeader>{source !== 'ADMISSION_PAGE' ? 'Edit Admission Enquiry' : 'Grant Admission'} </ModalHeader>
                     <ModalBody className="modal-content">
-                        <AdmissionEnquiryPage operationType={"EDIT"} enquiryObject={enquiryObj} origin={source} sourceOfApplication={sourceOfApplication}></AdmissionEnquiryPage>
+                        <AdmissionEnquiryPage onSaveUpdate={this.updateEnquiryList} user={user} operationType={"EDIT"} enquiryObject={enquiryObj} origin={source} sourceOfApplication={sourceOfApplication}></AdmissionEnquiryPage>
                         <div className="text-center" style={{marginLeft:'222px', marginTop:'-34px'}}>
                             <button className="btn btn-danger border-bottom" onClick={(e) => this.showDetail(e, false, {})}>Cancel</button>
                         </div>

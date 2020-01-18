@@ -5,7 +5,8 @@ import { SAVE_ADMISSION_ENQUIRY } from '../_queries';
 import {commonFunctions} from '../_utilites/common.functions';
 import  "../../../css/custom.css";
 import * as moment from 'moment';
-import wsAdmissionServiceSingletonClient from '../../../wsAdmissionServiceClient';
+import wsCmsBackendServiceSingletonClient from '../../../wsCmsBackendServiceClient';
+import { AnswerCountValidator } from 'xform-react';
 // import {Websocket} from 'react-websocket';
 
 type AdmissionEnquiryState = {
@@ -17,6 +18,8 @@ type AdmissionEnquiryState = {
     dob: any,
     origin: any,
     sourceOfApplication: any
+    departmentId: any;
+    user: any;
 };
 
 const ERROR_MESSAGE_MANDATORY_FIELD_MISSING = "Mandatory fields missing";
@@ -31,6 +34,11 @@ export interface NewAdmissionEnquiryProps extends React.HTMLAttributes<HTMLEleme
     origin?: any,
     enquiryObject?: any;
     [operationType: string] : any;
+    branchId?: any;
+    academicYearId?: any;
+    departmentId?: any;
+    user?: any;
+    onSaveUpdate?: any;
 }
 
 class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, AdmissionEnquiryState>{
@@ -42,9 +50,11 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
             origin: this.props.origin,
             enquiryObject: this.props.enquiryObject,
             operationType: this.props.operationType,
-            academicYearId: 56,
-            branchId: 34,
+            user: this.props.user,
             dob: "",
+            branchId: null,
+            academicYearId: null,
+            departmentId: null,
             admissionEnquiryData: {
                 errorMessage:"",
                 successMessage:"",
@@ -58,33 +68,40 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                 modeOfEnquiry: "",
                 highestQualification: "",
                 comments: "",
-                department: {
-                    id: ""
-                }
+                
             },
         };
         this.changeTextBoxBorderToError = this.changeTextBoxBorderToError.bind(this);
         this.restoreTextBoxBorderToNormal = this.restoreTextBoxBorderToNormal.bind(this);
         this.addAdmissionEnquiry = this.addAdmissionEnquiry.bind(this);
-        this.registerSocket = this.registerSocket.bind(this);
     }
     
+    async componentDidMount(){
+        await this.registerSocket();
+    }
+
     registerSocket() {
-        // let self = this;
-        const socket = wsAdmissionServiceSingletonClient.getInstance();
+        const socket = wsCmsBackendServiceSingletonClient.getInstance();
 
         socket.onmessage = (response: any) => {
-        //   let message = JSON.parse(response.data);
-          console.log("message received from server ::: ", response);
+            let message = JSON.parse(response.data);
+            console.log("2. message received from server ::: ", message);
+            this.setState({
+                branchId: message.selectedBranchId,
+                academicYearId: message.selectedAcademicYearId,
+                departmentId: message.selectedDepartmentId,
+            });
+            console.log("2. branchId: ",this.state.branchId);
+            console.log("2. ayId: ",this.state.academicYearId);  
         }
     
         socket.onopen = () => {
-           console.log("websocket connection open with admission service");
-           socket.send("helo");
+            console.log("2. Opening websocekt connection on Admission EnquiryPage.tsx. User : ",this.state.user.login);
+            socket.send(this.state.user.login);
         }
     
         window.onbeforeunload = () => {
-            console.log("websocket connection is going to be closed with admission service");
+            console.log("2. Closing websocket connection with cms backend service");
         }
     }
 
@@ -207,7 +224,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     }
 
     async addAdmissionEnquiry(dob: any){
-        const { admissionEnquiryData, academicYearId, branchId } = this.state;
+        const { admissionEnquiryData, academicYearId, branchId, departmentId } = this.state;
         let admissionEnquiryInput = {
             studentName: admissionEnquiryData.studentName,
             studentMiddleName: admissionEnquiryData.studentMiddleName,
@@ -221,7 +238,8 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
             modeOfEnquiry: admissionEnquiryData.modeOfEnquiry,
             comments: admissionEnquiryData.comments,
             academicYearId: academicYearId,
-            branchId: branchId
+            branchId: branchId,
+            departmentId: departmentId
         };
 
         let btn = document.querySelector("#btnSave");
@@ -253,7 +271,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     }
 
     async updateAdmissionEnquiry(){
-        const { admissionEnquiryData, enquiryObject, academicYearId, branchId, origin, sourceOfApplication } = this.state;
+        const { admissionEnquiryData, enquiryObject, academicYearId, branchId, origin, sourceOfApplication, departmentId } = this.state;
         let dob = null;
         if(enquiryObject.dateOfBirth !== undefined && enquiryObject.dateOfBirth !== null 
             && enquiryObject.dateOfBirth.trim() !== "" ){
@@ -276,7 +294,8 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
             comments: enquiryObject.comments,
             academicYearId: academicYearId,
             branchId: branchId,
-            sourceOfApplication: sourceOfApplication
+            sourceOfApplication: sourceOfApplication,
+            departmentId: departmentId
         };
 
         let btn = document.querySelector("#btnUpdate");
@@ -294,6 +313,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
         }).then((resp: any) => {
             console.log("Success in saveAdmissionEnquiryMutation. Exit code : ",resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.exitCode);
             exitCode = resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.exitCode;
+            this.props.onSaveUpdate(resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.dataList);
         }).catch((error: any) => {
             exitCode = 1;
             console.log('Error in saveAdmissionEnquiryMutation : ', error);
@@ -309,7 +329,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
             admissionEnquiryData: admissionEnquiryData,
             enquiryObject: enquiryObject
         });
-        this.registerSocket();
+        // this.registerSocket();
     }
 
     render() {

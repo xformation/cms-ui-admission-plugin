@@ -1,9 +1,9 @@
 
 const cfg = {
-    URL: "ws://localhost:4000/websocket/tracker/websocket"
+    URL: "ws://100.81.3.26:4000/websocket/tracker/websocket"
 }
 
-const wsAdmissionServiceSingletonClient = (function () {
+const wsCmsBackendServiceSingletonClient = (function () {
     let instance: any;
 
     function createInstance() {
@@ -13,12 +13,12 @@ const wsAdmissionServiceSingletonClient = (function () {
 
     return {
         getInstance: function () {
-            if (!instance) {
+            // if (!instance) {
                 instance = createInstance();
-            }
-            return instance;
+            // }
+            return instance; 
         }
     };
 })();
 
-export default wsAdmissionServiceSingletonClient;
+export default wsCmsBackendServiceSingletonClient;
