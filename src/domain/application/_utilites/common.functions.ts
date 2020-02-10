@@ -1,6 +1,8 @@
 export const commonFunctions = {
   getRequestOptions,
   validateEmail,
+  phoneNumber,
+  landlineNo,
   changeTextBoxBorderToError,
   restoreTextBoxBorderToNormal,
 };
@@ -24,18 +26,35 @@ function validateEmail(emailId: any) {
   return regx.test(emailId);
 }
 
+function phoneNumber(cellPhoneNo: any) {
+  const phoneno = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/;
+  return phoneno.test(cellPhoneNo);
+}
+function landlineNo(landLinePhoneNo: any) {
+  const landlineno = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{5})$/;
+  return landlineno.test(landLinePhoneNo);
+}
+
 function changeTextBoxBorderToError(textBoxValue: any, objName: any) {
   if (textBoxValue.trim() === '') {
     const obj: any = document.querySelector('#' + objName);
-    obj.className = 'gf-form-input max-width-18 input-textbox-error';
+    obj.className = 'gf-form-input fwidth input-textbox-error';
   }
   if (objName === 'emailId') {
     const obj: any = document.querySelector('#' + objName);
-    obj.className = 'gf-form-input max-width-18 input-textbox-error';
+    obj.className = 'gf-form-input fwidth input-textbox-error';
+  }
+  if (objName === 'cellPhoneNo') {
+    const obj: any = document.querySelector('#' + objName);
+    obj.className = 'gf-form-input fwidth input-textbox-error';
+  }
+  if (objName === 'landLinePhoneNo') {
+    const obj: any = document.querySelector('#' + objName);
+    obj.className = 'gf-form-input fwidth input-textbox-error';
   }
 }
 
 function restoreTextBoxBorderToNormal(objName: any) {
   const obj: any = document.querySelector('#' + objName);
-  obj.className = 'gf-form-input max-width-18';
+  obj.className = 'gf-form-input fwidth';
 }

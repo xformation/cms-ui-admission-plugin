@@ -189,3 +189,34 @@
 .input-textbox-error {
   border: 1px solid #d44939 !important;
 }
+
+/* Modal */
+
+.react-strap-modal-container > .modal-content {
+  padding: 0px !important;
+}
+
+.react-strap-modal-container .modal-header {
+  background: #1c95ea;
+  border-bottom: 1px solid #c7d0d9;
+  box-shadow: none !important;
+}
+
+.react-strap-modal-container .modal-header .modal-title {
+  margin-bottom: 0px;
+  padding: 17px 10px;
+  color: white !important;
+}
+
+/* flex */
+.aflex {
+  display: flex;
+  justify-content: flex-start;
+  align-items: start;
+  width: 100%;
+}
+
+.mrb {
+  margin-right: 1.2rem;
+  margin-bottom: 1rem;
+}
