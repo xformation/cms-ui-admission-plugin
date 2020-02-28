@@ -67,7 +67,12 @@ export default class TabPage extends React.Component<any, any> {
             
           </TabPane>
           <TabPane tabId={1}>
-            <AdmissionApplication />
+            {
+              user !== null && (
+                <AdmissionApplication user={user}/>
+              )
+            }
+           
           </TabPane>
           
         </TabContent>

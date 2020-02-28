@@ -1,0 +1,50 @@
+.emsSlider {
+  padding: 0px;
+  width: 100%;
+  position: relative;
+  min-height: 5em;
+  border: 1px solid #cccccc;
+  cursor: pointer;
+}
+
+.emsSlider div {
+  margin: 0px;
+  border: none;
+}
+
+.sliderBg {
+  min-height: 2em;
+  width: 100%;
+  z-index: -1;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.sliderBg img {
+  margin-top: 5px;
+}
+
+.ticks {
+  margin: 0px;
+  padding: 0px;
+  z-index: 1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
+
+.ticks table {
+  width: 100%;
+  align-items: center;
+}
+
+.ticks table tbody {
+  text-align: center;
+}
+
+.iconImg {
+  height: 20px;
+  width: 20px;
+}

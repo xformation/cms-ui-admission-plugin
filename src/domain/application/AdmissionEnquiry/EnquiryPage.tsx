@@ -6,8 +6,9 @@ import {commonFunctions} from '../_utilites/common.functions';
 import  "../../../css/custom.css";
 import * as moment from 'moment';
 import wsCmsBackendServiceSingletonClient from '../../../wsCmsBackendServiceClient';
-import { AnswerCountValidator } from 'xform-react';
-// import {Websocket} from 'react-websocket';
+import axios from 'axios';
+import {config} from '../../../config';
+import {Utils} from '../_utilites/Utils';
 
 type AdmissionEnquiryState = {
     operationType: any,
@@ -20,15 +21,19 @@ type AdmissionEnquiryState = {
     sourceOfApplication: any
     departmentId: any;
     user: any;
+    stateData: any;
+    isStateExists: any;
 };
 
 const ERROR_MESSAGE_MANDATORY_FIELD_MISSING = "Mandatory fields missing";
 const ERROR_MESSAGE_INVALID_EMAIL_ID = "Invalid email id";
-const ERROR_MESSAGE_INVALID_NUMBER = "Invalid Number";
 const ERROR_MESSAGE_SERVER_SIDE_ERROR = "Due to some error in admission service, admission enquiry could not be saved. Please check admission service logs";
 const SUCCESS_MESSAGE_ADMISSION_ENQUIRY_ADDED = "New admission enquiry saved successfully";
 const SUCCESS_MESSAGE_ADMISSION_ENQUIRY_UPDATED = "Admission enquiry updated successfully";
 const SUCCESS_MESSAGE_ADMISSION_GRANTED = "Admission granted";
+const ERROR_MESSAGE_ACADEMIC_YEAR_MISSING = "Please select academic year from preferences";
+const ERROR_MESSAGE_BRANCH_MISSING = "Please select branch from preferences";
+const ERROR_MESSAGE_DEPARTMENT_MISSING = "Please select department from preferences";
 
 export interface NewAdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement>{
     sourceOfApplication?: any,
@@ -71,6 +76,8 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                 comments: "",
                 
             },
+            stateData: [],
+            isStateExists: false,
         };
         this.changeTextBoxBorderToError = this.changeTextBoxBorderToError.bind(this);
         this.restoreTextBoxBorderToNormal = this.restoreTextBoxBorderToNormal.bind(this);
@@ -79,6 +86,11 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     
     async componentDidMount(){
         await this.registerSocket();
+        await this.ssmStatesExists();
+        if(this.state.isStateExists === false){
+            console.log("Admission enquiry states not exists. Creating states");
+            await this.initStateMachineStates();
+        }
     }
 
     registerSocket() {
@@ -109,25 +121,17 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     changeTextBoxBorderToError(textBoxValue: any, objName: any){
         if(textBoxValue.trim() === ""){
             const obj: any = document.querySelector("#"+objName);
-            obj.className = "gf-form-input fwidth input-textbox-error";
+            obj.className = "gf-form-input max-width-18 input-textbox-error";
         }
         if(objName === "emailId"){
             const obj: any = document.querySelector("#"+objName);
-            obj.className = "gf-form-input fwidth input-textbox-error";
-        }
-        if(objName === "cellPhoneNo"){
-            const obj: any = document.querySelector("#"+objName);
-            obj.className = "gf-form-input fwidth input-textbox-error";
-        }
-        if(objName === "landLinePhoneNo"){
-            const obj: any = document.querySelector("#"+objName);
-            obj.className = "gf-form-input fwidth input-textbox-error";
+            obj.className = "gf-form-input max-width-18 input-textbox-error";
         }
     }
     
     restoreTextBoxBorderToNormal(objName: any){
         const obj: any = document.querySelector("#"+objName);
-        obj.className = "gf-form-input fwidth";
+        obj.className = "gf-form-input max-width-18";
     }
 
     onChange = (e: any) => {
@@ -163,13 +167,26 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     }
 
     saveEnquiry = (e: any) => {
-        const { admissionEnquiryData, enquiryObject, operationType, sourceOfApplication, academicYearId, branchId } = this.state;
+        const { admissionEnquiryData, enquiryObject, operationType, sourceOfApplication, academicYearId, branchId, departmentId } = this.state;
         admissionEnquiryData.errorMessage = "";
         this.setState({
             admissionEnquiryData: admissionEnquiryData
         });
         
         console.log("Operation type : ",this.state.operationType);
+        
+        if(academicYearId === undefined || academicYearId === null || academicYearId === ""){
+            admissionEnquiryData.errorMessage = ERROR_MESSAGE_ACADEMIC_YEAR_MISSING;
+            return;
+        }
+        if(branchId === undefined || branchId === null || branchId === ""){
+            admissionEnquiryData.errorMessage = ERROR_MESSAGE_BRANCH_MISSING;
+            return;
+        }
+        if(departmentId === undefined || departmentId === null || departmentId === ""){
+            admissionEnquiryData.errorMessage = ERROR_MESSAGE_DEPARTMENT_MISSING;
+            return;
+        }
         if(operationType === "ADD"){
             if(admissionEnquiryData.studentName.trim() === "" 
                 || admissionEnquiryData.studentLastName.trim() === ""
@@ -184,20 +201,6 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                 if(!commonFunctions.validateEmail(admissionEnquiryData.emailId)){
                     admissionEnquiryData.errorMessage = ERROR_MESSAGE_INVALID_EMAIL_ID;
                     this.changeTextBoxBorderToError(admissionEnquiryData.emailId, "emailId");
-                    return;
-                } 
-            }
-            if(admissionEnquiryData.cellPhoneNo !== ""){
-                if(!commonFunctions.phoneNumber(admissionEnquiryData.cellPhoneNo)){
-                    admissionEnquiryData.errorMessage = ERROR_MESSAGE_INVALID_NUMBER;
-                    this.changeTextBoxBorderToError(admissionEnquiryData.cellPhoneNo, "cellPhoneNo");
-                    return;
-                } 
-            }
-            if(admissionEnquiryData.landLinePhoneNo !== ""){
-                if(!commonFunctions.landlineNo(admissionEnquiryData.landLinePhoneNo)){
-                    admissionEnquiryData.errorMessage = ERROR_MESSAGE_INVALID_NUMBER;
-                    this.changeTextBoxBorderToError(admissionEnquiryData.landLinePhoneNo, "landLinePhoneNo");
                     return;
                 } 
             }
@@ -224,20 +227,6 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                 if(!commonFunctions.validateEmail(enquiryObject.emailId)){
                     admissionEnquiryData.errorMessage = ERROR_MESSAGE_INVALID_EMAIL_ID;
                     this.changeTextBoxBorderToError(enquiryObject.emailId, "emailId");
-                    return;
-                } 
-            }
-            if(enquiryObject.cellPhoneNo !== "" && enquiryObject.cellPhoneNo !== null && enquiryObject.cellPhoneNo !== undefined){
-                if(!commonFunctions.phoneNumber(enquiryObject.cellPhoneNo)){
-                    admissionEnquiryData.errorMessage = ERROR_MESSAGE_INVALID_NUMBER;
-                    this.changeTextBoxBorderToError(enquiryObject.cellPhoneNo, "cellPhoneNo");
-                    return;
-                } 
-            }
-            if(enquiryObject.landLinePhoneNo !== "" && enquiryObject.landLinePhoneNo !== null && enquiryObject.landLinePhoneNo !== undefined){
-                if(!commonFunctions.landlineNo(enquiryObject.landLinePhoneNo)){
-                    admissionEnquiryData.errorMessage = ERROR_MESSAGE_INVALID_NUMBER;
-                    this.changeTextBoxBorderToError(enquiryObject.landLinePhoneNo, "landLinePhoneNo");
                     return;
                 } 
             }
@@ -292,6 +281,12 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
         }).then((resp: any) => {
             console.log("Success in saveAdmissionEnquiryMutation. Exit code : ",resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.exitCode);
             exitCode = resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.exitCode;
+            if(exitCode === 0 ){
+                // call workflow rest API to create a new state of newly created admission enquiry
+                this.fetchCurState(resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.id);
+            }else {
+                admissionEnquiryData.errorMessage = ERROR_MESSAGE_SERVER_SIDE_ERROR;
+            }
         }).catch((error: any) => {
             exitCode = 1;
             console.log('Error in saveAdmissionEnquiryMutation : ', error);
@@ -305,6 +300,91 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
         this.setState({
             admissionEnquiryData: admissionEnquiryData
         });
+    }
+
+    
+    
+    /**
+     * fetchCurState method get the current state. if it does not exist it creats a new one 
+     * with the givne machine id and return the initial state
+     * @param enqId 
+     */
+    fetchCurState(enqId: any) {
+        const machineId = Utils.getSSMachineId(config.SSM_ID, enqId);
+        const data = {
+			machineId: machineId
+		}
+	    Utils.postReq(config.SSM_CUR_STATE + "?machineId=" + machineId, data)
+			.then((res: any) => {
+				console.log('Current State: ', res.data);
+				// this.updateStateData(res.data);
+			})
+			.catch((err: any) => {
+				console.error('Failed to fetch ', err);
+			});
+    }
+    
+    sendSsmEvent(ssmEventId: any, enqId: any){
+        const machineId = Utils.getSSMachineId(config.SSM_ID, enqId);
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var formdata = new FormData();
+        formdata.append("machineId", machineId);
+        formdata.append("event", ssmEventId);
+        
+	    Utils.postReq(config.SSM_SEND_EVENT, formdata)
+			.then((res: any) => {
+				console.log('Send Event - current State: ', res.data);
+				// this.updateStateData(res.data);
+			})
+			.catch((err: any) => {
+				console.error('Send Event - Failed to fetch ', err);
+			});
+    }
+
+    async ssmStatesExists() {
+        const URL = config.SSM_LIST_STATES + '?ssmId=' + config.SSM_ID;
+        await Utils.getReq(URL)
+            .then((res: any) => {
+                console.log('AdmissionEnquiry states : ', res);
+                if (res && Array.isArray(res.data)) {
+                    const arr = Utils.getStatesSet(res.data);
+                    this.setState({
+                        stateData: arr,
+                    });
+                    if(arr.length > 0){
+                        console.log("Admission enquiry states already exists");
+                        this.setState({
+                            stateData: arr,
+                            isStateExists: true,
+                        });
+                    }
+                } else {
+                    console.warn('Invalid response for ' + config.SSM_LIST_STATES);
+                }
+                // this.fetchCurState(this.state.assign.id, Utils.studentData.id);
+            }).catch((err: any) => {
+                console.error('Failed to fetch states list ', err);
+            });
+        
+    }
+
+    async initStateMachineStates(){
+        console.log("Initilizing states in workflowservice :::: ",config.ADMISSION_ENQUIRY_SSM_JSON);
+        
+        fetch(config.SSM_CREATE_URL, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: config.ADMISSION_ENQUIRY_SSM_JSON
+        }).then(response => {
+            console.log("SSM Response ::: ",response)
+        }).catch(error =>{
+            console.log("SSM error ::: ",error)
+        })
     }
 
     async updateAdmissionEnquiry(){
@@ -345,11 +425,16 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
             mutation: SAVE_ADMISSION_ENQUIRY,
             variables: { 
                 input: admissionEnquiryInput
-             },
-             fetchPolicy: 'no-cache'
+            },
+            fetchPolicy: 'no-cache'
         }).then((resp: any) => {
             console.log("Success in saveAdmissionEnquiryMutation. Exit code : ",resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.exitCode);
             exitCode = resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.exitCode;
+            if(exitCode === 0){
+                if(enquiryObject.enquiryStatus === "DECLINED"){
+                    this.sendSsmEvent("LostFromEnquiryReceived", resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.id);
+                }
+            }
             this.props.onSaveUpdate(resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.dataList);
         }).catch((error: any) => {
             exitCode = 1;
@@ -366,7 +451,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
             admissionEnquiryData: admissionEnquiryData,
             enquiryObject: enquiryObject
         });
-        // this.registerSocket();
+        
     }
 
     render() {
@@ -383,44 +468,44 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                         <MessageBox id="mbox" message={admissionEnquiryData.successMessage} activeTab={1}/>        
                         : null
                 }
-                <div className="aflex m-b-2 m-t-1">
+                <div className="row col-sm-12 col-xs-12 m-b-2">
                     <div className="col-sm-4">
                         <h6>First Name <span style={{ color: 'red' }}> * </span> </h6>
-                        <input type="text" className="gf-form-input fwidth" placeholder="Student First Name" maxLength={255} disabled={origin === "ADMISSION_PAGE" ? true : false} name="studentName" id="studentName" onChange={this.onChange}  value={operationType === "ADD" ? admissionEnquiryData.studentName : enquiryObject.studentName}/>
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Student First Name" maxLength={255} disabled={origin === "ADMISSION_PAGE" ? true : false} name="studentName" id="studentName" onChange={this.onChange}  value={operationType === "ADD" ? admissionEnquiryData.studentName : enquiryObject.studentName}/>
                     </div>
                     <div className="col-sm-4">
                         <h6 >Middle Name</h6>
-                        <input type="text" className="gf-form-input fwidth" placeholder="Student Middle Name" maxLength={255} disabled={origin === "ADMISSION_PAGE" ? true : false} name="studentMiddleName" id="studentMiddleName"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.studentMiddleName : enquiryObject.studentMiddleName}/>
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Student Middle Name" maxLength={255} disabled={origin === "ADMISSION_PAGE" ? true : false} name="studentMiddleName" id="studentMiddleName"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.studentMiddleName : enquiryObject.studentMiddleName}/>
                     </div>
                     <div className="col-sm-4">
                         <h6 >Last Name <span style={{ color: 'red' }}> * </span></h6>
-                        <input type="text" className="gf-form-input fwidth" placeholder="Student Last Name" maxLength={255} disabled={origin === "ADMISSION_PAGE" ? true : false} name="studentLastName" id="studentLastName"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.studentLastName : enquiryObject.studentLastName}/>
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Student Last Name" maxLength={255} disabled={origin === "ADMISSION_PAGE" ? true : false} name="studentLastName" id="studentLastName"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.studentLastName : enquiryObject.studentLastName}/>
                     </div>
                 </div>
 
-                <div className="aflex m-b-2">
+                <div className="row col-sm-12 col-xs-12 m-b-2">
                     <div className="col-sm-4">
                         <h6 >Cell Phone No</h6>
-                        <input type="number" className="gf-form-input fwidth" placeholder="Cell Phone No" maxLength={10}  disabled={origin === "ADMISSION_PAGE" ? true : false} name="cellPhoneNo" id="cellPhoneNo"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.cellPhoneNo : enquiryObject.cellPhoneNo}/>
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Cell Phone No" maxLength={255}  disabled={origin === "ADMISSION_PAGE" ? true : false} name="cellPhoneNo" id="cellPhoneNo"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.cellPhoneNo : enquiryObject.cellPhoneNo}/>
                     </div>
                     <div className="col-sm-4">
                         <h6 >Land Line Phone No</h6>
-                        <input type="number" className="gf-form-input fwidth" placeholder="Land Line Phone No" maxLength={11}  disabled={origin === "ADMISSION_PAGE" ? true : false} name="landLinePhoneNo" id="landLinePhoneNo" onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.landLinePhoneNo : enquiryObject.landLinePhoneNo} />
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Land Line Phone No" maxLength={255}  disabled={origin === "ADMISSION_PAGE" ? true : false} name="landLinePhoneNo" id="landLinePhoneNo" onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.landLinePhoneNo : enquiryObject.landLinePhoneNo} />
                     </div>
                     <div className="col-sm-4">
                         <h6 >Email Id</h6>
-                        <input type="text" className="gf-form-input fwidth" placeholder="Email Id" maxLength={255}  disabled={origin === "ADMISSION_PAGE" ? true : false} name="emailId" id="emailId"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.emailId : enquiryObject.emailId}/>
+                        <input type="text" className="gf-form-input max-width-18" placeholder="Email Id" maxLength={255}  disabled={origin === "ADMISSION_PAGE" ? true : false} name="emailId" id="emailId"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.emailId : enquiryObject.emailId}/>
                     </div>
                 </div>
 
-                <div className="aflex m-b-2">
+                <div className="row col-sm-12 col-xs-12 m-b-2">
                     <div className="col-sm-4">
                         <h6 >Date Of Birth</h6>
                         {
                             this.props.operationType === "ADD" ?
-                                <input type="date" className="gf-form-input fwidth" disabled={origin === "ADMISSION_PAGE" ? true : false} name="dateOfBirth" id="dateOfBirth"  maxLength={8}  onChange={this.onChange} value={admissionEnquiryData.dateOfBirth}></input>  
+                                <input type="date" disabled={origin === "ADMISSION_PAGE" ? true : false} name="dateOfBirth" id="dateOfBirth"  maxLength={8}  onChange={this.onChange} value={admissionEnquiryData.dateOfBirth}></input>  
                             :
-                            <input type="date" className="gf-form-input fwidth" disabled={origin === "ADMISSION_PAGE" ? true : false} name="dateOfBirth" id="dateOfBirth" maxLength={8}  onChange={this.onChange} value={dob !== "" ? dob : moment(enquiryObject.strDateOfBirth, "DD-MM-YYYY").format("YYYY-MM-DD")}></input> 
+                            <input type="date" disabled={origin === "ADMISSION_PAGE" ? true : false} name="dateOfBirth" id="dateOfBirth" style={{width:'139px'}} maxLength={8}  onChange={this.onChange} value={dob !== "" ? dob : moment(enquiryObject.strDateOfBirth, "DD-MM-YYYY").format("YYYY-MM-DD")}></input> 
                         }
                         
                     </div>
@@ -435,11 +520,11 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                     </div>
                     <div className="col-sm-4">
                         <h6 >Highest Qualification</h6>
-                        <input type="text" disabled={origin === "ADMISSION_PAGE" ? true : false} className="gf-form-input fwidth" placeholder="Highest Qualification" maxLength={255} name="highestQualification" id="highestQualification" onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.highestQualification : enquiryObject.highestQualification} />
+                        <input type="text" disabled={origin === "ADMISSION_PAGE" ? true : false} className="gf-form-input max-width-18" placeholder="Highest Qualification" maxLength={255} name="highestQualification" id="highestQualification" onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.highestQualification : enquiryObject.highestQualification} />
                     </div>
                 </div>
 
-                <div className="aflex m-b-2">
+                <div className="row col-sm-12 col-xs-12 m-b-2">
                     <div className="col-sm-4">
                         <h6 >Mode Of Enquiry</h6>
                         <select name="modeOfEnquiry" id="modeOfEnquiry" disabled={origin === "ADMISSION_PAGE" ? true : false} onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.modeOfEnquiry : enquiryObject.modeOfEnquiry} className="gf-form-input max-width-22">
@@ -458,29 +543,29 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
                                     <option key={"RECEIVED"} value={"RECEIVED"}>RECEIVED</option>
                                     <option key={"FOLLOWUP"} value={"FOLLOWUP"}>FOLLOWUP</option>
                                     <option key={"DECLINED"} value={"DECLINED"}>DECLINED</option>
-                                    <option key={"CONVERTED_TO_ADMISSION"} value={"CONVERTED_TO_ADMISSION"}>CONVERTED_TO_ADMISSION</option>
+                                    {/* <option key={"CONVERTED_TO_ADMISSION"} value={"CONVERTED_TO_ADMISSION"}>CONVERTED_TO_ADMISSION</option> */}
                                 </select>
                             </div>
                         )
                     }
                     <div className="col-sm-4">
                         <h6 >Comments <span style={{ color: 'red' }}> * </span></h6>
-                        <textarea rows={3} disabled={origin === "ADMISSION_PAGE" ? true : false} className="gf-form-input fwidth" placeholder="comments" maxLength={5000}  name="comments" id="comments"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.comments : enquiryObject.comments}/>
+                        <textarea rows={3} disabled={origin === "ADMISSION_PAGE" ? true : false} className="gf-form-input max-width-18" placeholder="comments" maxLength={5000}  name="comments" id="comments"  onChange={this.onChange} value={operationType === "ADD" ? admissionEnquiryData.comments : enquiryObject.comments}/>
                     </div>
                 </div>
                 {
                     operationType === "ADD" ? 
-                    <div className="m-t-1 text-right mrb">
+                    <div className="m-t-1 text-right">
                         <button id="btnSave" className="btn btn-primary border-bottom" onClick={this.saveEnquiry}>Save</button>
                     </div>
                     :
                     origin !== "ADMISSION_PAGE" ?
                         <div className="m-t-1 text-center">
-                            <button id="btnUpdate" className="btn btn-primary border-bottom" style={{marginLeft: '-100px'}} onClick={this.saveEnquiry}>Update</button>
+                            <button id="btnUpdate" className="btn btn-primary border-bottom" onClick={this.saveEnquiry}>Update</button>
                         </div>
                         :
                         <div className="m-t-1 text-center">
-                            <button id="btnConvertToAdmission" className="btn btn-primary border-bottom" style={{width:'164px', marginLeft:'-140px'}} onClick={this.saveEnquiry} >{sourceOfApplication === "STUDENT_PROFILE" ? "Grant Admission" : "Convert to Admission"} </button>
+                            <button id="btnConvertToAdmission" className="btn btn-primary border-bottom" style={{width:'164px', marginLeft:'-59px'}} onClick={this.saveEnquiry} >{sourceOfApplication === "STUDENT_PROFILE" ? "Grant Admission" : "Convert to Admission"} </button>
                         </div>
                 }
                 

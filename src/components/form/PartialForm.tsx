@@ -66,12 +66,15 @@ export default class PartialForm<MODEL extends FormModel> extends React.Componen
         formElements.forEach((element: any) => {
             const { name, constraint } = element;
             if (visitedFields[name]) {
-                if (!constraint.validate(model[name])) {
-                    result[name] = {
-                        field: name,
-                        message: constraint.message,
-                    };
+                if(constraint){
+                    if (!constraint.validate(model[name])) {
+                        result[name] = {
+                            field: name,
+                            message: constraint.message,
+                        };
+                    }
                 }
+                
             }
         });
 
