@@ -24,6 +24,7 @@ export interface AdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement>
 }
 
 export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<AdmissionEnquiryProps, any> {
+    surveyModel:any = null;
     constructor(props: AdmissionEnquiryProps) {
         super(props);
         this.state = {
@@ -42,20 +43,18 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
             survey: null,
         };
         this.updateEnquiryList = this.updateEnquiryList.bind(this);
+        this.nextPageEvent = this.nextPageEvent.bind(this);
     }
 
     async componentDidMount(){
         await this.getSsmStates();
         this.removeDuplicate();
+        this.surveyModel = new Survey.ReactSurveyModel(SurveyJson.ADMISSION_STATE_FORM);
         this.setState({ survey: SurveyJson.ADMISSION_STATE_FORM});
     }
 
     nextPageEvent(){
-         var x = new Survey.ReactSurveyModel();
-         if(x.isCurrentPageHasErrors){
-             alert(x.isCurrentPageHasErrors);
-            
-         }
+        console.log(this.surveyModel);
     }
     prevPageEvent(){
         alert("prev page");
@@ -217,7 +216,11 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
                                         <Slider data={this.state.uniqueStateData} />
                                     </div>
                                     <div className="xform-container" style={{height:'300px', overflowY:'auto'}}>
-                                        {this.state.survey ? this.getModel(this.state.survey) : null}
+                                        {/* {this.state.survey ? this.getModel(this.state.survey) : null} */}
+                                        {
+                                            this.surveyModel && 
+                                            <Survey.Survey model={this.surveyModel} onComplete={this.onComplete} onCurrentPageChanging ={this.nextPageEvent} prevPage={this.prevPageEvent} />
+                                        }
                                     </div>
                                     {/* <div className="xform-container" style={{height:'300px', overflowY:'auto'}}>
                                         <StudentPersonalInfo className="xform-container"></StudentPersonalInfo>
