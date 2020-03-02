@@ -5,14 +5,18 @@ const jsrOakUrl = 'http://localhost:8093';
 
 const ADMISSION_ENQUIRY_SSM =
   '{ "states" : [' +
-  '{ "ssmId": "admenq-1", "name": "EnquiryReceived", "target": "PersonalInfo","event": "SubmitAdmEnq","initial": true },' +
+  '{ "ssmId": "admenq-1", "name": "EnquiryReceived", "target": "PersonalInfo","event": "PersonalInfo","initial": true },' +
   '{ "ssmId": "admenq-1", "name": "EnquiryReceived", "target": "Lost","event": "LostFromEnquiryReceived" },' +
-  '{ "ssmId": "admenq-1", "name": "PersonalInfo", "target": "AcademicInfo","event": "SubmitPi" },' +
+  '{ "ssmId": "admenq-1", "name": "PersonalInfo", "target": "AcademicInfo","event": "AcademicInfo" },' +
+  '{ "ssmId": "admenq-1", "name": "PersonalInfo", "target": "EnquiryReceived","event": "BackToEnquiryReceived" },' +
   '{ "ssmId": "admenq-1", "name": "PersonalInfo", "target": "Lost","event": "LostFromPersonalInfo" },' +
-  '{ "ssmId": "admenq-1", "name": "AcademicInfo", "target": "Documents","event": "SubmitAi" },' +
+  '{ "ssmId": "admenq-1", "name": "AcademicInfo", "target": "Documents","event": "Documents" },' +
+  '{ "ssmId": "admenq-1", "name": "AcademicInfo", "target": "PersonalInfo","event": "BackToPersonalInfo" },' +
   '{ "ssmId": "admenq-1", "name": "AcademicInfo", "target": "Lost","event": "LostFromAcademicInfo" },' +
-  '{ "ssmId": "admenq-1", "name": "Documents", "target": "GrantAdmission","event": "Grant", "end": true },' +
+  '{ "ssmId": "admenq-1", "name": "Documents", "target": "AdmissionGranted","event": "GrantAdmission"  },' +
+  '{ "ssmId": "admenq-1", "name": "Documents", "target": "AcademicInfo","event": "BackToAcademicInfo" },' +
   '{ "ssmId": "admenq-1", "name": "Documents", "target": "Lost","event": "LostFromDocuments" },' +
+  '{ "ssmId": "admenq-1", "name": "AdmissionGranted", "event": "CompleteAdmission", "end": true },' +
   '{ "ssmId": "admenq-1", "name": "Lost", "event": "Lost", "end": true } ]}';
 
 const ssmId = 'admenq-1';

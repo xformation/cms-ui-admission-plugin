@@ -324,24 +324,24 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
 			});
     }
     
-    sendSsmEvent(ssmEventId: any, enqId: any){
-        const machineId = Utils.getSSMachineId(config.SSM_ID, enqId);
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
+    // sendSsmEvent(ssmEventId: any, enqId: any){
+    //     const machineId = Utils.getSSMachineId(config.SSM_ID, enqId);
+    //     var myHeaders = new Headers();
+    //     myHeaders.append("Content-Type", "application/json");
 
-        var formdata = new FormData();
-        formdata.append("machineId", machineId);
-        formdata.append("event", ssmEventId);
+    //     var formdata = new FormData();
+    //     formdata.append("machineId", machineId);
+    //     formdata.append("event", ssmEventId);
         
-	    Utils.postReq(config.SSM_SEND_EVENT, formdata)
-			.then((res: any) => {
-				console.log('Send Event - current State: ', res.data);
-				// this.updateStateData(res.data);
-			})
-			.catch((err: any) => {
-				console.error('Send Event - Failed to fetch ', err);
-			});
-    }
+	//     Utils.postReq(config.SSM_SEND_EVENT, formdata)
+	// 		.then((res: any) => {
+	// 			console.log('Send Event - current State: ', res.data);
+	// 			// this.updateStateData(res.data);
+	// 		})
+	// 		.catch((err: any) => {
+	// 			console.error('Send Event - Failed to fetch ', err);
+	// 		});
+    // }
 
     async ssmStatesExists() {
         const URL = config.SSM_LIST_STATES + '?ssmId=' + config.SSM_ID;
@@ -432,7 +432,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
             exitCode = resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.exitCode;
             if(exitCode === 0){
                 if(enquiryObject.enquiryStatus === "DECLINED"){
-                    this.sendSsmEvent("LostFromEnquiryReceived", resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.id);
+                    Utils.sendSsmEvent("LostFromEnquiryReceived", resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.id);
                 }
             }
             this.props.onSaveUpdate(resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.dataList);

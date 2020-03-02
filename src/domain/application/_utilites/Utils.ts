@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {config} from '../../../config';
 
 export const Utils: any = {
   getFileNodePath,
@@ -13,6 +14,7 @@ export const Utils: any = {
   postReq,
   getReq,
   createNodeInOak,
+  sendSsmEvent,
 };
 
 function getFileNodePath(asignId: any, subId: any, studentId: any) {
@@ -148,5 +150,23 @@ function createNodeInOak(url: any, nodePath: any, file: any, sPath: any) {
     })
     .catch(err => {
       console.error('Failed to fetch ' + url, err);
+    });
+}
+
+async function sendSsmEvent(ssmEventId: any, enqId: any) {
+  const machineId = getSSMachineId(config.SSM_ID, enqId);
+  var myHeaders = new Headers();
+  myHeaders.append('Content-Type', 'application/json');
+
+  var formdata = new FormData();
+  formdata.append('machineId', machineId);
+  formdata.append('event', ssmEventId);
+
+  await postReq(config.SSM_SEND_EVENT, formdata)
+    .then((res: any) => {
+      console.log('Send Event - current State: ', res.data);
+    })
+    .catch((err: any) => {
+      console.error('Send Event - Failed to fetch ', err);
     });
 }

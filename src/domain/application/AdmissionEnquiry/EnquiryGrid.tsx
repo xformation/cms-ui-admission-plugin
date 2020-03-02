@@ -25,6 +25,13 @@ export interface AdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement>
 
 export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<AdmissionEnquiryProps, any> {
     surveyModel:any = null;
+    SSM_SORT_ORDER : any = {
+        "EnquiryReceived": 0,
+        "PersonalInfo": 1,
+        "AcademicInfo": 2,
+        "Documents": 3,
+        "AdmissionGranted": 4,
+    };
     constructor(props: AdmissionEnquiryProps) {
         super(props);
         this.state = {
@@ -41,30 +48,71 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
             uniqueStateData: [],
             currentState: null,
             survey: null,
+            currentPageNo: null,
         };
+        this.createRows = this.createRows.bind(this);
         this.updateEnquiryList = this.updateEnquiryList.bind(this);
         this.nextPageEvent = this.nextPageEvent.bind(this);
+        this.prevPageEvent = this.prevPageEvent.bind(this);
+        this.onComplete = this.onComplete.bind(this);
+        this.getSsmStates = this.getSsmStates.bind(this);
+        this.fetchCurState = this.fetchCurState.bind(this);
+        this.removeDuplicateAndSort = this.removeDuplicateAndSort.bind(this);
+        this.showDetail = this.showDetail.bind(this);
+        this.updateSliderStates = this.updateSliderStates.bind(this);
     }
 
     async componentDidMount(){
         await this.getSsmStates();
-        this.removeDuplicate();
+        this.removeDuplicateAndSort();
         this.surveyModel = new Survey.ReactSurveyModel(SurveyJson.ADMISSION_STATE_FORM);
         this.setState({ survey: SurveyJson.ADMISSION_STATE_FORM});
     }
 
-    nextPageEvent(){
-        console.log(this.surveyModel);
-    }
-    prevPageEvent(){
-        alert("prev page");
+    async nextPageEvent(){
+        // console.log("Next EVENT ::::::: ",this.surveyModel.currentPageValue.name);
+        // if(this.surveyModel.currentPageValue){
+        //     const curSt = await Utils.sendSsmEvent("Submit"+this.surveyModel.currentPageValue.name, this.state.enquiryObj.id);
+        //     console.log("Current State Next Event :::::::: ",curSt);
+        //     this.updateStateData(curSt);
+        //     // .then((res: any) => {
+        //         //     console.log('Current State set from Next Event : ', res.data);
+        //         // });
+        // }
     }
 
-    getModel(json: any){
-        var model = new Survey.ReactSurveyModel(json);
-        return (<Survey.Survey model={model} onComplete={this.onComplete} nextPage={this.nextPageEvent} prevPage={this.prevPageEvent} />);
-        // return (<Survey.Survey model={model} onComplete={this.onComplete}  />);
+    /**
+     * prevPageEvent is called on onCurrentPageChanged survey event. it should do the state changes
+     * in workflow.
+     */
+    async prevPageEvent(){
+        
+        console.log("1. prevPageEvent : Page name --------- ",this.surveyModel.currentPageValue);
+        if(this.surveyModel.currentPageValue){
+            
+            let eventType = this.surveyModel.currentPageValue.name;
+            if(this.state.currentPageNo !== null && this.surveyModel.currentPageValue.visibleIndex < this.state.currentPageNo){
+                eventType = "BackTo"+this.surveyModel.currentPageValue.name;
+            }
+            console.log("2. prevPageEvent : event type --------- ",eventType);
+            await Utils.sendSsmEvent(eventType, this.state.enquiryObj.id)
+            // this.updateStateData(curSt);
+                // .then((curSt: any) => {
+                //     console.log('Current State set from Previous Event : ', curSt);
+                // });
+            await this.updateSliderStates(this.surveyModel.currentPageValue.name);
+            this.setState({
+                currentPageNo: this.surveyModel.currentPageValue.visibleIndex,
+            });
+            
+        }
     }
+
+    // getModel(json: any){
+    //     var model = new Survey.ReactSurveyModel(json);
+    //     return (<Survey.Survey model={model} onComplete={this.onComplete} nextPage={this.nextPageEvent} prevPage={this.prevPageEvent} />);
+    //     // return (<Survey.Survey model={model} onComplete={this.onComplete}  />);
+    // }
 
     onComplete(survey: any, options: any) {
         console.log("Survey results: " + JSON.stringify(survey.data));
@@ -92,31 +140,40 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
         
     }
     
+    /**
+     * currentState rest API creates a state in workflow if it does not exits. If exist, retrieves it.
+     */
     async fetchCurState(enqId: any) {
-        const machineId = Utils.getSSMachineId(config.SSM_ID, enqId);
-        console.log('EnquiryGrid - machineId ::--> ', machineId);
+        const machineId = await Utils.getSSMachineId(config.SSM_ID, enqId);
+        console.log('1. fetchCurState - machineId ::--> ', machineId);
         const data = {
 			machineId: machineId
 		}
 	    await Utils.postReq(config.SSM_CUR_STATE + "?machineId=" + machineId, data)
 			.then((res: any) => {
-				console.log('EnquiryGrid - Current State: ', res.data);
-				this.updateStateData(res.data);
+				console.log('2. fetchCurState - Current State: ', res.data);
+                // this.updateStateData(res.data);
+                this.setState({
+                    currentState: res.data,
+                });
 			})
 			.catch((err: any) => {
-				console.error('EnquiryGrid: Failed to fetch ', err);
+				console.error('3. fetchCurState: Failed to fetch ', err);
 			});
     }
 
-    removeDuplicate(){
+    removeDuplicateAndSort(){
         const arr = this.state.ssmStatesData;
-        let nm= "", target="Lost";
         let obj:any = [];
+        let objName: any = {};
         arr.map( (item: any) => {
-            if (item.target !== target) {
-                console.log("Unique items ::::: ",item);
-                nm = item.name;
-                obj.push(item);
+            if(!objName[item.name] ){
+                console.log("removeDuplicateAndSort - Unique items ::::: ",item);
+                objName[item.name] = item;
+                if(item.name !== "Lost"){
+                    let index = this.SSM_SORT_ORDER[item.name];
+                    obj[index] = item;
+                }
             }
         });
         this.setState({
@@ -126,34 +183,64 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
         });
     }
 
-    updateStateData(curState: any) {
-        console.log("Current Status :::::: ",curState);
-        const arr = this.state.uniqueStateData; // sort states according to target
-        // this.removeDuplicate();
-		// const ind = Utils.arrayItemHasKeyValue(arr, 'name', curState);
-		// if (ind >= 0) {
-			arr.map((item: any, index: any) => {
-				if (item.name === curState) {
-                    console.log("Current Item :::::: ",item);
-                    item.active = true;
-                    item.status = 'Y';
-                } 
-                // else if (index < ind) {
-				// 	item.status = 'Y';
-				// }
-				return item;
-			});
+    async updateSliderStates(curState: any) {
+        console.log("1. updateSliderStates - Current state ---- ",curState);
+        const arr = this.state.ssmStatesData; 
+        const currentIndex = this.SSM_SORT_ORDER[curState];
+        const obj: any = [];
+        await arr.map((item: any, index: any) => {
+            console.log("2. updateSliderStates - Current Item ---- ",item);
+            let i = this.SSM_SORT_ORDER[item.name];
+            // if (item.name === this.state.currentState) {
+            //     item.active = true;
+            //     item.status = 'Y';
+            //     obj[i] = item;
+            // }else 
+            if(index <= currentIndex){
+                item.status = 'Y';
+            }else{
+                item.status = 'N';
+            } 
+            obj[i] = item;
+            // if (index < i) {
+            //     item.status = 'Y';
+            //     obj[i] = item;
+            // }
+            // return item;
+        });
 		// }
 		this.setState({
-            ssmStatesData: arr,
-            uniqueStateData: arr,
-            currentState: curState
-		});
+            uniqueStateData: obj,
+            // ssmStatesData: obj,
+            // isLoading: true,
+        });
     }
     
-    showDetail(e: any, bShow: boolean, enquiryObj: any) {
-        this.fetchCurState(enquiryObj.id);
+    async showSelectedPage(curSt: any) {
+        await console.log("1. showSelectedPage :::: ");
+        for (var i = 0; i < this.surveyModel.visiblePages.length; i++) {
+            let pm = this.surveyModel.visiblePages[i];
+            console.log("2. showSelectedPage. Current Page :: ",pm);
+            if(pm.name === curSt){
+                this.surveyModel.currentPageNo = pm.visibleIndex;
+                console.log("3. showSelectedPage ::::: Page name : ",this.surveyModel.currentPageValue);
+                break;
+            }
+        }
+        await console.log("4. showSelectedPage :::::: ");
+    }
+
+    async showDetail(e: any, bShow: boolean, enquiryObj: any) {
         e && e.preventDefault();
+        if(bShow){
+            await this.fetchCurState(enquiryObj.id);
+            if(this.state.currentState === "EnquiryReceived"){
+                await Utils.sendSsmEvent("PersonalInfo", enquiryObj.id);
+            }
+            await this.updateSliderStates(this.state.currentState);
+            await this.showSelectedPage(this.state.currentState);
+        }
+
         this.setState(() => ({
             isModalOpen: bShow,
             enquiryObj: enquiryObj,
@@ -219,7 +306,7 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
                                         {/* {this.state.survey ? this.getModel(this.state.survey) : null} */}
                                         {
                                             this.surveyModel && 
-                                            <Survey.Survey model={this.surveyModel} onComplete={this.onComplete} onCurrentPageChanging ={this.nextPageEvent} prevPage={this.prevPageEvent} />
+                                            <Survey.Survey model={this.surveyModel} onComplete={this.onComplete} onCurrentPageChanging ={this.nextPageEvent} onCurrentPageChanged ={this.prevPageEvent} />
                                         }
                                     </div>
                                     {/* <div className="xform-container" style={{height:'300px', overflowY:'auto'}}>
