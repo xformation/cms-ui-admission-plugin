@@ -403,6 +403,25 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
         });
     }
 
+    onFormDetailsChanged(sender: any, options: any){
+        let studentType = sender.getQuestionByName("studentType");
+        let batch = sender.getQuestionByName("batchId");
+        switch (options.name){
+            case "studentType":
+                batch.value = "";
+                batch.choices = [{
+                    value: "choice1",
+                    text: "choice1"
+                },{
+                    value: "choice2",
+                    text: "choice2"
+                },{
+                    value: "choice3",
+                    text: "choice3"
+                }];
+        }
+    }
+
     render() {
         const {data} = this.props
         const {list, totalRecords, type, isModalOpen, enquiryObj, source, sourceOfApplication, user, currentState} = this.state;
@@ -421,7 +440,7 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
                                         {/* {this.state.survey ? this.getModel(this.state.survey) : null} */}
                                         {
                                             this.surveyModel && 
-                                            <Survey.Survey model={this.surveyModel} onComplete={this.onComplete} onCurrentPageChanging ={this.nextPageEvent} onCurrentPageChanged ={this.prevPageEvent} />
+                                            <Survey.Survey model={this.surveyModel} onComplete={this.onComplete} onCurrentPageChanging ={this.nextPageEvent} onCurrentPageChanged ={this.prevPageEvent} onValueChanged={this.onFormDetailsChanged}/>
                                         }
                                     </div>
                                     {/* <div className="xform-container" style={{height:'300px', overflowY:'auto'}}>
