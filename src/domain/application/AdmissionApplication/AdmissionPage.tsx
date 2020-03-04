@@ -371,7 +371,7 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
     }
 
     render() {
-        const {operationType, admissionApplicationData, editAdmissionObject, dob, enquiryList, noEnquiryRecordFoundMsg} = this.state;
+        const {user, operationType, admissionApplicationData, editAdmissionObject, dob, enquiryList, noEnquiryRecordFoundMsg} = this.state;
         return (
             <main>
                 {
@@ -387,20 +387,21 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
                 
                 <div className="row col-sm-12 col-xs-12 m-b-2">
                     
-                    <h6>Source of Application <span style={{ color: 'red' }}> * </span> </h6>
+                    {/* <h6>Source of Application <span style={{ color: 'red' }}> * </span> </h6> */}
                     
                     <div className="col-sm-4">
-                        <select name="sourceOfApplication" id="sourceOfApplication" onChange={this.onChange} value={operationType === "ADD" ? admissionApplicationData.sourceOfApplication : editAdmissionObject.sourceOfApplication} className="gf-form-input max-width-22">
+                        <input type="button" value="Get Admission Enquiries" className="btn btn-primary" onClick={e => this.getData("ADMISSION_ENQUIRY")}></input>
+                        {/* <select name="sourceOfApplication" id="sourceOfApplication" onChange={this.onChange} value={operationType === "ADD" ? admissionApplicationData.sourceOfApplication : editAdmissionObject.sourceOfApplication} className="gf-form-input max-width-22">
                             <option key={""} value={""}>Select Source of Application</option>
                             <option key={"ADMISSION_ENQUIRY"} value={"ADMISSION_ENQUIRY"}>ADMISSION ENQUIRY</option>
                             <option key={"STUDENT_PROFILE"} value={"STUDENT_PROFILE"}>STUDENT PROFILE</option>
-                        </select>
+                        </select> */}
                     </div>
                 </div>
 
                 <div className="row col-sm-12 col-xs-12 m-b-2">
                     {enquiryList !== null && enquiryList.length > 0 ?
-                        <EnquiryGrid sourceOfApplication={admissionApplicationData.sourceOfApplication} source="ADMISSION_PAGE" type="Total Enquiries" totalRecords={enquiryList !== null ? enquiryList.length : 0} data={enquiryList}></EnquiryGrid>
+                        <EnquiryGrid user={user} sourceOfApplication={admissionApplicationData.sourceOfApplication} source="ADMISSION_PAGE" type="Total Enquiries" totalRecords={enquiryList !== null ? enquiryList.length : 0} data={enquiryList}></EnquiryGrid>
                     :<span style={{ color: 'red' }}> {noEnquiryRecordFoundMsg} </span> 
                     }
                     

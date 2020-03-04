@@ -12,6 +12,7 @@ import {SurveyJson} from './SurveryJson';
 import * as Survey from "survey-react";
 import "survey-react/survey.css";
 import "survey-react/modern.css";
+import wsCmsBackendServiceSingletonClient from '../../../wsCmsBackendServiceClient';
 
 export interface AdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement>{
     [data: string]: any;
@@ -49,6 +50,11 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
             currentState: null,
             survey: null,
             currentPageNo: null,
+            branchId: null,
+            departmentId: null,
+            academicYearId: null,
+            batchList: [],
+            sectionList: [],
         };
         this.createRows = this.createRows.bind(this);
         this.updateEnquiryList = this.updateEnquiryList.bind(this);
@@ -60,6 +66,10 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
         this.removeDuplicateAndSort = this.removeDuplicateAndSort.bind(this);
         this.showDetail = this.showDetail.bind(this);
         this.updateSliderStates = this.updateSliderStates.bind(this);
+        this.getBatchList = this.getBatchList.bind(this);
+        this.setBatchDropDown = this.setBatchDropDown.bind(this);
+        this.getSectionList = this.getSectionList.bind(this);
+        this.setSectionDropDown = this.setSectionDropDown.bind(this);
     }
 
     async componentDidMount(){
@@ -67,6 +77,33 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
         this.removeDuplicateAndSort();
         this.surveyModel = new Survey.ReactSurveyModel(SurveyJson.ADMISSION_STATE_FORM);
         this.setState({ survey: SurveyJson.ADMISSION_STATE_FORM});
+        await this.registerSocket();
+    }
+
+    registerSocket() {
+        const socket = wsCmsBackendServiceSingletonClient.getInstance();
+
+        socket.onmessage = (response: any) => {
+            let message = JSON.parse(response.data);
+            console.log("EnquiryGrid. message received from server ::: ", message);
+            this.setState({
+                branchId: message.selectedBranchId,
+                academicYearId: message.selectedAcademicYearId,
+                departmentId: message.selectedDepartmentId,
+            });
+            console.log("EnquiryGrid. branchId: ",this.state.branchId);
+            console.log("EnquiryGrid. departmentId: ",this.state.departmentId);
+            console.log("EnquiryGrid. ayId: ",this.state.academicYearId);  
+        }
+    
+        socket.onopen = () => {
+            console.log("AdmissinPage. Opening websocekt connection User : ",this.state.user.login);
+            socket.send(this.state.user.login);
+        }
+    
+        window.onbeforeunload = () => {
+            console.log("AdmissinPage. Closing websocket connection with cms backend service");
+        }
     }
 
     async nextPageEvent(){
@@ -88,6 +125,7 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
     async prevPageEvent(){
         
         console.log("1. prevPageEvent : Page name --------- ",this.surveyModel.currentPageValue);
+        
         if(this.surveyModel.currentPageValue){
             
             let eventType = this.surveyModel.currentPageValue.name;
@@ -107,12 +145,6 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
             
         }
     }
-
-    // getModel(json: any){
-    //     var model = new Survey.ReactSurveyModel(json);
-    //     return (<Survey.Survey model={model} onComplete={this.onComplete} nextPage={this.nextPageEvent} prevPage={this.prevPageEvent} />);
-    //     // return (<Survey.Survey model={model} onComplete={this.onComplete}  />);
-    // }
 
     onComplete(survey: any, options: any) {
         console.log("Survey results: " + JSON.stringify(survey.data));
@@ -230,6 +262,81 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
         await console.log("4. showSelectedPage :::::: ");
     }
 
+    async getBatchList(){
+        const {departmentId} = this.state;
+        let batchList : any = [];
+        console.log("Getting batch :::: ");
+        const URL = config.PREF_GET_BATCH_URL + '?departmentId=' + departmentId;
+        await Utils.getReq(URL)
+            .then((res: any) => {
+                console.log('1. EnquiryGrid. batch list : ', res);
+                if (res && Array.isArray(res.data)) {
+                    for (var i = 0; i < res.data.length; i++) {
+                        let b = res.data[i];
+                        // console.log("2. EnquiryGrid. batch list batch :: ",b);
+                        batchList.push(b);
+                    }
+                    this.setState({
+                        batchList: batchList,
+                    });
+                    console.log('3. EnquiryGrid. batch list : ', batchList);
+
+                } else {
+                    console.warn('EnquiryGrid: Invalid response for batch list url : ' + URL);
+                }
+            }).catch((err: any) => {
+                console.error('EnquiryGrid: Failed to fetch batch list ', err);
+            });
+    }
+
+    async getSectionList(batchId: any){
+        let sectionList : any = [];
+        console.log("Getting section list :::: ");
+        const URL = config.PREF_GET_SECTION_URL + '?batchId=' + batchId;
+        await Utils.getReq(URL)
+            .then((res: any) => {
+                console.log('1. EnquiryGrid. section list : ', res);
+                if (res && Array.isArray(res.data)) {
+                    for (var i = 0; i < res.data.length; i++) {
+                        let b = res.data[i];
+                        // console.log("2. EnquiryGrid. batch list batch :: ",b);
+                        sectionList.push(b);
+                    }
+                    this.setState({
+                        sectionList: sectionList,
+                    });
+                    console.log('3. EnquiryGrid. section list : ', sectionList);
+
+                } else {
+                    console.warn('EnquiryGrid: Invalid response for section list url : ' + URL);
+                }
+            }).catch((err: any) => {
+                console.error('EnquiryGrid: Failed to fetch section list ', err);
+            });
+    }
+
+    async setBatchDropDown(){
+        const {batchList} = this.state;
+        var q = this.surveyModel.getQuestionByName("batchId");
+        await batchList.map((item: any, index: any) => {
+            q.choices[index].value=item.id;
+            q.choices[index].text=item.batch;
+            // console.log("batch item : ",item);
+        });
+        console.log("Batch DROPDOWN :::: ",q);
+    }
+
+    async setSectionDropDown(){
+        const {sectionList} = this.state;
+        var q = this.surveyModel.getQuestionByName("sectionId");
+        await sectionList.map((item: any, index: any) => {
+            q.choices[index].value=item.id;
+            q.choices[index].text=item.section;
+            // console.log("batch item : ",item);
+        });
+        console.log("Section DROPDOWN :::: ",q);
+    }
+
     async showDetail(e: any, bShow: boolean, enquiryObj: any) {
         e && e.preventDefault();
         if(bShow){
@@ -239,6 +346,14 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
             }
             await this.updateSliderStates(this.state.currentState);
             await this.showSelectedPage(this.state.currentState);
+            await this.getBatchList();
+            await this.setBatchDropDown();
+            // var q = this.surveyModel.getQuestionByName("batchId");
+            // console.log("this.state.batchList ::::: ",this.state.batchList);
+            // // await this.state.batchList.map((item: any, index: any) => {
+            //     q.choices[0].value="item.id";
+            //     q.choices[0].text="item.batch";
+            // // });
         }
 
         this.setState(() => ({

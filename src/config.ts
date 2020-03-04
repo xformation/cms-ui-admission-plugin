@@ -2,6 +2,7 @@ const graphqlUrl = 'http://localhost:9094';
 const loggedInUserUrl = 'http://localhost:3000';
 const ssmWorkflowUrl = 'http://localhost:8095';
 const jsrOakUrl = 'http://localhost:8093';
+const preferenceUrl = 'http://localhost:9091';
 
 const ADMISSION_ENQUIRY_SSM =
   '{ "states" : [' +
@@ -33,4 +34,7 @@ export const config = {
   SSM_LIST_STATES_BY_MACHINE_ID: ssmWorkflowUrl + '/ssm/states/listStates',
   SSM_SEND_EVENT: ssmWorkflowUrl + '/ssm/states/sendEvent',
   JSR_OAK_URL: jsrOakUrl,
+
+  PREF_GET_BATCH_URL: preferenceUrl + '/api/batch-by-filters',
+  PREF_GET_SECTION_URL: preferenceUrl + '/api/section-by-filters',
 };

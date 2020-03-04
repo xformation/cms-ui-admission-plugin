@@ -6,8 +6,34 @@ const ADMISSION_STATE_FORM =
       "name": "PersonalInfo",
       "elements": [
        {
+        "type": "dropdown",
+        "name": "studentType",
+        "title": "Student Type",
+        "isRequired": true,
+        "requiredErrorText": "Please select student type",
+        "choices": [
+         {
+          "value": "REGULAR",
+          "text": "REGULAR"
+         },
+         {
+          "value": "STAFF_CONCESSION",
+          "text": "STAFF CONCESSION"
+         },
+         {
+          "value": "BENEFITS",
+          "text": "BENEFITS"
+         },
+         {
+          "value": "SCHOLARSHIP",
+          "text": "SCHOLARSHIP"
+         }
+        ]
+       },
+       {
         "type": "file",
-        "name": "question3",
+        "name": "studentImage",
+        "title": "Student Image",
         "imageHeight": "100",
         "imageWidth": "100",
         "maxSize": 0,
@@ -23,7 +49,9 @@ const ADMISSION_STATE_FORM =
         "choices": [
          "item1",
          "item2",
-         "item3"
+         "item3",
+         "item4",
+         "item5"
         ]
        },
        {
@@ -36,7 +64,8 @@ const ADMISSION_STATE_FORM =
         "choices": [
          "item1",
          "item2",
-         "item3"
+         "item3",
+         "item4"
         ]
        },
        {
@@ -108,10 +137,13 @@ const ADMISSION_STATE_FORM =
         "maxLength": 255
        },
        {
-        "type": "html",
+        "type": "text",
         "name": "dateOfBirth",
+        "title": "Date of Birth",
         "isRequired": true,
-        "html": "<label>Date of Birth</lable><input type=\"date\"/>"
+        "requiredErrorText": "Please select date of birth",
+        "inputType": "date",
+        "maxLength": 10
        },
        {
         "type": "dropdown",
@@ -338,8 +370,54 @@ const ADMISSION_STATE_FORM =
        },
        {
         "type": "text",
-        "name": "question4",
-        "startWithNewLine": false
+        "name": "emergencyContactName",
+        "startWithNewLine": false,
+        "title": "Emergency Contact Person",
+        "isRequired": true,
+        "requiredErrorText": "Please select emergency contact person",
+        "maxLength": 255
+       },
+       {
+        "type": "text",
+        "name": "emergencyContactCellNumber",
+        "title": "Emergency Contact Cell Number",
+        "isRequired": true,
+        "requiredErrorText": "Please select emergency contact cell number",
+        "maxLength": 255
+       },
+       {
+        "type": "text",
+        "name": "emergencyContactEmailId",
+        "startWithNewLine": false,
+        "title": "Emergency Contact Email Id",
+        "validators": [
+         {
+          "type": "email"
+         }
+        ],
+        "maxLength": 255
+       },
+       {
+        "type": "dropdown",
+        "name": "relationWithStudent",
+        "startWithNewLine": false,
+        "title": "Emergency Contact Relation With Student",
+        "isRequired": true,
+        "requiredErrorText": "Please select emergency contact relation with student",
+        "choices": [
+         {
+          "value": "FATHER",
+          "text": "FATHER"
+         },
+         {
+          "value": "MOTHER",
+          "text": "MOTHER"
+         },
+         {
+          "value": "GUARDIAN",
+          "text": "GUARDIAN"
+         }
+        ]
        }
       ],
       "title": "Personal Informaion"
@@ -349,9 +427,47 @@ const ADMISSION_STATE_FORM =
       "elements": [
        {
         "type": "text",
-        "name": "Address",
+        "name": "qualification",
+        "title": "Highest Qualification",
         "isRequired": true,
-        "requiredErrorText": "Please enter address",
+        "requiredErrorText": "Please select highest qualification",
+        "maxLength": 255
+       },
+       {
+        "type": "text",
+        "name": "yearOfPassing",
+        "startWithNewLine": false,
+        "title": "Year of Passing",
+        "isRequired": true,
+        "requiredErrorText": "Please select year of passing",
+        "validators": [
+         {
+          "type": "numeric"
+         }
+        ],
+        "maxLength": 255,
+        "placeHolder": "1990"
+       },
+       {
+        "type": "text",
+        "name": "percentage",
+        "startWithNewLine": false,
+        "title": "Percentage of Last Qualification",
+        "isRequired": true,
+        "requiredErrorText": "Please select last percentage",
+        "validators": [
+         {
+          "type": "numeric"
+         }
+        ],
+        "maxLength": 3
+       },
+       {
+        "type": "text",
+        "name": "institution",
+        "title": "Last College Attended",
+        "isRequired": true,
+        "requiredErrorText": "Please select last attended college name ",
         "maxLength": 255
        }
       ],
@@ -361,9 +477,29 @@ const ADMISSION_STATE_FORM =
       "name": "Documents",
       "elements": [
        {
-        "type": "file",
-        "name": "Document 1",
-        "maxSize": 0
+        "type": "paneldynamic",
+        "name": "uploadDocuments",
+        "title": "Upload Documents",
+        "templateElements": [
+         {
+          "type": "text",
+          "name": "question3",
+          "title": "Document Name",
+          "maxLength": 255
+         },
+         {
+          "type": "file",
+          "name": "selectFile",
+          "startWithNewLine": false,
+          "title": " Select File",
+          "isRequired": true,
+          "requiredErrorText": "Please select a file",
+          "showPreview": false,
+          "allowImagesPreview": false,
+          "maxSize": 0,
+          "needConfirmRemoveFile": true
+         }
+        ]
        }
       ],
       "title": "Documents"
