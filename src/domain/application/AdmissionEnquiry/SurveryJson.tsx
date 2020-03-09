@@ -12,7 +12,7 @@ const ADMISSION_STATE_FORM =
         "type": "dropdown",
         "name": "studentType",
         "title": "Student Type",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select student type",
         "choices": [
          {
@@ -49,7 +49,7 @@ const ADMISSION_STATE_FORM =
         "name": "batchId",
         "startWithNewLine": false,
         "title": "Year",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select year",
         "choices": [
          
@@ -60,7 +60,7 @@ const ADMISSION_STATE_FORM =
         "name": "sectionId",
         "startWithNewLine": false,
         "title": "Section",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select section",
         "choices": [
          
@@ -70,7 +70,7 @@ const ADMISSION_STATE_FORM =
         "type": "text",
         "name": "studentName",
         "title": "Student Name",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select student name",
         "maxLength": 255
        },
@@ -86,7 +86,7 @@ const ADMISSION_STATE_FORM =
         "name": "studentLastName",
         "startWithNewLine": false,
         "title": "Student Last Name",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select student last name",
         "maxLength": 255
        },
@@ -94,7 +94,7 @@ const ADMISSION_STATE_FORM =
         "type": "text",
         "name": "fatherName",
         "title": "Father Name",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select father's name",
         "maxLength": 255
        },
@@ -110,7 +110,7 @@ const ADMISSION_STATE_FORM =
         "name": "fatherLastName",
         "startWithNewLine": false,
         "title": "Father Last Name",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select father's last name",
         "maxLength": 255
        },
@@ -138,7 +138,7 @@ const ADMISSION_STATE_FORM =
         "type": "text",
         "name": "dateOfBirth",
         "title": "Date of Birth",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select date of birth",
         "inputType": "date",
         "maxLength": 10
@@ -148,7 +148,7 @@ const ADMISSION_STATE_FORM =
         "name": "sex",
         "startWithNewLine": false,
         "title": "Gender",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select gender",
         "choices": [
          {
@@ -176,7 +176,7 @@ const ADMISSION_STATE_FORM =
         "type": "dropdown",
         "name": "religion",
         "title": "Religion",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select religion",
         "choices": [
          {
@@ -207,7 +207,7 @@ const ADMISSION_STATE_FORM =
         "name": "caste",
         "startWithNewLine": false,
         "title": "Caste",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select caste",
         "choices": [
          {
@@ -239,7 +239,7 @@ const ADMISSION_STATE_FORM =
         "type": "text",
         "name": "studentLocalAddress",
         "title": "Local Address",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select local address",
         "maxLength": 255
        },
@@ -248,7 +248,7 @@ const ADMISSION_STATE_FORM =
         "name": "studentPermanentAddress",
         "startWithNewLine": false,
         "title": "Permanent Address",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select permanent address",
         "maxLength": 255
        },
@@ -263,7 +263,7 @@ const ADMISSION_STATE_FORM =
         "type": "dropdown",
         "name": "state",
         "title": "State",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select state",
         "choices": [
          
@@ -274,7 +274,7 @@ const ADMISSION_STATE_FORM =
         "name": "city",
         "startWithNewLine": false,
         "title": "City",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select city",
         "choices": [
          
@@ -305,7 +305,7 @@ const ADMISSION_STATE_FORM =
         "name": "studentPrimaryEmailId",
         "startWithNewLine": false,
         "title": "Primary Email Id",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select primary email id",
         "validators": [
          {
@@ -367,7 +367,7 @@ const ADMISSION_STATE_FORM =
         "name": "emergencyContactName",
         "startWithNewLine": false,
         "title": "Emergency Contact Person",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select emergency contact person",
         "maxLength": 255
        },
@@ -375,7 +375,7 @@ const ADMISSION_STATE_FORM =
         "type": "text",
         "name": "emergencyContactCellNumber",
         "title": "Emergency Contact Cell Number",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select emergency contact cell number",
         "maxLength": 255
        },
@@ -396,7 +396,7 @@ const ADMISSION_STATE_FORM =
         "name": "relationWithStudent",
         "startWithNewLine": false,
         "title": "Emergency Contact Relation With Student",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select emergency contact relation with student",
         "choices": [
          {
@@ -423,7 +423,7 @@ const ADMISSION_STATE_FORM =
         "type": "text",
         "name": "qualification",
         "title": "Highest Qualification",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select highest qualification",
         "maxLength": 255
        },
@@ -432,7 +432,7 @@ const ADMISSION_STATE_FORM =
         "name": "yearOfPassing",
         "startWithNewLine": false,
         "title": "Year of Passing",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select year of passing",
         "validators": [
          {
@@ -447,7 +447,7 @@ const ADMISSION_STATE_FORM =
         "name": "percentage",
         "startWithNewLine": false,
         "title": "Percentage of Last Qualification",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select last percentage",
         "validators": [
          {
@@ -460,7 +460,7 @@ const ADMISSION_STATE_FORM =
         "type": "text",
         "name": "institution",
         "title": "Last College Attended",
-        "isRequired": false,
+        "isRequired": true,
         "requiredErrorText": "Please select last attended college name ",
         "maxLength": 255
        }
@@ -486,7 +486,7 @@ const ADMISSION_STATE_FORM =
           "name": "selectFile",
           "startWithNewLine": false,
           "title": "Select File",
-          "isRequired": false,
+          "isRequired": true,
           "requiredErrorText": "Please select a file",
           "showPreview": false,
           "allowImagesPreview": false,
