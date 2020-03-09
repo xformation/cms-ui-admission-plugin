@@ -1,8 +1,9 @@
-const graphqlUrl = 'http://localhost:9094';
-const loggedInUserUrl = 'http://localhost:3000';
-const ssmWorkflowUrl = 'http://localhost:8095';
-const jsrOakUrl = 'http://localhost:8093';
-const preferenceUrl = 'http://localhost:9091';
+const graphqlUrl = 'http://100.81.3.25:9094';
+const loggedInUserUrl = 'http://100.81.3.25:3000';
+const ssmWorkflowUrl = 'http://100.81.3.25:8095';
+const jsrOakUrl = 'http://100.81.3.25:8093';
+const preferenceUrl = 'http://100.81.3.25:9091';
+const backEndUrl = 'http://100.81.3.25:8080';
 
 const ADMISSION_ENQUIRY_SSM =
   '{ "states" : [' +
@@ -24,6 +25,7 @@ const ssmId = 'admenq-1';
 
 export const config = {
   SSM_ID: ssmId,
+  IS_MS_ONEDRIVE_STORAGE: 'YES',
   ADMISSION_ENQUIRY_SSM_JSON: ADMISSION_ENQUIRY_SSM,
   GRAPHQL_URL: graphqlUrl + '/graphql',
   LOGGED_IN_USER_URL: loggedInUserUrl + '/api/user',
@@ -37,4 +39,9 @@ export const config = {
 
   PREF_GET_BATCH_URL: preferenceUrl + '/api/batch-by-filters',
   PREF_GET_SECTION_URL: preferenceUrl + '/api/section-by-filters',
+  PREF_STATES_URL: preferenceUrl + '/api/states',
+  PREF_CITY_URL: preferenceUrl + '/api/cities',
+
+  BACKEND_GRANT_ADMISSION: backEndUrl + '/api/cms-grant-admission-to-student',
+  BACKEND_CMS_DOCUMENTS_URL: backEndUrl + '/api/cmsdocuments',
 };

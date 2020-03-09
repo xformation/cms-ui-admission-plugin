@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import AdmissionEnquiryPage from './EnquiryPage';
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+// import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { withApollo } from 'react-apollo';
 import Slider from './Slider';
 import {config} from '../../../config';
 import {Utils} from '../_utilites/Utils';
@@ -10,9 +11,15 @@ import  "../../../css/custom.css";
 import {SurveyJson} from './SurveryJson';
 
 import * as Survey from "survey-react";
+import axios from 'axios'; 
 import "survey-react/survey.css";
 import "survey-react/modern.css";
 import wsCmsBackendServiceSingletonClient from '../../../wsCmsBackendServiceClient';
+import { SAVE_ADMISSION_APPLICATION } from '../_queries';
+import * as moment from 'moment';
+import { commonFunctions } from '../_utilites/common.functions';
+import {UserAgentApplication} from 'msal';
+import {azureConfig} from '../../../azureConfig';
 
 export interface AdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement>{
     [data: string]: any;
@@ -24,7 +31,7 @@ export interface AdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement>
     
 }
 
-export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<AdmissionEnquiryProps, any> {
+class EnquiryGrid<T = {[data: string]: any}> extends React.Component<AdmissionEnquiryProps, any> {
     surveyModel:any = null;
     SSM_SORT_ORDER : any = {
         "EnquiryReceived": 0,
@@ -55,6 +62,27 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
             academicYearId: null,
             batchList: [],
             sectionList: [],
+            stateList: [],
+            cityList: [],
+            admissionNo: null,
+            isAuthenticated: false,
+            userAgentApplication: new UserAgentApplication({
+                auth:{
+                  clientId: azureConfig.APP_ID,
+                  redirectUri: azureConfig.REDIRECT_URL
+                },
+                cache: {
+                  cacheLocation: "localStorage",
+                  storeAuthStateInCookie: true,
+                }
+            }),
+            accessToken: null,
+            msCloudParentId: azureConfig.MS_CLOUD_PARENT_ID,
+            tokenType: null,
+            imageFileObj: null,
+            otherFileObj: [],
+            documentUploadStatus: [],
+            newStudentId: null,
         };
         this.createRows = this.createRows.bind(this);
         this.updateEnquiryList = this.updateEnquiryList.bind(this);
@@ -67,9 +95,18 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
         this.showDetail = this.showDetail.bind(this);
         this.updateSliderStates = this.updateSliderStates.bind(this);
         this.getBatchList = this.getBatchList.bind(this);
-        this.setBatchDropDown = this.setBatchDropDown.bind(this);
+        this.setDropDown = this.setDropDown.bind(this);
         this.getSectionList = this.getSectionList.bind(this);
-        this.setSectionDropDown = this.setSectionDropDown.bind(this);
+        // this.setSectionDropDown = this.setSectionDropDown.bind(this);
+        this.onFormDetailsChanged = this.onFormDetailsChanged.bind(this);
+        this.getStateList = this.getStateList.bind(this);
+        this.getCityList = this.getCityList.bind(this);
+        this.saveAdmissionApplication = this.saveAdmissionApplication.bind(this);
+        this.initData = this.initData.bind(this);
+        this.uploadFiles = this.uploadFiles.bind(this);
+        this.uploadFilesToMsCloud = this.uploadFilesToMsCloud.bind(this);
+        this.updateDocumentsPathInBackend = this.updateDocumentsPathInBackend.bind(this);
+        this.loginToMsAccount = this.loginToMsAccount.bind(this);
     }
 
     async componentDidMount(){
@@ -78,6 +115,65 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
         this.surveyModel = new Survey.ReactSurveyModel(SurveyJson.ADMISSION_STATE_FORM);
         this.setState({ survey: SurveyJson.ADMISSION_STATE_FORM});
         await this.registerSocket();
+        await this.loginToMsAccount();
+    }
+
+    async loginToMsAccount() {
+        try {
+          if(!this.state.isAuthenticated){
+            console.log("Authenticating the user with microsoft AD account");
+            await this.state.userAgentApplication.loginPopup({
+                scopes: azureConfig.scopes,
+                prompt: "select_account"
+            });
+          }
+          await this.getUserProfile();
+        }catch(err) {
+          alert("ERROR. loginToMsAccount ---->>>>> "+err);
+          this.setState({
+            isAuthenticated: false,
+            azureUser: {},
+            // error: error
+          });
+        }
+    }
+    
+    async getUserProfile() {
+        try {
+            var accessToken = await this.state.userAgentApplication.acquireTokenSilent({
+                scopes: azureConfig.scopes,
+                // client_secret: azureConfig.CLIENT_SECRATE
+            });
+            console.log("EnquiryGrid. ACCESS TOKEN :::::: ", accessToken.accessToken);
+            if (accessToken) {
+              // TEMPORARY: Display the token in the error flash
+              this.setState({
+                isAuthenticated: true,
+                accessToken: accessToken.accessToken
+              });
+            //   console.log("Getting list of all the files : ");
+            //   const URI = 'https://graph.microsoft.com/v1.0/me/drive/root:/Manoj @ SYNECTIKS INC';
+            //   axios.get( URI,
+            //     { headers: { Authorization: `Bearer ${accessToken.accessToken}` }}
+            //   ).then(res => {
+            //     const me = res.data;
+            //     console.log("PARENT ID : ",me.parentReference.id);
+            //     this.setState({ 
+            //         msCloudParentId : me.parentReference.id
+            //     });
+            //     console.log("TAB PAGE : MICROSOFT GRAPH RESPONSE : ",me);
+            //   });
+    
+              
+            }
+        } catch(err) {
+          alert("ERROR getting acces token ---->>>>> "+err);
+          this.setState({
+            isAuthenticated: false,
+            // azureUser: {},
+          });
+        }
+        // console.log("EnquiryGrid : PARENT ID : ",this.state.msCloudParentId);
     }
 
     registerSocket() {
@@ -107,6 +203,8 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
     }
 
     async nextPageEvent(){
+        const{branchId} = this.state;
+        
         // console.log("Next EVENT ::::::: ",this.surveyModel.currentPageValue.name);
         // if(this.surveyModel.currentPageValue){
         //     const curSt = await Utils.sendSsmEvent("Submit"+this.surveyModel.currentPageValue.name, this.state.enquiryObj.id);
@@ -146,8 +244,110 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
         }
     }
 
-    onComplete(survey: any, options: any) {
-        console.log("Survey results: " + JSON.stringify(survey.data));
+    async onComplete(survey: any, options: any) {
+        const {branchId, departmentId, imageFileObj, otherFileObj} = this.state;
+        // console.log("Survey results: " + JSON.stringify(survey.data));
+        try{
+            await this.saveAdmissionApplication('ACTIVE');
+            await this.saveStudent();
+            if(config.IS_MS_ONEDRIVE_STORAGE === 'YES'){
+                // if(imageFileObj){
+                //     await this.uploadFilesToMsCloud(imageFileObj,"image/png", "photo");
+                // }
+                console.log("EnquiryGrid. onComplete. otherFileObj ::--->>>>>, ",otherFileObj);
+                if(otherFileObj.length > 0){
+                    await otherFileObj.map((item: any, index: any) => {
+                        console.log("uploding file ::: --> ",item);
+                        if(item.name === imageFileObj.name && item.type === imageFileObj.type){
+                            this.uploadFilesToMsCloud(imageFileObj,"image/png", "photo");
+                        }else {
+                            if(item.type === "image/png"){
+                                this.uploadFilesToMsCloud(item,"image/png", "document");
+                            }else{
+                                this.uploadFilesToMsCloud(item,"application/json", "document");
+                            }
+                        }
+                        
+                    });
+                }
+            }
+            
+            // await this.updateDocumentsPathInBackend();
+            await Utils.sendSsmEvent("GrantAdmission", this.state.enquiryObj.id);
+            await this.updateSliderStates("AdmissionGranted");
+        }catch(e){
+            console.log("Exception saving admission application ",e);
+        }
+    }
+
+    async updateDocumentsPathInBackend(item: any){
+        console.log("1. EnquiryGrid. updateDocumentsPathInBackend:::::: ");
+        const {documentUploadStatus, newStudentId} = this.state;
+        // const arr = documentUploadStatus;
+        // await arr.map( (item: any) => {
+            console.log("1. EnquiryGrid. updateDocumentsPathInBackend. Item ::: ", item)
+            if(item.status === 'SUCCESS'){
+                 Utils.postReq(config.BACKEND_CMS_DOCUMENTS_URL+"?studentId="+newStudentId, item)
+                .then((res: any) => {
+                    console.error('EnquiryGrid: document backend update status ', res);
+                })
+                .catch((err: any) => {
+                    console.error('3. fetchCurState: Failed to fetch ', err);
+                });
+            }
+        // });
+    }
+
+    async saveStudent() {
+        const {branchId, departmentId, academicYearId, admissionNo} = this.state;
+        const data = Utils.getInput(this.surveyModel, branchId, departmentId, null, admissionNo, academicYearId);
+        console.log("1 EnquiryGrid. saveStudent.  input  : ",data);
+        if(data.strDateOfBirth === "Invalid date"){
+            data.strDateOfBirth = null;
+        }
+	    await Utils.postReq(config.BACKEND_GRANT_ADMISSION + "?admissionNo=" + admissionNo, data)
+			.then((res: any) => {
+				console.log('2 EnquiryGrid. saveStudent - admission granted ::: ', res);
+                this.setState({
+                    newStudentId: res.data
+                });
+                console.log('3 EnquiryGrid. new student id ::: ', res.data);
+			})
+			.catch((err: any) => {
+				console.error('3 EnquiryGrid. Failed to post student data to backend ', err);
+			});
+    }
+
+    async saveAdmissionApplication(status: any){
+        const {academicYearId, branchId, departmentId, enquiryObj } = this.state;
+        let admissionApplicationInput = {
+            applicationStatus: status,
+            admissionEnquiryId: enquiryObj.id,
+            academicYearId: academicYearId,
+            branchId: branchId
+        };
+
+        let exitCode = 0;
+        await this.props.client.mutate({
+            mutation: SAVE_ADMISSION_APPLICATION,
+            variables: { 
+                input: admissionApplicationInput
+             },
+             fetchPolicy: 'no-cache'
+        }).then((resp: any) => {
+            console.log("Success in saveAdmissionApplication Mutation. Exit code : ",resp.data.saveAdmissionApplication.cmsAdmissionApplicationVo.exitCode);
+            exitCode = resp.data.saveAdmissionApplication.cmsAdmissionApplicationVo.exitCode;
+            if(exitCode === 0){
+                this.setState({
+                    list: resp.data.saveAdmissionApplication.cmsAdmissionApplicationVo.enquiryList,
+                    admissionNo: resp.data.saveAdmissionApplication.cmsAdmissionApplicationVo.admissionNo
+                });
+            }
+        }).catch((error: any) => {
+            exitCode = 1;
+            console.log('Error in saveAdmissionApplication Mutation : ', error);
+        });
+        
     }
 
     async getSsmStates() {
@@ -228,18 +428,21 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
             //     item.status = 'Y';
             //     obj[i] = item;
             // }else 
+            
             if(index <= currentIndex){
                 item.status = 'Y';
             }else{
                 item.status = 'N';
             } 
             obj[i] = item;
+            
             // if (index < i) {
             //     item.status = 'Y';
             //     obj[i] = item;
             // }
             // return item;
         });
+
 		// }
 		this.setState({
             uniqueStateData: obj,
@@ -290,12 +493,18 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
     }
 
     async getSectionList(batchId: any){
+        if(batchId === ""){
+            this.setState({
+                sectionList: [],
+            });
+            return;
+        }
         let sectionList : any = [];
-        console.log("Getting section list :::: ");
+        console.log("Getting section list: ");
         const URL = config.PREF_GET_SECTION_URL + '?batchId=' + batchId;
         await Utils.getReq(URL)
             .then((res: any) => {
-                console.log('1. EnquiryGrid. section list : ', res);
+                console.log('1. EnquiryGrid. section list: ', res);
                 if (res && Array.isArray(res.data)) {
                     for (var i = 0; i < res.data.length; i++) {
                         let b = res.data[i];
@@ -305,36 +514,55 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
                     this.setState({
                         sectionList: sectionList,
                     });
-                    console.log('3. EnquiryGrid. section list : ', sectionList);
+                    console.log('3. EnquiryGrid. section list: ', sectionList);
 
                 } else {
-                    console.warn('EnquiryGrid: Invalid response for section list url : ' + URL);
+                    console.warn('EnquiryGrid: Invalid response for section list url: ' + URL);
                 }
             }).catch((err: any) => {
-                console.error('EnquiryGrid: Failed to fetch section list ', err);
+                console.error('EnquiryGrid: Error. Failed to fetch section list: ', err);
             });
     }
 
-    async setBatchDropDown(){
-        const {batchList} = this.state;
-        var q = this.surveyModel.getQuestionByName("batchId");
-        await batchList.map((item: any, index: any) => {
-            q.choices[index].value=item.id;
-            q.choices[index].text=item.batch;
-            // console.log("batch item : ",item);
+    async setDropDown(list: any, questionObject: any, id: any, name: any){
+        var obj = this.surveyModel.getQuestionByName(questionObject);
+        obj.value = "";
+        let arr : any = [];                    
+        await list.map((item: any, index: any) => {
+            let obj = { 
+                value: item[id],
+                text: item[name]
+            }    
+            arr.push(obj);
         });
-        console.log("Batch DROPDOWN :::: ",q);
+        obj.choices = arr;
     }
 
-    async setSectionDropDown(){
-        const {sectionList} = this.state;
-        var q = this.surveyModel.getQuestionByName("sectionId");
-        await sectionList.map((item: any, index: any) => {
-            q.choices[index].value=item.id;
-            q.choices[index].text=item.section;
-            // console.log("batch item : ",item);
-        });
-        console.log("Section DROPDOWN :::: ",q);
+    async initData(enquiryObj: any){
+        var studentNameQuestion = this.surveyModel.getQuestionByName("studentName");
+        studentNameQuestion.questionValue = enquiryObj.studentName;
+
+        var studentMiddleNameQuestion = this.surveyModel.getQuestionByName("studentMiddleName");
+        studentMiddleNameQuestion.questionValue = enquiryObj.studentMiddleName;
+        
+        var studentLastNameQuestion = this.surveyModel.getQuestionByName("studentLastName");
+        studentLastNameQuestion.questionValue = enquiryObj.studentLastName;
+        
+        var studentPrimaryCellNumberQuestion = this.surveyModel.getQuestionByName("studentPrimaryCellNumber");
+        studentPrimaryCellNumberQuestion.questionValue = enquiryObj.cellPhoneNo;
+        
+        var studentLandLinePhoneNumberQuestion = this.surveyModel.getQuestionByName("studentLandLinePhoneNumber");
+        studentLandLinePhoneNumberQuestion.questionValue = enquiryObj.landLinePhoneNo;
+        
+        var studentPrimaryEmailIdQuestion = this.surveyModel.getQuestionByName("studentPrimaryEmailId");
+        studentPrimaryEmailIdQuestion.questionValue = enquiryObj.emailId;
+        
+        var dateOfBirthQuestion = this.surveyModel.getQuestionByName("dateOfBirth");
+        dateOfBirthQuestion.questionValue = moment(enquiryObj.strDateOfBirth, "DD-MM-YYYY").format("YYYY-MM-DD");
+        
+        var genderQuestion = this.surveyModel.getQuestionByName("sex");
+        genderQuestion.value = enquiryObj.gender;
+        
     }
 
     async showDetail(e: any, bShow: boolean, enquiryObj: any) {
@@ -347,13 +575,11 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
             await this.updateSliderStates(this.state.currentState);
             await this.showSelectedPage(this.state.currentState);
             await this.getBatchList();
-            await this.setBatchDropDown();
-            // var q = this.surveyModel.getQuestionByName("batchId");
-            // console.log("this.state.batchList ::::: ",this.state.batchList);
-            // // await this.state.batchList.map((item: any, index: any) => {
-            //     q.choices[0].value="item.id";
-            //     q.choices[0].text="item.batch";
-            // // });
+            await this.setDropDown(this.state.batchList, "batchId", "id", "batch");
+            await this.getStateList();
+            await this.setDropDown(this.state.stateList, "state", "id", "stateName");
+            await this.getCityList();
+            await this.initData(enquiryObj);
         }
 
         this.setState(() => ({
@@ -367,7 +593,7 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
 
     createRows(objAry: any) {
         const { source } = this.state;
-        console.log("createRows() - Enquiry list on Grid page:  ", objAry);
+        console.log("createRows() - Enquiry list on Grid page: ", objAry);
         if(objAry === undefined || objAry === null) {
             return;
         }
@@ -403,22 +629,166 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
         });
     }
 
-    onFormDetailsChanged(sender: any, options: any){
-        let studentType = sender.getQuestionByName("studentType");
-        let batch = sender.getQuestionByName("batchId");
-        switch (options.name){
-            case "studentType":
-                batch.value = "";
-                batch.choices = [{
-                    value: "choice1",
-                    text: "choice1"
-                },{
-                    value: "choice2",
-                    text: "choice2"
-                },{
-                    value: "choice3",
-                    text: "choice3"
-                }];
+    async getStateList(){
+        let stateList : any = [];
+        const URL = config.PREF_STATES_URL;
+        await Utils.getReq(URL)
+            .then((res: any) => {
+                if (res && Array.isArray(res.data)) {
+                    for (var i = 0; i < res.data.length; i++) {
+                        let b = res.data[i];
+                        stateList.push(b);
+                    }
+                    this.setState({
+                        stateList: stateList,
+                    });
+                } else {
+                    console.warn('EnquiryGrid: Invalid response for state list url: ' + URL);
+                }
+            }).catch((err: any) => {
+                console.error('EnquiryGrid: Error. Failed to fetch state list: ', err);
+            });
+    }
+
+    async getCityList(){
+        let cityList : any = [];
+        const URL = config.PREF_CITY_URL;
+        await Utils.getReq(URL)
+            .then((res: any) => {
+                if (res && Array.isArray(res.data)) {
+                    for (var i = 0; i < res.data.length; i++) {
+                        let b = res.data[i];
+                        cityList.push(b);
+                    }
+                    this.setState({
+                        cityList: cityList,
+                    });
+                } else {
+                    console.warn('EnquiryGrid: Invalid response for city list url: ' + URL);
+                }
+            }).catch((err: any) => {
+                console.error('EnquiryGrid: Error. Failed to fetch city list: ', err);
+            });
+    }
+
+    async uploadFilesToMsCloud(file: any, contentType: any, namePrefix: any){
+        const { accessToken, msCloudParentId, newStudentId } = this.state;
+        try{
+          const fName = namePrefix+"_"+file.name + "_"+newStudentId;
+          console.log("EnquiryGrid. Uploading file to MS OneDrive: ",fName);
+          const URI = azureConfig.MS_GRAPH_URL+'/'+msCloudParentId+':/'+file.name+':/content';
+          // console.log("Access Token : ",accessToken.accessToken);
+          // console.log("EnquiryGrid. msCloudParentId: ",msCloudParentId);
+          
+          var myHeaders = new Headers();
+          myHeaders.append("Authorization", `Bearer ${accessToken}` );
+          myHeaders.append("Content-Type", contentType);
+          await fetch(URI, {
+            method: 'PUT',
+            headers: myHeaders,
+            body: file,
+            redirect: 'follow'
+          })
+            .then(response => response.json())
+            .then(async  result => { 
+                // const {documentUploadStatus} = this.state;
+                // const arr = documentUploadStatus;
+                // arr.map((item: any, index: any) => {
+                let item = {
+                        documentName: namePrefix+"__"+file.name,
+                        isMsOneDriveStorage: config.IS_MS_ONEDRIVE_STORAGE,
+                        status: 'SUCCESS',
+                        oneDrivePath: result['@microsoft.graph.downloadUrl'],
+                }
+                await this.updateDocumentsPathInBackend(item);
+                // console.log("1. EnquiryGrid uploadFilesToMsCloud. selectFile::: --> ",item);
+                // arr.push(item);
+                // // });
+                // this.setState({
+                //     documentUploadStatus: arr,
+                // });
+                console.log("2. EnquiryGrid uploadFilesToMsCloud. File upload succes: ",result);
+                console.log("3. EnquiryGrid uploadFilesToMsCloud. File Download URL: ",result['@microsoft.graph.downloadUrl'])
+            })
+            .catch(error => console.log('error', error));
+        }catch(err){
+          console.log("EnquiryGrid. Error in uploading file to MS OneDrive: ",err);
+        }
+    }
+
+    async uploadFiles(sender: any, options: any){
+        switch (options.name) {
+            case "studentImage":
+            {
+                console.log("EnquiryGrid. studentImage::: --> ",options.files[0]);
+                this.setState({
+                    imageFileObj: options.files[0],
+                });
+            }
+            case "selectFile":
+            {
+                const {otherFileObj} = this.state;
+                const arr = otherFileObj;
+                // console.log("Existing items in file array : ",arr);
+                await options.files.map((item: any, index: any) => {
+                    console.log("EnquiryGrid. selectFile::: --> ",item);
+                    arr.push(item);
+                });
+                this.setState({
+                    otherFileObj: arr,
+                });
+            }
+            
+        }
+    }
+    async onFormDetailsChanged(sender: any, options: any){
+        switch (options.name) {
+            case "batchId":
+            {
+                let batch = sender.getQuestionByName("batchId");
+                let section = sender.getQuestionByName("sectionId");
+                await this.getSectionList(batch.value);
+                section.value = "";
+                let arr : any = [];                    
+                for(let i=0; i<this.state.sectionList.length; i++){
+                    let item = this.state.sectionList[i];
+                    let obj = { 
+                        value: item.id,
+                        text: item.section
+                    }    
+                    arr.push(obj);
+                }
+                section.choices = arr;
+            }
+            case "state":
+            {
+                let objSource = sender.getQuestionByName("state");
+                let objTarget = sender.getQuestionByName("city");
+                objTarget.value = "";
+                let arr : any = [];                    
+
+                await this.state.cityList.map((item: any, index: any) => {
+                    if(objSource.value === item["stateId"]){
+                        let obj = { 
+                            value: item["id"],
+                            text: item["cityName"]
+                        }    
+                        arr.push(obj);
+                    }
+                });
+
+                objTarget.choices = arr;
+            }
+                // section.choices = [{
+                //     value: "choice1",
+                //     text: "choice1"
+                // },{
+                //     value: "choice2",
+                //     text: "choice2"
+                // },{
+                //     value: "choice3",
+                //     text: "choice3"
+                // }];
         }
     }
 
@@ -440,7 +810,7 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
                                         {/* {this.state.survey ? this.getModel(this.state.survey) : null} */}
                                         {
                                             this.surveyModel && 
-                                            <Survey.Survey model={this.surveyModel} onComplete={this.onComplete} onCurrentPageChanging ={this.nextPageEvent} onCurrentPageChanged ={this.prevPageEvent} onValueChanged={this.onFormDetailsChanged}/>
+                                            <Survey.Survey model={this.surveyModel} onComplete={this.onComplete} onCurrentPageChanging ={this.nextPageEvent} onCurrentPageChanged ={this.prevPageEvent} onValueChanged={this.onFormDetailsChanged} onUploadFiles={this.uploadFiles}/>
                                         }
                                     </div>
                                     {/* <div className="xform-container" style={{height:'300px', overflowY:'auto'}}>
@@ -493,4 +863,4 @@ export class EnquiryGrid<T = {[data: string]: any}> extends React.Component<Admi
     }
 }
 
-export default EnquiryGrid;
+export default withApollo(EnquiryGrid);

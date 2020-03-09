@@ -4,7 +4,7 @@ import {withApollo} from 'react-apollo';
 
 import {GET_ADMISSION_ENQUIRY_LIST} from '../_queries';
 import AdmissionEnquiryPage from './EnquiryPage';
-import {EnquiryGrid} from './EnquiryGrid';
+import EnquiryGrid from './EnquiryGrid';
 import wsCmsBackendServiceSingletonClient from '../../../wsCmsBackendServiceClient';
 
 export interface AdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement> {

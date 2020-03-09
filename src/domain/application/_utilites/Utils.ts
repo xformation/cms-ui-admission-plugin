@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {config} from '../../../config';
+import * as moment from 'moment';
 
 export const Utils: any = {
   getFileNodePath,
@@ -15,6 +16,7 @@ export const Utils: any = {
   getReq,
   createNodeInOak,
   sendSsmEvent,
+  getInput,
 };
 
 function getFileNodePath(asignId: any, subId: any, studentId: any) {
@@ -169,4 +171,155 @@ async function sendSsmEvent(ssmEventId: any, enqId: any) {
     .catch((err: any) => {
       console.error('Send Event - Failed to fetch ', err);
     });
+}
+
+function getInput(
+  srcObject: any,
+  branchId: any,
+  departmentId: any,
+  objId: any,
+  admissionNo: any,
+  academicYearId: any
+) {
+  let inputObj = {
+    id: objId,
+    studentName: srcObject.getQuestionByName('studentName').questionValue,
+    studentMiddleName: srcObject.getQuestionByName('studentMiddleName').questionValue,
+    studentLastName: srcObject.getQuestionByName('studentLastName').questionValue,
+    fatherName: srcObject.getQuestionByName('fatherName').questionValue,
+    fatherMiddleName: srcObject.getQuestionByName('fatherMiddleName').questionValue,
+    fatherLastName: srcObject.getQuestionByName('fatherLastName').questionValue,
+    motherName: srcObject.getQuestionByName('motherName').questionValue,
+    motherMiddleName: srcObject.getQuestionByName('motherMiddleName').questionValue,
+    motherLastName: srcObject.getQuestionByName('motherLastName').questionValue,
+    // studentAadharNo: srcObject.getQuestionByName("studentAadharNo").questionValue,
+    // studentPanNo: srcObject.getQuestionByName("studentPanNo").questionValue,
+    // studentSocialSecurityNo: srcObject.getQuestionByName("studentSocialSecurityNo").questionValue,
+    // studentTaxReferenceNo: srcObject.getQuestionByName("studentTaxReferenceNo").questionValue,
+    // studentBplNo: srcObject.getQuestionByName("studentBplNo").questionValue,
+    // studentDrivingLicenseNo: srcObject.getQuestionByName("studentDrivingLicenseNo").questionValue,
+    // studentPassportNo: srcObject.getQuestionByName("studentPassportNo").questionValue,
+    placeOfBirth: srcObject.getQuestionByName('placeOfBirth').questionValue,
+    religion: srcObject.getQuestionByName('religion').questionValue,
+    caste: srcObject.getQuestionByName('caste').questionValue,
+    subCaste: srcObject.getQuestionByName('subCaste').questionValue,
+    sex:
+      srcObject.getQuestionByName('sex').questionValue === ''
+        ? null
+        : srcObject.getQuestionByName('sex').questionValue,
+    studentLocalAddress: srcObject.getQuestionByName('studentLocalAddress').questionValue,
+    studentPermanentAddress: srcObject.getQuestionByName('studentPermanentAddress')
+      .questionValue,
+    city: srcObject.getQuestionByName('city').questionValue,
+    state: srcObject.getQuestionByName('state').questionValue,
+    pinCode: srcObject.getQuestionByName('pinCode').questionValue,
+    studentPrimaryCellNumber: srcObject.getQuestionByName('studentPrimaryCellNumber')
+      .questionValue,
+    studentAlternateCellNumber: srcObject.getQuestionByName('studentAlternateCellNumber')
+      .questionValue,
+    studentLandLinePhoneNumber: srcObject.getQuestionByName('studentLandLinePhoneNumber')
+      .questionValue,
+    studentPrimaryEmailId: srcObject.getQuestionByName('studentPrimaryEmailId')
+      .questionValue,
+    studentAlternateEmailId: srcObject.getQuestionByName('studentAlternateEmailId')
+      .questionValue,
+    relationWithStudent: srcObject.getQuestionByName('relationWithStudent').questionValue,
+    emergencyContactName: srcObject.getQuestionByName('emergencyContactName')
+      .questionValue,
+    // emergencyContactMiddleName: srcObject.getQuestionByName("emergencyContactMiddleName").questionValue,
+    // emergencyContactLastName: srcObject.getQuestionByName("emergencyContactLastName").questionValue,
+    emergencyContactCellNumber: srcObject.getQuestionByName('emergencyContactCellNumber')
+      .questionValue,
+    // emergencyContactLandLinePhoneNumber: srcObject.getQuestionByName("emergencyContactLandLinePhoneNumber").questionValue,
+    emergencyContactEmailId: srcObject.getQuestionByName('emergencyContactEmailId')
+      .questionValue,
+    // studentImagePath: srcObject.getQuestionByName("studentImagePath").questionValue,
+    admissionNo: admissionNo,
+    // enrollmentNo: srcObject.getQuestionByName("enrollmentNo").questionValue,
+    // rollNo: srcObject.getQuestionByName("rollNo").questionValue,
+    studentType: srcObject.getQuestionByName('studentType').questionValue,
+    fatherCellNumber: srcObject.getQuestionByName('fatherCellNumber').questionValue,
+    fatherEmailId: srcObject.getQuestionByName('fatherEmailId').questionValue,
+    // fatherOccupation: srcObject.getQuestionByName("fatherOccupation").questionValue,
+    // fatherOfficeEmailId: srcObject.getQuestionByName("fatherOfficeEmailId").questionValue,
+    // fatherOfficeAddress: srcObject.getQuestionByName("fatherOfficeAddress").questionValue,
+    // fatherOfficeCellNumber: srcObject.getQuestionByName("fatherOfficeCellNumber").questionValue,
+    // fatherOfficeLandLinePhoneNumber: srcObject.getQuestionByName("fatherOfficeLandLinePhoneNumber").questionValue,
+    // fatherAadharNo: srcObject.getQuestionByName("fatherAadharNo").questionValue,
+    // fatherPanNo: srcObject.getQuestionByName("fatherPanNo").questionValue,
+    // fatherSocialSecurityNo: srcObject.getQuestionByName("fatherSocialSecurityNo").questionValue,
+    // fatherTaxReferenceNo: srcObject.getQuestionByName("fatherTaxReferenceNo").questionValue,
+    // fatherBplNo: srcObject.getQuestionByName("fatherBplNo").questionValue,
+    // fatherDrivingLicenseNo: srcObject.getQuestionByName("fatherDrivingLicenseNo").questionValue,
+    // fatherPassportNo: srcObject.getQuestionByName("fatherPassportNo").questionValue,
+    // fatherImagePath: srcObject.getQuestionByName("fatherImagePath").questionValue,
+    motherCellNumber: srcObject.getQuestionByName('motherCellNumber').questionValue,
+    motherEmailId: srcObject.getQuestionByName('motherEmailId').questionValue,
+    // motherOccupation: srcObject.getQuestionByName("motherOccupation").questionValue,
+    // motherOfficeEmailId: srcObject.getQuestionByName("motherOfficeEmailId").questionValue,
+    // motherOfficeAddress: srcObject.getQuestionByName("motherOfficeAddress").questionValue,
+    // motherOfficeCellNumber: srcObject.getQuestionByName("motherOfficeCellNumber").questionValue,
+    // motherOfficeLandLinePhoneNumber: srcObject.getQuestionByName("motherOfficeLandLinePhoneNumber").questionValue,
+    // motherAadharNo: srcObject.getQuestionByName("motherAadharNo").questionValue,
+    // motherPanNo: srcObject.getQuestionByName("motherPanNo").questionValue,
+    // motherSocialSecurityNo: srcObject.getQuestionByName("motherSocialSecurityNo").questionValue,
+    // motherTaxReferenceNo: srcObject.getQuestionByName("motherTaxReferenceNo").questionValue,
+    // motherBplNo: srcObject.getQuestionByName("motherBplNo").questionValue,
+    // motherDrivingLicenseNo: srcObject.getQuestionByName("motherDrivingLicenseNo").questionValue,
+    // motherPassportNo: srcObject.getQuestionByName("motherPassportNo").questionValue,
+    // motherImagePath: srcObject.getQuestionByName("motherImagePath").questionValue,
+    // guardianName: srcObject.getQuestionByName("guardianName").questionValue,
+    // guardianMiddleName: srcObject.getQuestionByName("guardianMiddleName").questionValue,
+    // guardianLastName: srcObject.getQuestionByName("guardianLastName").questionValue,
+    // guardianAddress: srcObject.getQuestionByName("guardianAddress").questionValue,
+    // guardianCellNumber: srcObject.getQuestionByName("guardianCellNumber").questionValue,
+    // guardianLandLinePhoneNumber: srcObject.getQuestionByName("guardianLandLinePhoneNumber").questionValue,
+    // guardianEmailId: srcObject.getQuestionByName("guardianEmailId").questionValue,
+    // guardianOccupation: srcObject.getQuestionByName("guardianOccupation").questionValue,
+    // guardianOfficeEmailId: srcObject.getQuestionByName("guardianOfficeEmailId").questionValue,
+    // guardianOfficeAddress: srcObject.getQuestionByName("guardianOfficeAddress").questionValue,
+    // guardianOfficeCellNumber: srcObject.getQuestionByName("guardianOfficeCellNumber").questionValue,
+    // guardianOfficeLandLinePhoneNumber: srcObject.getQuestionByName("guardianOfficeLandLinePhoneNumber").questionValue,
+    // guardianImagePath: srcObject.getQuestionByName("guardianImagePath").questionValue,
+    // isGuardianSponsorAgency: srcObject.getQuestionByName("isGuardianSponsorAgency").questionValue,
+    // sponsorAgencyName: srcObject.getQuestionByName("sponsorAgencyName").questionValue,
+    // sponsorAgencyRegistrationNo: srcObject.getQuestionByName("sponsorAgencyRegistrationNo").questionValue,
+    // sponsorAgencyAddress: srcObject.getQuestionByName("sponsorAgencyAddress").questionValue,
+    // sponsorAgencyCellNumber: srcObject.getQuestionByName("sponsorAgencyCellNumber").questionValue,
+    // sponsorAgencyLandLineNumber: srcObject.getQuestionByName("sponsorAgencyLandLineNumber").questionValue,
+    // sponsorAgencyEmailId: srcObject.getQuestionByName("sponsorAgencyEmailId").questionValue,
+    // sponsorAgencyAppointeeName: srcObject.getQuestionByName("sponsorAgencyAppointeeName").questionValue,
+    // sponsorAgencyAppointeeDesignation: srcObject.getQuestionByName("sponsorAgencyAppointeeDesignation").questionValue,
+    // sponsorAgencyAppointeeCellNumber: srcObject.getQuestionByName("sponsorAgencyAppointeeCellNumber").questionValue,
+    // sponsorAgencyAppointeeLandLineNumber: srcObject.getQuestionByName("sponsorAgencyAppointeeLandLineNumber").questionValue,
+    // sponsorAgencyAppointeeEmailId: srcObject.getQuestionByName("sponsorAgencyAppointeeEmailId").questionValue,
+    // sponsorAgencyAppointeeOfficeAddress: srcObject.getQuestionByName("sponsorAgencyAppointeeOfficeAddress").questionValue,
+    // isPhysicallyChallenged: srcObject.getQuestionByName("isPhysicallyChallenged").questionValue,
+    // detailsOfDisability: srcObject.getQuestionByName("detailsOfDisability").questionValue,
+    // disabilityCertificateNo: srcObject.getQuestionByName("disabilityCertificateNo").questionValue,
+    // disabilityCertificateIssueAuthority: srcObject.getQuestionByName("disabilityCertificateIssueAuthority").questionValue,
+    // disabilityCertificateIssueDate: srcObject.getQuestionByName("disabilityCertificateIssueDate").questionValue,
+    // percentagOfDisability: srcObject.getQuestionByName("percentagOfDisability").questionValue,
+    // bloodGroup: srcObject.getQuestionByName("bloodGroup").questionValue,
+    // vaccinationDetails: srcObject.getQuestionByName("vaccinationDetails").questionValue,
+    // otherMedicalDetails: srcObject.getQuestionByName("otherMedicalDetails").questionValue,
+    status: 'ACTIVE',
+
+    // comments: srcObject.getQuestionByName("comments").questionValue,
+    departmentId: departmentId,
+    batchId: srcObject.getQuestionByName('batchId').questionValue,
+    sectionId: srcObject.getQuestionByName('sectionId').questionValue,
+    branchId: branchId,
+    academicYearId: academicYearId,
+    // strDisabilityCertificateIssueDate: srcObject.getQuestionByName("strDisabilityCertificateIssueDate"),
+    strDateOfBirth:
+      srcObject.getQuestionByName('dateOfBirth').questionValue !== null &&
+      srcObject.getQuestionByName('dateOfBirth').questionValue !== undefined &&
+      srcObject.getQuestionByName('dateOfBirth').questionValue !== ''
+        ? moment(srcObject.getQuestionByName('dateOfBirth').questionValue).format(
+            'DD-MM-YYYY'
+          )
+        : null,
+  };
+  return inputObj;
 }

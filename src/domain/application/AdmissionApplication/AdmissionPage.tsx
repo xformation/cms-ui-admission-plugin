@@ -6,7 +6,7 @@ import {commonFunctions} from '../_utilites/common.functions';
 import  "../../../css/custom.css";
 import * as moment from 'moment';
 import { GET_ADMISSION_ENQUIRY_LIST, GET_STUDENT_LIST } from '../_queries';
-import  {EnquiryGrid} from '../AdmissionEnquiry/EnquiryGrid' 
+import  EnquiryGrid from '../AdmissionEnquiry/EnquiryGrid' 
 import wsCmsBackendServiceSingletonClient from '../../../wsCmsBackendServiceClient';
 import {config} from '../../../config';
 import {Utils} from '../_utilites/Utils';
@@ -193,6 +193,11 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
     }
 
     getData(source: any){
+        const {branchId} = this.state;
+        if(branchId === null || branchId === undefined || branchId ===""){
+            alert("Please select branch from preferences");
+            return;
+        }
         if(source === "ADMISSION_ENQUIRY" ){
             this.getEnquiryData();
         }else if(source === "STUDENT_PROFILE" ){

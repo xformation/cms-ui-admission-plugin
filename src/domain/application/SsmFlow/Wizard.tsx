@@ -6,7 +6,7 @@ import {commonFunctions} from '../_utilites/common.functions';
 import  "../../../css/wizard.css";
 import * as moment from 'moment';
 import { GET_ADMISSION_ENQUIRY_LIST, GET_STUDENT_LIST } from '../_queries';
-import  {EnquiryGrid} from '../AdmissionEnquiry/EnquiryGrid' 
+import  EnquiryGrid from '../AdmissionEnquiry/EnquiryGrid' 
 import wsCmsBackendServiceSingletonClient from '../../../wsCmsBackendServiceClient';
 
 type WizardState = {
