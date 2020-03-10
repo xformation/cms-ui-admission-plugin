@@ -486,7 +486,7 @@ const ADMISSION_STATE_FORM =
           "name": "selectFile",
           "startWithNewLine": false,
           "title": "Select File",
-          "isRequired": true,
+          "isRequired": false,
           "requiredErrorText": "Please select a file",
           "showPreview": false,
           "allowImagesPreview": false,
