@@ -6,14 +6,17 @@ import AdmissionPage from './AdmissionPage';
 
 export interface AdmissionApplicationProps extends React.HTMLAttributes<HTMLElement>{
     [data: string]: any;
-    user?: any,
+    user?: any;
+    permissions?: any;
 }
 
 class AdmissionApplication extends React.Component<AdmissionApplicationProps, any> {
+    LOGGED_IN_USER = new URLSearchParams(location.search).get('signedInUser');
     constructor(props: AdmissionApplicationProps) {
         super(props);
         this.state = {
-            activeTab: 0,
+            permissions: this.props.permissions,
+            activeTab: -1,
             admissionList: null,
             user: this.props.user,
         };
@@ -57,15 +60,27 @@ class AdmissionApplication extends React.Component<AdmissionApplicationProps, an
     }
 
     render() {
-        const { activeTab, admissionList, user } = this.state;
+        const { activeTab, admissionList, permissions } = this.state;
         return (
             <section className="tab-container row vertical-tab-container">
                 <Nav tabs className="pl-3 pl-3 mb-4 mt-4 col-sm-2">
-                    <NavItem className="cursor-pointer">
-                        <NavLink className={`vertical-nav-link ${activeTab === 0 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(0); }} >
-                            New Admission
-                        </NavLink>
-                    </NavItem>
+                    {
+                        this.LOGGED_IN_USER !== 'admin' && permissions["New Admission"] === "New Admission" ?
+                            <NavItem className="cursor-pointer">
+                                <NavLink className={`vertical-nav-link ${activeTab === 0 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(0); }} >
+                                    New Admission
+                                </NavLink>
+                            </NavItem>
+                            // console.log("permissions[New Admission] ::: --- ",permissions["New Admission"])
+                        : this.LOGGED_IN_USER === 'admin' ?
+                            <NavItem className="cursor-pointer">
+                                <NavLink className={`vertical-nav-link ${activeTab === 0 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(0); }} >
+                                    New Admission
+                                </NavLink>
+                            </NavItem>
+                        : null
+                    }
+
                     {/* <NavItem className="cursor-pointer">
                         <NavLink className={`vertical-nav-link ${activeTab === 1 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(1); }} >
                             Received
@@ -89,10 +104,25 @@ class AdmissionApplication extends React.Component<AdmissionApplicationProps, an
                     
                 </Nav>
                 <TabContent activeTab={activeTab} className="col-sm-9 border-left p-t-1">
-                    <TabPane tabId={0}>
-                        <AdmissionPage user={user} operationType={"ADD"} ></AdmissionPage>
-                    </TabPane>
-                    
+                    {
+                        this.LOGGED_IN_USER !== 'admin' && permissions["New Admission"] === "New Admission" ?
+                            <TabPane tabId={0}>
+                                {
+                                    activeTab === 0 ?
+                                    <AdmissionPage operationType={"ADD"} ></AdmissionPage>
+                                    : null
+                                }
+                            </TabPane>
+                        : this.LOGGED_IN_USER === 'admin' ?
+                            <TabPane tabId={0}>
+                                {
+                                    activeTab === 0 ?
+                                    <AdmissionPage operationType={"ADD"} ></AdmissionPage>
+                                    : null
+                                }
+                            </TabPane>
+                        : null
+                    }
                     
                 </TabContent>
             </section>

@@ -3,6 +3,7 @@ import {commonFunctions} from '../_utilites/common.functions';
 
 export const admissionService = {
   getLoggedInUser,
+  getUserPermission,
   // getCmsTerms,
   // getCmsBatches,
   // getCmsAcademicYears,
@@ -12,6 +13,14 @@ export const admissionService = {
   // getCmsTeachers,
   // getFilterAttendanceMasterByDepartment
 };
+
+function getUserPermission(userName: any) {
+  const requestOptions = commonFunctions.getRequestOptions('GET', {}, {});
+  return fetch(
+    config.CMS_GLOBAL_CONFIG_URL + '?userName=' + userName,
+    requestOptions
+  ).then(response => response.json());
+}
 
 function getLoggedInUser() {
   const requestOptions = commonFunctions.getRequestOptions('GET', {}, {});

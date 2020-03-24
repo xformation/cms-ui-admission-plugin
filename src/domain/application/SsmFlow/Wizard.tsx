@@ -53,8 +53,8 @@ class Wizard extends React.Component<WizardProps, WizardState>{
         }
     
         socket.onopen = () => {
-            console.log("Wizard. Opening websocekt connection User : ",this.state.user.login);
-            socket.send(this.state.user.login);
+            console.log("Wizard. Opening websocekt connection User : ",new URLSearchParams(location.search).get("signedInUser"));
+            socket.send(new URLSearchParams(location.search).get("signedInUser"));
         }
     
         window.onbeforeunload = () => {

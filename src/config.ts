@@ -1,9 +1,9 @@
-const graphqlUrl = 'http://100.81.3.25:9094';
-const loggedInUserUrl = 'http://100.81.3.25:3000';
-const ssmWorkflowUrl = 'http://100.81.3.25:8095';
-const jsrOakUrl = 'http://100.81.3.25:8093';
-const preferenceUrl = 'http://100.81.3.25:9091';
-const backEndUrl = 'http://100.81.3.25:8080';
+const graphqlUrl = 'http://100.81.5.25:9094';
+const loggedInUserUrl = 'http://100.81.5.25:3000';
+const ssmWorkflowUrl = 'http://100.81.5.25:8095';
+const jsrOakUrl = 'http://100.81.5.25:8093';
+const preferenceUrl = 'http://100.81.5.25:9091';
+const backEndUrl = 'http://100.81.5.25:8080';
 
 const ADMISSION_ENQUIRY_SSM =
   '{ "states" : [' +
@@ -44,4 +44,5 @@ export const config = {
 
   BACKEND_GRANT_ADMISSION: backEndUrl + '/api/cms-grant-admission-to-student',
   BACKEND_CMS_DOCUMENTS_URL: backEndUrl + '/api/cmsdocuments',
+  CMS_GLOBAL_CONFIG_URL: backEndUrl + '/api/cmssettings',
 };

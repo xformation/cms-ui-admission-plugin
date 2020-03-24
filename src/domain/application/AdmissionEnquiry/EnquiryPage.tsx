@@ -109,8 +109,8 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
         }
     
         socket.onopen = () => {
-            console.log("2. Opening websocekt connection on Admission EnquiryPage.tsx. User : ",this.state.user.login);
-            socket.send(this.state.user.login);
+            console.log("2. Opening websocekt connection on Admission EnquiryPage.tsx. User : ",new URLSearchParams(location.search).get("signedInUser"));
+            socket.send(new URLSearchParams(location.search).get("signedInUser"));
         }
     
         window.onbeforeunload = () => {

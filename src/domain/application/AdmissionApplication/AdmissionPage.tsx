@@ -86,8 +86,8 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
         }
     
         socket.onopen = () => {
-            console.log("AdmissinPage. Opening websocekt connection User : ",this.state.user.login);
-            socket.send(this.state.user.login);
+            console.log("AdmissinPage. Opening websocekt connection User : ",new URLSearchParams(location.search).get("signedInUser"));
+            socket.send(new URLSearchParams(location.search).get("signedInUser"));
         }
     
         window.onbeforeunload = () => {
@@ -406,7 +406,7 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
 
                 <div className="row col-sm-12 col-xs-12 m-b-2">
                     {enquiryList !== null && enquiryList.length > 0 ?
-                        <EnquiryGrid user={user} sourceOfApplication={admissionApplicationData.sourceOfApplication} source="ADMISSION_PAGE" type="Total Enquiries" totalRecords={enquiryList !== null ? enquiryList.length : 0} data={enquiryList}></EnquiryGrid>
+                        <EnquiryGrid sourceOfApplication={admissionApplicationData.sourceOfApplication} source="ADMISSION_PAGE" type="Total Enquiries" totalRecords={enquiryList !== null ? enquiryList.length : 0} data={enquiryList}></EnquiryGrid>
                     :<span style={{ color: 'red' }}> {noEnquiryRecordFoundMsg} </span> 
                     }
                     

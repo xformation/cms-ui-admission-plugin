@@ -10,16 +10,16 @@ import wsCmsBackendServiceSingletonClient from '../../../wsCmsBackendServiceClie
 export interface AdmissionEnquiryProps extends React.HTMLAttributes<HTMLElement> {
   [data: string]: any;
   user?: any;
+  permissions?: any;
 }
 
-class AdmissionEnquiry<T = {[data: string]: any}> extends React.Component<
-  AdmissionEnquiryProps,
-  any
-> {
+class AdmissionEnquiry<T = {[data: string]: any}> extends React.Component< AdmissionEnquiryProps, any > {
+  LOGGED_IN_USER = new URLSearchParams(location.search).get('signedInUser');
   constructor(props: AdmissionEnquiryProps) {
     super(props);
     this.state = {
-      activeTab: 0,
+      permissions: this.props.permissions,
+      activeTab: -1,
       enquiryList: null,
       branchId: null,
       academicYearId: null,
@@ -52,9 +52,9 @@ class AdmissionEnquiry<T = {[data: string]: any}> extends React.Component<
     socket.onopen = () => {
       console.log(
         '1. Opening websocekt connection on Admission index.tsx. User : ',
-        this.state.user
+        new URLSearchParams(location.search).get("signedInUser")
       );
-      socket.send(this.state.user.login);
+      socket.send(new URLSearchParams(location.search).get("signedInUser"));
     };
 
     window.onbeforeunload = () => {
@@ -89,131 +89,254 @@ class AdmissionEnquiry<T = {[data: string]: any}> extends React.Component<
   }
 
   render() {
-    const {activeTab, enquiryList, user} = this.state;
+    const {activeTab, enquiryList, permissions} = this.state;
     return (
       <section className="tab-container row vertical-tab-container m-r-1">
         <Nav tabs className="pl-3 pl-3 mb-4 mt-4 col-sm-2">
-          <NavItem className="cursor-pointer">
-            <NavLink
-              className={`vertical-nav-link ${activeTab === 0 ? 'side-active' : ''}`}
-              onClick={() => {
-                this.toggleTab(0, '');
-              }}
-            >
-              New Enquiry
-            </NavLink>
-          </NavItem>
-          <NavItem className="cursor-pointer">
-            <NavLink
-              className={`vertical-nav-link ${activeTab === 1 ? 'side-active' : ''}`}
-              onClick={() => {
-                this.toggleTab(1, 'RECEIVED');
-                console.log('check for re-render:', enquiryList);
-              }}
-            >
-              Received
-            </NavLink>
-          </NavItem>
-          <NavItem className="cursor-pointer">
-            <NavLink
-              className={`vertical-nav-link ${activeTab === 2 ? 'side-active' : ''}`}
-              onClick={() => {
-                this.toggleTab(2, 'FOLLOWUP');
-              }}
-            >
-              Follow Up
-            </NavLink>
-          </NavItem>
-          <NavItem className="cursor-pointer">
-            <NavLink
-              className={`vertical-nav-link ${activeTab === 3 ? 'side-active' : ''}`}
-              onClick={() => {
-                this.toggleTab(3, 'DECLINED');
-              }}
-            >
-              Declined
-            </NavLink>
-          </NavItem>
-          <NavItem className="cursor-pointer">
-            <NavLink
-              className={`vertical-nav-link ${activeTab === 4 ? 'side-active' : ''}`}
-              onClick={() => {
-                this.toggleTab(4, 'CONVERTED_TO_ADMISSION');
-              }}
-            >
-              Admission Granted
-            </NavLink>
-          </NavItem>
-          <NavItem className="cursor-pointer">
-            <NavLink
-              className={`vertical-nav-link ${activeTab === 5 ? 'side-active' : ''}`}
-              onClick={() => {
-                this.toggleTab(5, null);
-              }}
-            >
-              Total Enquiry
-            </NavLink>
-          </NavItem>
+          
+          {
+            this.LOGGED_IN_USER !== 'admin' && permissions["New Enquiry"] === "New Enquiry" ?
+            <NavItem className="cursor-pointer">
+              <NavLink className={`vertical-nav-link ${activeTab === 0 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(0, ''); }} >
+                New Enquiry
+              </NavLink>
+            </NavItem>
+            : this.LOGGED_IN_USER === 'admin' ?
+            <NavItem className="cursor-pointer">
+              <NavLink className={`vertical-nav-link ${activeTab === 0 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(0, ''); }} >
+                New Enquiry
+              </NavLink>
+            </NavItem>
+            : null
+          }
+
+          {
+            this.LOGGED_IN_USER !== 'admin' && permissions["Received"] === "Received" ?
+            <NavItem className="cursor-pointer">
+              <NavLink className={`vertical-nav-link ${activeTab === 1 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(1, 'RECEIVED'); console.log('check for re-render:', enquiryList); }} >
+                Received
+              </NavLink>
+            </NavItem>
+            : this.LOGGED_IN_USER === 'admin' ?
+            <NavItem className="cursor-pointer">
+              <NavLink className={`vertical-nav-link ${activeTab === 1 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(1, 'RECEIVED'); console.log('check for re-render:', enquiryList); }} >
+                Received
+              </NavLink>
+            </NavItem>
+            : null
+          }
+
+          {
+            this.LOGGED_IN_USER !== 'admin' && permissions["Follow Up"] === "Follow Up" ?
+            <NavItem className="cursor-pointer">
+              <NavLink className={`vertical-nav-link ${activeTab === 2 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(2, 'FOLLOWUP'); }} >
+                Follow Up
+              </NavLink>
+            </NavItem>
+            : this.LOGGED_IN_USER === 'admin' ?
+            <NavItem className="cursor-pointer">
+              <NavLink className={`vertical-nav-link ${activeTab === 2 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(2, 'FOLLOWUP'); }} >
+                Follow Up
+              </NavLink>
+            </NavItem>
+            : null
+          }
+
+          {
+            this.LOGGED_IN_USER !== 'admin' && permissions["Declined"] === "Declined" ?
+            <NavItem className="cursor-pointer">
+              <NavLink className={`vertical-nav-link ${activeTab === 3 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(3, 'DECLINED'); }} >
+                Declined
+              </NavLink>
+            </NavItem>
+            : this.LOGGED_IN_USER === 'admin' ?
+            <NavItem className="cursor-pointer">
+              <NavLink className={`vertical-nav-link ${activeTab === 3 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(3, 'DECLINED'); }} >
+                Declined
+              </NavLink>
+            </NavItem>
+            : null
+          }
+
+          {
+            this.LOGGED_IN_USER !== 'admin' && permissions["Admission Granted"] === "Admission Granted" ?
+            <NavItem className="cursor-pointer">
+              <NavLink className={`vertical-nav-link ${activeTab === 4 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(4, 'CONVERTED_TO_ADMISSION'); }} >
+                Admission Granted
+              </NavLink>
+            </NavItem>
+            : this.LOGGED_IN_USER === 'admin' ?
+            <NavItem className="cursor-pointer">
+              <NavLink className={`vertical-nav-link ${activeTab === 4 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(4, 'CONVERTED_TO_ADMISSION'); }} >
+                Admission Granted
+              </NavLink>
+            </NavItem>
+            : null
+          }
+
+          {
+            this.LOGGED_IN_USER !== 'admin' && permissions["Total Enquiry"] === "Total Enquiry" ?
+            <NavItem className="cursor-pointer">
+              <NavLink className={`vertical-nav-link ${activeTab === 5 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(5, null); }} >
+                Total Enquiry
+              </NavLink>
+            </NavItem>
+            : this.LOGGED_IN_USER === 'admin' ?
+            <NavItem className="cursor-pointer">
+              <NavLink className={`vertical-nav-link ${activeTab === 5 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(5, null); }} >
+                Total Enquiry
+              </NavLink>
+            </NavItem>
+            : null
+          }
+
         </Nav>
+
         <TabContent activeTab={activeTab} className="col-sm-10 border-left p-t-1">
-          <TabPane tabId={0}>
-            {user !== null && (
-              <AdmissionEnquiryPage
-                user={user}
-                operationType={'ADD'}
-              ></AdmissionEnquiryPage>
-            )}
-          </TabPane>
-          <TabPane tabId={1}>
-            {user !== null && enquiryList !== null && (
-              <EnquiryGrid
-                user={user}
-                type="Total Received"
-                totalRecords={enquiryList.getAdmissionEnquiryList.length}
-                data={enquiryList.getAdmissionEnquiryList}
-              ></EnquiryGrid>
-            )}
-          </TabPane>
-          <TabPane tabId={2}>
-            {user !== null && enquiryList !== null && (
-              <EnquiryGrid
-                user={user}
-                type="Total Follow Up"
-                totalRecords={enquiryList.getAdmissionEnquiryList.length}
-                data={enquiryList.getAdmissionEnquiryList}
-              ></EnquiryGrid>
-            )}
-          </TabPane>
-          <TabPane tabId={3}>
-            {user !== null && enquiryList !== null && (
-              <EnquiryGrid
-                user={user}
-                type="Total Declined"
-                totalRecords={enquiryList.getAdmissionEnquiryList.length}
-                data={enquiryList.getAdmissionEnquiryList}
-              ></EnquiryGrid>
-            )}
-          </TabPane>
-          <TabPane tabId={4}>
-            {user !== null && enquiryList !== null && (
-              <EnquiryGrid
-                user={user}
-                type="Total Admission Granted"
-                totalRecords={enquiryList.getAdmissionEnquiryList.length}
-                data={enquiryList.getAdmissionEnquiryList}
-              ></EnquiryGrid>
-            )}
-          </TabPane>
-          <TabPane tabId={5}>
-            {user !== null && enquiryList !== null && (
-              <EnquiryGrid
-                user={user}
-                type="Total Enquiries"
-                totalRecords={enquiryList.getAdmissionEnquiryList.length}
-                data={enquiryList.getAdmissionEnquiryList}
-              ></EnquiryGrid>
-            )}
-          </TabPane>
+          
+          {
+            this.LOGGED_IN_USER !== 'admin' && permissions["New Enquiry"] === "New Enquiry" ?
+            <TabPane tabId={0}>
+            {
+              activeTab === 0 ?
+              <AdmissionEnquiryPage operationType={'ADD'} ></AdmissionEnquiryPage>
+              : null
+            }
+            </TabPane>
+            : this.LOGGED_IN_USER === 'admin' ?
+            <TabPane tabId={0}>
+            {
+              activeTab === 0 ?
+              <AdmissionEnquiryPage operationType={'ADD'} ></AdmissionEnquiryPage>
+              : null
+            }
+            </TabPane>
+            : null
+          }
+
+          {
+            this.LOGGED_IN_USER !== 'admin' && permissions["Received"] === "Received" ?
+              <TabPane tabId={1}>
+                {
+                  activeTab === 1 ?
+                  (enquiryList !== null && (
+                    <EnquiryGrid type="Total Received" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                  )) 
+                  : null
+                }
+              </TabPane>
+            : this.LOGGED_IN_USER === 'admin' ?
+              <TabPane tabId={1}>
+                {
+                  activeTab === 1 ?
+                  (enquiryList !== null && (
+                    <EnquiryGrid type="Total Received" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                  )) 
+                  : null
+                }
+              </TabPane>
+            : null
+          }
+
+
+          {
+            this.LOGGED_IN_USER !== 'admin' && permissions["Follow Up"] === "Follow Up" ?
+            <TabPane tabId={2}>
+              {
+                activeTab === 2 ?
+                (enquiryList !== null && (
+                    <EnquiryGrid type="Total Follow Up" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                ))
+                : null
+              }
+            </TabPane>
+            : this.LOGGED_IN_USER === 'admin' ?
+            <TabPane tabId={2}>
+              {
+                activeTab === 2 ?
+                (enquiryList !== null && (
+                    <EnquiryGrid type="Total Follow Up" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                ))
+                : null
+              }
+            </TabPane>
+            : null
+          }
+
+          {
+            this.LOGGED_IN_USER !== 'admin' && permissions["Declined"] === "Declined" ?
+              <TabPane tabId={3}>
+                {
+                  activeTab === 3 ?
+                  (enquiryList !== null && (
+                    <EnquiryGrid type="Total Declined" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                  ))
+                : null
+                }
+              </TabPane>
+            : this.LOGGED_IN_USER === 'admin' ?
+                <TabPane tabId={3}>
+                  {
+                    activeTab === 3 ?
+                    (enquiryList !== null && (
+                      <EnquiryGrid type="Total Declined" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                    ))
+                    : null
+                  }
+                </TabPane>
+            : null
+          }
+
+          {
+            this.LOGGED_IN_USER !== 'admin' && permissions["Admission Granted"] === "Admission Granted" ?
+              <TabPane tabId={4}>
+                {
+                  activeTab === 4 ?
+                  (enquiryList !== null && (
+                    <EnquiryGrid type="Total Admission Granted" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                  ))
+                  : null
+                }
+              </TabPane>
+            : this.LOGGED_IN_USER === 'admin' ?
+                <TabPane tabId={4}>
+                  {
+                    activeTab === 4 ?
+                    (enquiryList !== null && (
+                      <EnquiryGrid type="Total Admission Granted" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                    ))
+                    : null
+                  }
+                </TabPane>
+            : null
+          }
+
+          
+          
+          {
+            this.LOGGED_IN_USER !== 'admin' && permissions["Total Enquiry"] === "Total Enquiry" ?
+              <TabPane tabId={5}>
+                {
+                  activeTab === 5 ?
+                  (enquiryList !== null && (
+                    <EnquiryGrid type="Total Enquiries" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                  )) 
+                  :null
+                }
+              </TabPane>
+            : this.LOGGED_IN_USER === 'admin' ?
+              <TabPane tabId={5}>
+                {
+                  activeTab === 5 ?
+                  (enquiryList !== null && (
+                    <EnquiryGrid type="Total Enquiries" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                  )) 
+                  :null
+                }
+              </TabPane>
+            : null
+          }
+
         </TabContent>
       </section>
     );

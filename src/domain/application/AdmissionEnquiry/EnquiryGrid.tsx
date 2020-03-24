@@ -115,7 +115,10 @@ class EnquiryGrid<T = {[data: string]: any}> extends React.Component<AdmissionEn
         this.surveyModel = new Survey.ReactSurveyModel(SurveyJson.ADMISSION_STATE_FORM);
         this.setState({ survey: SurveyJson.ADMISSION_STATE_FORM});
         await this.registerSocket();
-        await this.loginToMsAccount();
+        if(this.state.source === 'ADMISSION_PAGE'){
+            await this.loginToMsAccount();
+        }
+        
     }
 
     async loginToMsAccount() {
@@ -193,8 +196,8 @@ class EnquiryGrid<T = {[data: string]: any}> extends React.Component<AdmissionEn
         }
     
         socket.onopen = () => {
-            console.log("AdmissinPage. Opening websocekt connection User : ",this.state.user.login);
-            socket.send(this.state.user.login);
+            console.log("AdmissinPage. Opening websocekt connection User : ",new URLSearchParams(location.search).get("signedInUser"));
+            socket.send(new URLSearchParams(location.search).get("signedInUser"));
         }
     
         window.onbeforeunload = () => {
