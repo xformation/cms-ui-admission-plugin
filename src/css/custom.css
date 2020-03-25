@@ -1,5 +1,5 @@
 .xform-container {
-  padding: 10px;
+  padding-top: 10px;
   background: white;
 }
 
@@ -9,6 +9,11 @@
 
 .xform-container .right-part {
   border-left: 1px solid #ababab;
+}
+
+.xform-container .page-title {
+  padding-bottom: 10px;
+  font-size: 23px;
 }
 
 .xform-container .form-main-container {
@@ -96,6 +101,7 @@
 .xform-container .error {
   color: #d62d19;
   font-weight: 300;
+  background: transparent !important;
 }
 
 .xform-container .student-photo {

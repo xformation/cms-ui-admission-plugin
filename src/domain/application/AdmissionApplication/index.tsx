@@ -103,7 +103,7 @@ class AdmissionApplication extends React.Component<AdmissionApplicationProps, an
                     </NavItem> */}
                     
                 </Nav>
-                <TabContent activeTab={activeTab} className="col-sm-9 border-left p-t-1">
+                <TabContent activeTab={activeTab} className="col-sm-10 border-left p-t-1">
                     {
                         this.LOGGED_IN_USER !== 'admin' && permissions["New Admission"] === "New Admission" ?
                             <TabPane tabId={0}>

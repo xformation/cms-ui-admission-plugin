@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { withApollo } from 'react-apollo';
-import {MessageBox} from '../Message/MessageBox'
+import { MessageBox } from '../Message/MessageBox'
 import { SAVE_ADMISSION_ENQUIRY } from '../_queries';
-import {commonFunctions} from '../_utilites/common.functions';
-import  "../../../css/custom.css";
+import { commonFunctions } from '../_utilites/common.functions';
+import "../../../css/custom.css";
 import * as moment from 'moment';
 import { GET_ADMISSION_ENQUIRY_LIST, GET_STUDENT_LIST } from '../_queries';
-import  EnquiryGrid from '../AdmissionEnquiry/EnquiryGrid' 
+import EnquiryGrid from '../AdmissionEnquiry/EnquiryGrid'
 import wsCmsBackendServiceSingletonClient from '../../../wsCmsBackendServiceClient';
-import {config} from '../../../config';
-import {Utils} from '../_utilites/Utils';
+import { config } from '../../../config';
+import { Utils } from '../_utilites/Utils';
 
 type AdmissionState = {
-    noEnquiryRecordFoundMsg: any, 
+    noEnquiryRecordFoundMsg: any,
     enquiryList: any,
     operationType: any,
     editAdmissionObject: any,
@@ -30,18 +30,18 @@ const ERROR_MESSAGE_SERVER_SIDE_ERROR = "Due to some error in admission service,
 const SUCCESS_MESSAGE_ADMISSION_APPLICATION_ADDED = "New admission application saved successfully";
 const SUCCESS_MESSAGE_ADMISSION_APPLICATION_UPDATED = "Admission application updated successfully";
 
-export interface NewAdmissionProps extends React.HTMLAttributes<HTMLElement>{
+export interface NewAdmissionProps extends React.HTMLAttributes<HTMLElement> {
     editAdmissionObject?: any;
-    [operationType: string] : any;
+    [operationType: string]: any;
     user?: any;
 }
 
 class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
-    
+
     constructor(props: NewAdmissionProps) {
         super(props);
         this.state = {
-            noEnquiryRecordFoundMsg:"",
+            noEnquiryRecordFoundMsg: "",
             enquiryList: null,
             editAdmissionObject: this.props.editAdmissionObject,
             operationType: this.props.operationType,
@@ -51,13 +51,13 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
             dob: "",
             user: this.props.user,
             admissionApplicationData: {
-                errorMessage:"",
-                successMessage:"",
-                sourceOfApplication:"",
+                errorMessage: "",
+                successMessage: "",
+                sourceOfApplication: "",
                 comments: "",
-                departmentId:""
+                departmentId: ""
             },
-            
+
         };
         this.addAdmissionEnquiry = this.addAdmissionEnquiry.bind(this);
         this.getData = this.getData.bind(this);
@@ -65,8 +65,8 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
         this.getStudentData = this.getStudentData.bind(this);
         this.registerSocket = this.registerSocket.bind(this);
     }
-    
-    async componentDidMount(){
+
+    async componentDidMount() {
         await this.registerSocket();
     }
 
@@ -81,15 +81,15 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
                 academicYearId: message.selectedAcademicYearId,
                 departmentId: message.selectedDepartmentId,
             });
-            console.log("AdmissinPage. branchId: ",this.state.branchId);
-            console.log("AdmissinPage. ayId: ",this.state.academicYearId);  
+            console.log("AdmissinPage. branchId: ", this.state.branchId);
+            console.log("AdmissinPage. ayId: ", this.state.academicYearId);
         }
-    
+
         socket.onopen = () => {
-            console.log("AdmissinPage. Opening websocekt connection User : ",new URLSearchParams(location.search).get("signedInUser"));
+            console.log("AdmissinPage. Opening websocekt connection User : ", new URLSearchParams(location.search).get("signedInUser"));
             socket.send(new URLSearchParams(location.search).get("signedInUser"));
         }
-    
+
         window.onbeforeunload = () => {
             console.log("AdmissinPage. Closing websocket connection with cms backend service");
         }
@@ -101,59 +101,59 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
         const { admissionApplicationData, editAdmissionObject, operationType, dob } = this.state;
         admissionApplicationData.errorMessage = "";
         admissionApplicationData.successMessage = "";
-        if(operationType === "ADD"){
+        if (operationType === "ADD") {
             this.setState({
                 admissionApplicationData: {
                     ...admissionApplicationData,
                     [name]: value
                 }
             });
-            if(name === "sourceOfApplication"){
+            if (name === "sourceOfApplication") {
                 this.getData(value)
             }
-            
-        }else{
+
+        } else {
             this.setState({
                 editAdmissionObject: {
                     ...editAdmissionObject,
                     [name]: value
                 }
             });
-            if(name === "dateOfBirth"){
-                console.log("dob for update : ",value);
+            if (name === "dateOfBirth") {
+                console.log("dob for update : ", value);
                 let dob = moment(value, "YYYY-MM-DD").format("YYYY-MM-DD");
                 this.setState({
                     dob: dob
-                }); 
+                });
             }
         }
-        
+
         commonFunctions.restoreTextBoxBorderToNormal(name);
     }
 
-    async getEnquiryData(){
-        const {branchId, academicYearId} = this.state;
+    async getEnquiryData() {
+        const { branchId, academicYearId } = this.state;
         let eqs = null;
         const { data } = await this.props.client.query({
             query: GET_ADMISSION_ENQUIRY_LIST,
-            variables: { 
+            variables: {
                 branchId: branchId,
                 academicYearId: academicYearId,
                 enquiryStatus: eqs
-             },
-             fetchPolicy: 'no-cache'
+            },
+            fetchPolicy: 'no-cache'
         })
         const listLength = data.getAdmissionEnquiryList.length;
         const retVal = [];
         for (let i = 0; i < listLength; i++) {
             const admissionEnquiry = data.getAdmissionEnquiryList[i];
-            if(admissionEnquiry.enquiryStatus === "RECEIVED" || admissionEnquiry.enquiryStatus === "FOLLOWUP"){
-                console.log("admission page : ",admissionEnquiry.enquiryStatus);
-                retVal.push(admissionEnquiry);      
+            if (admissionEnquiry.enquiryStatus === "RECEIVED" || admissionEnquiry.enquiryStatus === "FOLLOWUP") {
+                console.log("admission page : ", admissionEnquiry.enquiryStatus);
+                retVal.push(admissionEnquiry);
             }
         }
         let msg = ""
-        if(retVal.length === 0){
+        if (retVal.length === 0) {
             msg = "No Record Found";
         }
         this.setState({
@@ -162,27 +162,27 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
         });
     }
 
-    async getStudentData(){
-        const {branchId, academicYearId} = this.state;
+    async getStudentData() {
+        const { branchId, academicYearId } = this.state;
         const { data } = await this.props.client.query({
             query: GET_STUDENT_LIST,
-            variables: { 
+            variables: {
                 branchId: branchId,
                 academicYearId: academicYearId
-             },
-             fetchPolicy: 'no-cache'
+            },
+            fetchPolicy: 'no-cache'
         })
         const listLength = data.getStudentList.length;
         const retVal = [];
         for (let i = 0; i < listLength; i++) {
             const admissionEnquiry = data.getStudentList[i];
             // if(admissionEnquiry.enquiryStatus === "RECEIVED" || admissionEnquiry.enquiryStatus === "FOLLOWUP"){
-                console.log("Student profile data on admission page : ",admissionEnquiry.id);
-                retVal.push(admissionEnquiry);      
+            console.log("Student profile data on admission page : ", admissionEnquiry.id);
+            retVal.push(admissionEnquiry);
             // }
         }
         let msg = ""
-        if(retVal.length === 0){
+        if (retVal.length === 0) {
             msg = "No Record Found";
         }
         this.setState({
@@ -192,17 +192,17 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
 
     }
 
-    getData(source: any){
-        const {branchId} = this.state;
-        if(branchId === null || branchId === undefined || branchId ===""){
+    getData(source: any) {
+        const { branchId } = this.state;
+        if (branchId === null || branchId === undefined || branchId === "") {
             alert("Please select branch from preferences");
             return;
         }
-        if(source === "ADMISSION_ENQUIRY" ){
+        if (source === "ADMISSION_ENQUIRY") {
             this.getEnquiryData();
-        }else if(source === "STUDENT_PROFILE" ){
+        } else if (source === "STUDENT_PROFILE") {
             this.getStudentData();
-        } 
+        }
     }
 
     saveAdmission = (e: any) => {
@@ -211,71 +211,71 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
         this.setState({
             admissionApplicationData: admissionApplicationData
         });
-        
-        console.log("Operation type : ",this.state.operationType);
-        if(operationType === "ADD"){
-            if(admissionApplicationData.studentName.trim() === "" 
+
+        console.log("Operation type : ", this.state.operationType);
+        if (operationType === "ADD") {
+            if (admissionApplicationData.studentName.trim() === ""
                 || admissionApplicationData.studentLastName.trim() === ""
-                || admissionApplicationData.comments.trim() === ""){
-                    admissionApplicationData.errorMessage = ERROR_MESSAGE_MANDATORY_FIELD_MISSING;
-                    commonFunctions.changeTextBoxBorderToError(admissionApplicationData.studentName, "studentName");
-                    commonFunctions.changeTextBoxBorderToError(admissionApplicationData.studentLastName, "studentLastName");
-                    commonFunctions.changeTextBoxBorderToError(admissionApplicationData.comments, "comments");
-                    return;
+                || admissionApplicationData.comments.trim() === "") {
+                admissionApplicationData.errorMessage = ERROR_MESSAGE_MANDATORY_FIELD_MISSING;
+                commonFunctions.changeTextBoxBorderToError(admissionApplicationData.studentName, "studentName");
+                commonFunctions.changeTextBoxBorderToError(admissionApplicationData.studentLastName, "studentLastName");
+                commonFunctions.changeTextBoxBorderToError(admissionApplicationData.comments, "comments");
+                return;
             }
-            if(admissionApplicationData.emailId !== ""){
-                if(!commonFunctions.validateEmail(admissionApplicationData.emailId)){
+            if (admissionApplicationData.emailId !== "") {
+                if (!commonFunctions.validateEmail(admissionApplicationData.emailId)) {
                     admissionApplicationData.errorMessage = ERROR_MESSAGE_INVALID_EMAIL_ID;
                     commonFunctions.changeTextBoxBorderToError(admissionApplicationData.emailId, "emailId");
                     return;
-                } 
+                }
             }
             this.setState({
                 admissionApplicationData: admissionApplicationData
             });
             let dob = null;
-            if(admissionApplicationData.dateOfBirth !== undefined && admissionApplicationData.dateOfBirth !== null 
-                && admissionApplicationData.dateOfBirth.trim() !== "" ){
-                    dob = moment(admissionApplicationData.dateOfBirth, "YYYY-MM-DD").format("DD-MM-YYYY");
+            if (admissionApplicationData.dateOfBirth !== undefined && admissionApplicationData.dateOfBirth !== null
+                && admissionApplicationData.dateOfBirth.trim() !== "") {
+                dob = moment(admissionApplicationData.dateOfBirth, "YYYY-MM-DD").format("DD-MM-YYYY");
             }
             this.addAdmissionEnquiry(dob);
-        }else {
-            if(editAdmissionObject.studentName.trim() === "" 
+        } else {
+            if (editAdmissionObject.studentName.trim() === ""
                 || editAdmissionObject.studentLastName.trim() === ""
-                || editAdmissionObject.comments.trim() === ""){
-                    admissionApplicationData.errorMessage = ERROR_MESSAGE_MANDATORY_FIELD_MISSING;
-                    commonFunctions.changeTextBoxBorderToError(editAdmissionObject.studentName, "studentName");
-                    commonFunctions.changeTextBoxBorderToError(editAdmissionObject.studentLastName, "studentLastName");
-                    commonFunctions.changeTextBoxBorderToError(editAdmissionObject.comments, "comments");
-                    return;
+                || editAdmissionObject.comments.trim() === "") {
+                admissionApplicationData.errorMessage = ERROR_MESSAGE_MANDATORY_FIELD_MISSING;
+                commonFunctions.changeTextBoxBorderToError(editAdmissionObject.studentName, "studentName");
+                commonFunctions.changeTextBoxBorderToError(editAdmissionObject.studentLastName, "studentLastName");
+                commonFunctions.changeTextBoxBorderToError(editAdmissionObject.comments, "comments");
+                return;
             }
-            if(editAdmissionObject.emailId !== ""){
-                if(!commonFunctions.validateEmail(editAdmissionObject.emailId)){
+            if (editAdmissionObject.emailId !== "") {
+                if (!commonFunctions.validateEmail(editAdmissionObject.emailId)) {
                     admissionApplicationData.errorMessage = ERROR_MESSAGE_INVALID_EMAIL_ID;
                     commonFunctions.changeTextBoxBorderToError(editAdmissionObject.emailId, "emailId");
                     return;
-                } 
+                }
             }
-            if(editAdmissionObject.enquiryStatus.trim() === ""){
-                    admissionApplicationData.errorMessage = ERROR_MESSAGE_MANDATORY_FIELD_MISSING;
-                    commonFunctions.changeTextBoxBorderToError(editAdmissionObject.enquiryStatus, "enquiryStatus");
-                    return;
+            if (editAdmissionObject.enquiryStatus.trim() === "") {
+                admissionApplicationData.errorMessage = ERROR_MESSAGE_MANDATORY_FIELD_MISSING;
+                commonFunctions.changeTextBoxBorderToError(editAdmissionObject.enquiryStatus, "enquiryStatus");
+                return;
             }
             this.setState({
                 admissionApplicationData: admissionApplicationData,
                 editAdmissionObject: editAdmissionObject
             });
             let dob = null;
-            if(editAdmissionObject.dateOfBirth !== undefined && editAdmissionObject.dateOfBirth !== null 
-                && editAdmissionObject.dateOfBirth.trim() !== "" ){
-                    dob = moment(editAdmissionObject.dateOfBirth, "YYYY-MM-DD").format("DD-MM-YYYY");
+            if (editAdmissionObject.dateOfBirth !== undefined && editAdmissionObject.dateOfBirth !== null
+                && editAdmissionObject.dateOfBirth.trim() !== "") {
+                dob = moment(editAdmissionObject.dateOfBirth, "YYYY-MM-DD").format("DD-MM-YYYY");
             }
             this.updateAdmissionEnquiry();
         }
-        
+
     }
 
-    async addAdmissionEnquiry(dob: any){
+    async addAdmissionEnquiry(dob: any) {
         const { admissionApplicationData, academicYearId, branchId } = this.state;
         let admissionEnquiryInput = {
             studentName: admissionApplicationData.studentName,
@@ -298,21 +298,21 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
         let exitCode = 0;
         await this.props.client.mutate({
             mutation: SAVE_ADMISSION_ENQUIRY,
-            variables: { 
+            variables: {
                 input: admissionEnquiryInput
-             },
-             fetchPolicy: 'no-cache'
+            },
+            fetchPolicy: 'no-cache'
         }).then((resp: any) => {
-            console.log("Success in saveAdmissionEnquiryMutation. Exit code : ",resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.exitCode);
+            console.log("Success in saveAdmissionEnquiryMutation. Exit code : ", resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.exitCode);
             exitCode = resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.exitCode;
         }).catch((error: any) => {
             exitCode = 1;
             console.log('Error in saveAdmissionEnquiryMutation : ', error);
         });
         btn && btn.removeAttribute("disabled");
-        if(exitCode === 0 ){
+        if (exitCode === 0) {
             admissionApplicationData.successMessage = SUCCESS_MESSAGE_ADMISSION_APPLICATION_ADDED;
-        }else {
+        } else {
             admissionApplicationData.errorMessage = ERROR_MESSAGE_SERVER_SIDE_ERROR;
         }
         this.setState({
@@ -320,12 +320,12 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
         });
     }
 
-    async updateAdmissionEnquiry(){
+    async updateAdmissionEnquiry() {
         const { admissionApplicationData, editAdmissionObject, academicYearId, branchId } = this.state;
         let dob = null;
-        if(editAdmissionObject.dateOfBirth !== undefined && editAdmissionObject.dateOfBirth !== null 
-            && editAdmissionObject.dateOfBirth.trim() !== "" ){
-                dob = moment(editAdmissionObject.dateOfBirth, "YYYY-MM-DD").format("DD-MM-YYYY");
+        if (editAdmissionObject.dateOfBirth !== undefined && editAdmissionObject.dateOfBirth !== null
+            && editAdmissionObject.dateOfBirth.trim() !== "") {
+            dob = moment(editAdmissionObject.dateOfBirth, "YYYY-MM-DD").format("DD-MM-YYYY");
         }
         let admissionEnquiryInput = {
             id: editAdmissionObject.id,
@@ -351,68 +351,66 @@ class AdmissionPage extends React.Component<NewAdmissionProps, AdmissionState>{
         let exitCode = 0;
         await this.props.client.mutate({
             mutation: SAVE_ADMISSION_ENQUIRY,
-            variables: { 
+            variables: {
                 input: admissionEnquiryInput
-             },
-             fetchPolicy: 'no-cache'
+            },
+            fetchPolicy: 'no-cache'
         }).then((resp: any) => {
-            console.log("Success in saveAdmissionEnquiryMutation. Exit code : ",resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.exitCode);
+            console.log("Success in saveAdmissionEnquiryMutation. Exit code : ", resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.exitCode);
             exitCode = resp.data.saveAdmissionEnquiry.cmsAdmissionEnquiryVo.exitCode;
         }).catch((error: any) => {
             exitCode = 1;
             console.log('Error in saveAdmissionEnquiryMutation : ', error);
         });
         btn && btn.removeAttribute("disabled");
-        if(exitCode === 0 ){
+        if (exitCode === 0) {
             admissionApplicationData.successMessage = SUCCESS_MESSAGE_ADMISSION_APPLICATION_UPDATED;
-        }else {
+        } else {
             admissionApplicationData.errorMessage = ERROR_MESSAGE_SERVER_SIDE_ERROR;
         }
         this.setState({
             admissionApplicationData: admissionApplicationData,
             editAdmissionObject: editAdmissionObject
         });
-        
+
     }
 
     render() {
-        const {user, operationType, admissionApplicationData, editAdmissionObject, dob, enquiryList, noEnquiryRecordFoundMsg} = this.state;
+        const { user, operationType, admissionApplicationData, editAdmissionObject, dob, enquiryList, noEnquiryRecordFoundMsg } = this.state;
         return (
             <main>
                 {
-                    admissionApplicationData.errorMessage !== ""  ? 
-                        <MessageBox id="mbox" message={admissionApplicationData.errorMessage} activeTab={2}/>        
+                    admissionApplicationData.errorMessage !== "" ?
+                        <MessageBox id="mbox" message={admissionApplicationData.errorMessage} activeTab={2} />
                         : null
                 }
                 {
-                    admissionApplicationData.successMessage !== ""  ? 
-                        <MessageBox id="mbox" message={admissionApplicationData.successMessage} activeTab={1}/>        
+                    admissionApplicationData.successMessage !== "" ?
+                        <MessageBox id="mbox" message={admissionApplicationData.successMessage} activeTab={1} />
                         : null
                 }
-                
+
                 <div className="row col-sm-12 col-xs-12 m-b-2">
-                    
+
                     {/* <h6>Source of Application <span style={{ color: 'red' }}> * </span> </h6> */}
-                    
-                    <div className="col-sm-4">
-                        <input type="button" value="Get Admission Enquiries" className="btn btn-primary" onClick={e => this.getData("ADMISSION_ENQUIRY")}></input>
-                        {/* <select name="sourceOfApplication" id="sourceOfApplication" onChange={this.onChange} value={operationType === "ADD" ? admissionApplicationData.sourceOfApplication : editAdmissionObject.sourceOfApplication} className="gf-form-input max-width-22">
+
+                    <input type="button" value="Get Admission Enquiries" className="btn btn-primary" onClick={e => this.getData("ADMISSION_ENQUIRY")}></input>
+                    {/* <select name="sourceOfApplication" id="sourceOfApplication" onChange={this.onChange} value={operationType === "ADD" ? admissionApplicationData.sourceOfApplication : editAdmissionObject.sourceOfApplication} className="gf-form-input max-width-22">
                             <option key={""} value={""}>Select Source of Application</option>
                             <option key={"ADMISSION_ENQUIRY"} value={"ADMISSION_ENQUIRY"}>ADMISSION ENQUIRY</option>
                             <option key={"STUDENT_PROFILE"} value={"STUDENT_PROFILE"}>STUDENT PROFILE</option>
                         </select> */}
-                    </div>
                 </div>
 
                 <div className="row col-sm-12 col-xs-12 m-b-2">
                     {enquiryList !== null && enquiryList.length > 0 ?
                         <EnquiryGrid sourceOfApplication={admissionApplicationData.sourceOfApplication} source="ADMISSION_PAGE" type="Total Enquiries" totalRecords={enquiryList !== null ? enquiryList.length : 0} data={enquiryList}></EnquiryGrid>
-                    :<span style={{ color: 'red' }}> {noEnquiryRecordFoundMsg} </span> 
+                        : <span style={{ color: 'red' }}> {noEnquiryRecordFoundMsg} </span>
                     }
-                    
+
                 </div>
-                
-                
+
+
             </main>
         );
     }
