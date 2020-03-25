@@ -110,15 +110,14 @@ class EnquiryGrid<T = {[data: string]: any}> extends React.Component<AdmissionEn
     }
 
     async componentDidMount(){
-        await this.getSsmStates();
-        this.removeDuplicateAndSort();
-        this.surveyModel = new Survey.ReactSurveyModel(SurveyJson.ADMISSION_STATE_FORM);
-        this.setState({ survey: SurveyJson.ADMISSION_STATE_FORM});
         await this.registerSocket();
         if(this.state.source === 'ADMISSION_PAGE'){
-            await this.loginToMsAccount();
+            await this.getSsmStates();
+            await this.removeDuplicateAndSort();
+            this.surveyModel = new Survey.ReactSurveyModel(SurveyJson.ADMISSION_STATE_FORM);
+            this.setState({ survey: SurveyJson.ADMISSION_STATE_FORM});
+            // await this.loginToMsAccount(); 
         }
-        
     }
 
     async loginToMsAccount() {
@@ -397,7 +396,7 @@ class EnquiryGrid<T = {[data: string]: any}> extends React.Component<AdmissionEn
 			});
     }
 
-    removeDuplicateAndSort(){
+    async removeDuplicateAndSort(){
         const arr = this.state.ssmStatesData;
         let obj:any = [];
         let objName: any = {};
