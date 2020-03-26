@@ -66,6 +66,10 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
         },
         page: {
             title: "page-title"
+        },
+        paneldynamic: {
+            "buttonAdd": "btn btn-secondary",
+		    "buttonRemove": "btn btn-danger m-b-1",
         }
     };
     constructor(props: AdmissionEnquiryProps) {
@@ -836,7 +840,7 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
         const { data } = this.props
         const { list, totalRecords, type, isDetailOpen, enquiryObj, source, sourceOfApplication, user, currentState, isLoading } = this.state;
         return (
-            <main>
+            <main style={{width: "100%"}}>
                 {isDetailOpen && !isLoading &&
                     <React.Fragment>
                         <button className="btn btn-primary" onClick={(e) => this.showDetail(e, false, {})}>Back</button>

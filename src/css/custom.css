@@ -56,7 +56,7 @@
 
 .xform-container .custom-style .form-control-container {
   padding-bottom: 20px;
-  width: 33.333333333% !important;
+  /* width: 33.333333333% !important; */
   float: none !important;
   padding-left: 10px;
   padding-right: 10px !important;
