@@ -12,8 +12,13 @@
 }
 
 .xform-container .page-title {
-  padding-bottom: 10px;
+  /* padding-bottom: 10px; */
   font-size: 23px;
+  margin-left: 10px;
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* background: rgba(0, 0, 0, 0.1); */
+  border-bottom: 4px solid #cccccc;
+  margin-bottom: 17px;
 }
 
 .xform-container .form-main-container {

@@ -53,10 +53,10 @@ export default class TabPage extends React.Component<any, any> {
     const {activeTab, permissions} = this.state;
     return (
       <section className="tab-container">
-        <div className="tab-flex p-1">
-          <h5><FaUserGraduate className="m-1 fa-2x" />Admission</h5>
+        <div className="">
+          <h5><FaUserGraduate className="fa-2x" />Admission</h5>
         </div>
-        <Nav tabs className="pl-3 pl-3 mb-4 mt-4 bottom-box-shadow">
+        <Nav tabs className="mb-4 mt-4 bottom-box-shadow">
           {
             this.LOGGED_IN_USER !== 'admin' && permissions["Admission Enquiry"] !== null && permissions["Admission Enquiry"] !== undefined ?
               <NavItem className="cursor-pointer">
