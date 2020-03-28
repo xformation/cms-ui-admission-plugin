@@ -17,6 +17,7 @@ export const Utils: any = {
   createNodeInOak,
   sendSsmEvent,
   getInput,
+  getInputForTempObject,
 };
 
 function getFileNodePath(asignId: any, subId: any, studentId: any) {
@@ -320,6 +321,85 @@ function getInput(
             'DD-MM-YYYY'
           )
         : null,
+  };
+  return inputObj;
+}
+
+function getInputForTempObject(
+  srcObject: any,
+  branchId: any,
+  academicYearId: any,
+  departmentId: any,
+  ssmId: any
+) {
+  let inputObj = {
+    stateMachineId: ssmId,
+    studentName: srcObject.getQuestionByName('studentName').questionValue,
+    studentMiddleName: srcObject.getQuestionByName('studentMiddleName').questionValue,
+    studentLastName: srcObject.getQuestionByName('studentLastName').questionValue,
+    fatherName: srcObject.getQuestionByName('fatherName').questionValue,
+    fatherMiddleName: srcObject.getQuestionByName('fatherMiddleName').questionValue,
+    fatherLastName: srcObject.getQuestionByName('fatherLastName').questionValue,
+    motherName: srcObject.getQuestionByName('motherName').questionValue,
+    motherMiddleName: srcObject.getQuestionByName('motherMiddleName').questionValue,
+    motherLastName: srcObject.getQuestionByName('motherLastName').questionValue,
+    placeOfBirth: srcObject.getQuestionByName('placeOfBirth').questionValue,
+    religion: srcObject.getQuestionByName('religion').questionValue,
+    caste: srcObject.getQuestionByName('caste').questionValue,
+    subCaste: srcObject.getQuestionByName('subCaste').questionValue,
+    sex:
+      srcObject.getQuestionByName('sex').questionValue === ''
+        ? null
+        : srcObject.getQuestionByName('sex').questionValue,
+    studentLocalAddress: srcObject.getQuestionByName('studentLocalAddress').questionValue,
+    studentPermanentAddress: srcObject.getQuestionByName('studentPermanentAddress')
+      .questionValue,
+    city: srcObject.getQuestionByName('city').questionValue,
+    state: srcObject.getQuestionByName('state').questionValue,
+    pinCode: srcObject.getQuestionByName('pinCode').questionValue,
+    studentPrimaryCellNumber: srcObject.getQuestionByName('studentPrimaryCellNumber')
+      .questionValue,
+    studentAlternateCellNumber: srcObject.getQuestionByName('studentAlternateCellNumber')
+      .questionValue,
+    studentLandLinePhoneNumber: srcObject.getQuestionByName('studentLandLinePhoneNumber')
+      .questionValue,
+    studentPrimaryEmailId: srcObject.getQuestionByName('studentPrimaryEmailId')
+      .questionValue,
+    studentAlternateEmailId: srcObject.getQuestionByName('studentAlternateEmailId')
+      .questionValue,
+    relationWithStudent: srcObject.getQuestionByName('relationWithStudent').questionValue,
+    emergencyContactName: srcObject.getQuestionByName('emergencyContactName')
+      .questionValue,
+    emergencyContactCellNumber: srcObject.getQuestionByName('emergencyContactCellNumber')
+      .questionValue,
+    emergencyContactEmailId: srcObject.getQuestionByName('emergencyContactEmailId')
+      .questionValue,
+    studentType: srcObject.getQuestionByName('studentType').questionValue,
+    fatherCellNumber: srcObject.getQuestionByName('fatherCellNumber').questionValue,
+    fatherEmailId: srcObject.getQuestionByName('fatherEmailId').questionValue,
+    motherCellNumber: srcObject.getQuestionByName('motherCellNumber').questionValue,
+    motherEmailId: srcObject.getQuestionByName('motherEmailId').questionValue,
+    batchId:
+      srcObject.getQuestionByName('batchId').questionValue !== ''
+        ? srcObject.getQuestionByName('batchId').questionValue
+        : null,
+    sectionId: srcObject.getQuestionByName('sectionId').questionValue,
+    branchId: branchId,
+    academicYearId: academicYearId,
+    departmentId: departmentId,
+    strDateOfBirth:
+      srcObject.getQuestionByName('dateOfBirth').questionValue !== null &&
+      srcObject.getQuestionByName('dateOfBirth').questionValue !== undefined &&
+      srcObject.getQuestionByName('dateOfBirth').questionValue !== '' &&
+      srcObject.getQuestionByName('dateOfBirth').questionValue !== 'Invalid date'
+        ? moment(srcObject.getQuestionByName('dateOfBirth').questionValue).format(
+            'DD-MM-YYYY'
+          )
+        : null,
+    highestQualification: srcObject.getQuestionByName('qualification').questionValue,
+    yearOfPassing: srcObject.getQuestionByName('yearOfPassing').questionValue,
+    lastQualificationPercentage: srcObject.getQuestionByName('percentage').questionValue,
+    lastCollegeAttended: srcObject.getQuestionByName('institution').questionValue,
   };
   return inputObj;
 }

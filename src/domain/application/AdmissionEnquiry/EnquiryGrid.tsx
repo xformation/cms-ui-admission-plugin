@@ -15,7 +15,7 @@ import axios from 'axios';
 import "survey-react/survey.css";
 import "survey-react/modern.css";
 import wsCmsBackendServiceSingletonClient from '../../../wsCmsBackendServiceClient';
-import { SAVE_ADMISSION_APPLICATION } from '../_queries';
+import { SAVE_ADMISSION_APPLICATION, SAVE_TEMP_STUDENT, GET_TEMP_STUDENT } from '../_queries';
 import * as moment from 'moment';
 import { commonFunctions } from '../_utilites/common.functions';
 import { UserAgentApplication } from 'msal';
@@ -80,6 +80,7 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
             type: this.props.type,
             isDetailOpen: false,
             enquiryObj: {},
+            tempObj: {},
             source: this.props.source,
             sourceOfApplication: this.props.sourceOfApplication,
             user: this.props.user,
@@ -140,6 +141,8 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
         this.uploadFilesToMsCloud = this.uploadFilesToMsCloud.bind(this);
         this.updateDocumentsPathInBackend = this.updateDocumentsPathInBackend.bind(this);
         this.loginToMsAccount = this.loginToMsAccount.bind(this);
+        this.saveTempObjectInDb = this.saveTempObjectInDb.bind(this);
+        this.initFromDb = this.initFromDb.bind(this);
     }
 
     async componentDidMount() {
@@ -251,6 +254,47 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
         // }
     }
 
+    async initFromDb(enquiryObj: any){
+        const { academicYearId, branchId, departmentId } = this.state;
+        const machineId = Utils.getSSMachineId(config.SSM_ID, enquiryObj.id);
+        const { data } = await this.props.client.query({
+            query: GET_TEMP_STUDENT,
+            variables: {
+                branchId: branchId,
+                academicYearId: academicYearId,
+                stateMachineId: machineId
+            },
+            fetchPolicy: 'no-cache'
+        })
+        const tempObj = data.getTempStudent;
+        console.log("Temp student object from db : ",tempObj);
+        this.setState({
+            tempObj: tempObj,
+        });
+        
+    }
+
+    async saveTempObjectInDb(){
+        const { academicYearId, branchId, departmentId } = this.state;
+        let exitCode = 0;
+        const machineId = Utils.getSSMachineId(config.SSM_ID, this.state.enquiryObj.id);
+        const tempInput = Utils.getInputForTempObject(this.surveyModel, branchId, academicYearId, departmentId, machineId);
+        await this.props.client.mutate({
+            mutation: SAVE_TEMP_STUDENT,
+            variables: {
+                input: tempInput
+            },
+            fetchPolicy: 'no-cache'
+        }).then((resp: any) => {
+            console.log("Success in saveTempStudent mutation. Exit code : ", resp.data.saveTempStudent.cmsTempStudentVo.exitCode);
+            exitCode = resp.data.saveTempStudent.cmsTempStudentVo.exitCode;
+        }).catch((error: any) => {
+            exitCode = 1;
+            console.log('Error in saveTempStudent mutation : ', error);
+        });
+        
+    }
+
     /**
      * prevPageEvent is called on onCurrentPageChanged survey event. it should do the state changes
      * in workflow.
@@ -272,6 +316,7 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
             //     console.log('Current State set from Previous Event : ', curSt);
             // });
             await this.updateSliderStates(this.surveyModel.currentPageValue.name);
+            await this.saveTempObjectInDb();
             this.setState({
                 currentPageNo: this.surveyModel.currentPageValue.visibleIndex,
             });
@@ -598,6 +643,43 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
         var genderQuestion = this.surveyModel.getQuestionByName("sex");
         genderQuestion.value = enquiryObj.gender;
 
+        // ----------------
+
+        this.surveyModel.getQuestionByName('fatherName').questionValue = this.state.tempObj.fatherName; 						
+        this.surveyModel.getQuestionByName('fatherMiddleName').questionValue = this.state.tempObj.fatherMiddleName; 					
+        this.surveyModel.getQuestionByName('fatherLastName').questionValue = this.state.tempObj.fatherLastName; 					
+        this.surveyModel.getQuestionByName('motherName').questionValue = this.state.tempObj.motherName; 						
+        this.surveyModel.getQuestionByName('motherMiddleName').questionValue = this.state.tempObj.motherMiddleName; 					
+        this.surveyModel.getQuestionByName('motherLastName').questionValue = this.state.tempObj.motherLastName; 					
+        this.surveyModel.getQuestionByName('placeOfBirth').questionValue = this.state.tempObj.placeOfBirth; 						
+        this.surveyModel.getQuestionByName('religion').questionValue = this.state.tempObj.religion; 							
+        this.surveyModel.getQuestionByName('caste').questionValue = this.state.tempObj.caste; 								
+        this.surveyModel.getQuestionByName('subCaste').questionValue = this.state.tempObj.subCaste; 							
+        this.surveyModel.getQuestionByName('studentLocalAddress').questionValue = this.state.tempObj.studentLocalAddress; 				
+        this.surveyModel.getQuestionByName('studentPermanentAddress').questionValue = this.state.tempObj.studentPermanentAddress; 			
+        this.surveyModel.getQuestionByName('city').questionValue = this.state.tempObj.city; 								
+        this.surveyModel.getQuestionByName('state').questionValue = this.state.tempObj.state; 								
+        this.surveyModel.getQuestionByName('pinCode').questionValue = this.state.tempObj.pinCode; 							
+        this.surveyModel.getQuestionByName('studentAlternateCellNumber').questionValue = this.state.tempObj.studentAlternateCellNumber; 		
+        this.surveyModel.getQuestionByName('studentAlternateEmailId').questionValue = this.state.tempObj.studentAlternateEmailId; 			
+        this.surveyModel.getQuestionByName('relationWithStudent').questionValue = this.state.tempObj.relationWithStudent; 				
+        this.surveyModel.getQuestionByName('emergencyContactName').questionValue = this.state.tempObj.emergencyContactName; 				
+        this.surveyModel.getQuestionByName('emergencyContactCellNumber').questionValue = this.state.tempObj.emergencyContactCellNumber; 		
+        this.surveyModel.getQuestionByName('emergencyContactEmailId').questionValue = this.state.tempObj.emergencyContactEmailId; 			
+        this.surveyModel.getQuestionByName('studentType').questionValue = this.state.tempObj.studentType; 						
+        this.surveyModel.getQuestionByName('fatherCellNumber').questionValue = this.state.tempObj.fatherCellNumber; 					
+        this.surveyModel.getQuestionByName('fatherEmailId').questionValue = this.state.tempObj.fatherEmailId; 						
+        this.surveyModel.getQuestionByName('motherCellNumber').questionValue = this.state.tempObj.motherCellNumber; 					
+        this.surveyModel.getQuestionByName('motherEmailId').questionValue = this.state.tempObj.motherEmailId; 						
+        this.surveyModel.getQuestionByName('batchId').questionValue = this.state.tempObj.batchId; 							
+        this.surveyModel.getQuestionByName('sectionId').questionValue = this.state.tempObj.sectionId; 							
+        // this.surveyModel.getQuestionByName('dateOfBirth').questionValue = this.state.tempObj.strDateOfBirth;						
+        this.surveyModel.getQuestionByName('qualification').questionValue = this.state.tempObj.highestQualification; 				
+        this.surveyModel.getQuestionByName('yearOfPassing').questionValue = this.state.tempObj.yearOfPassing; 						
+        this.surveyModel.getQuestionByName('percentage').questionValue = this.state.tempObj.lastQualificationPercentage; 		
+        this.surveyModel.getQuestionByName('institution').questionValue = this.state.tempObj.lastCollegeAttended; 				
+        
+        
     }
 
     async showDetail(e: any, bShow: boolean, enquiryObj: any) {
@@ -622,6 +704,7 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
                 await this.showSelectedPage(this.state.currentState);
                 await this.setDropDown(this.state.batchList, "batchId", "id", "batch");
                 await this.setDropDown(this.state.stateList, "state", "id", "stateName");
+                await this.initFromDb(enquiryObj);
                 await this.initData(enquiryObj);
             }
             this.setState({
