@@ -115,6 +115,7 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
             otherFileObj: [],
             documentUploadStatus: [],
             newStudentId: null,
+            enqObjForEdit: null,
         };
         this.createRows = this.createRows.bind(this);
         this.updateEnquiryList = this.updateEnquiryList.bind(this);
@@ -601,6 +602,7 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
 
     async showDetail(e: any, bShow: boolean, enquiryObj: any) {
         e && e.preventDefault();
+        const {source} = this.state;
         this.setState({
             isDetailOpen: bShow
         });
@@ -608,18 +610,20 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
             this.setState({
                 isLoading: true
             });
-            await this.fetchCurState(enquiryObj.id);
-            if (this.state.currentState === "EnquiryReceived") {
-                await Utils.sendSsmEvent("PersonalInfo", enquiryObj.id);
-            }
-            await this.updateSliderStates(this.state.currentState);
-            await this.showSelectedPage(this.state.currentState);
             await this.getBatchList();
-            await this.setDropDown(this.state.batchList, "batchId", "id", "batch");
             await this.getStateList();
-            await this.setDropDown(this.state.stateList, "state", "id", "stateName");
             await this.getCityList();
-            await this.initData(enquiryObj);
+            if(source === "ADMISSION_PAGE"){
+                await this.fetchCurState(enquiryObj.id);
+                if (this.state.currentState === "EnquiryReceived") {
+                    await Utils.sendSsmEvent("PersonalInfo", enquiryObj.id);
+                }
+                await this.updateSliderStates(this.state.currentState);
+                await this.showSelectedPage(this.state.currentState);
+                await this.setDropDown(this.state.batchList, "batchId", "id", "batch");
+                await this.setDropDown(this.state.stateList, "state", "id", "stateName");
+                await this.initData(enquiryObj);
+            }
             this.setState({
                 isLoading: false
             });
@@ -628,11 +632,12 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
                 isLoading: false
             });
         }
-        this.setState(() => ({
+        this.setState({
+            enqObjForEdit: enquiryObj, 
             enquiryObj: enquiryObj,
             source: this.props.source,
             sourceOfApplication: this.props.sourceOfApplication,
-        }));
+        });
     }
 
     createRows(objAry: any) {
@@ -657,7 +662,7 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
                     <td>
                         {
                             admissionEnquiry.enquiryStatus !== "CONVERTED_TO_ADMISSION" && admissionEnquiry.enquiryStatus !== "DECLINED" && (
-                                <button className="btn btn-primary" onClick={e => this.showDetail(e, true, admissionEnquiry)}>{source !== "ADMISSION_PAGE" ? 'Edit' : 'Convert To Admission'}</button>
+                                <button className="btn btn-primary" onClick={e => this.showDetail(e, true, admissionEnquiry)}>{source !== "ADMISSION_PAGE" ? 'Edit' : 'Grant Admission'}</button>
                             )
                         }
                     </td>
@@ -837,13 +842,14 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
     }
 
     render() {
-        const { data } = this.props
+        // const { data } = this.props
         const { list, totalRecords, type, isDetailOpen, enquiryObj, source, sourceOfApplication, user, currentState, isLoading } = this.state;
         return (
             <main style={{width: "100%"}}>
                 {isDetailOpen && !isLoading &&
+                    
                     <React.Fragment>
-                        <button className="btn btn-primary" onClick={(e) => this.showDetail(e, false, {})}>Back</button>
+                        <button className="btn btn-primary" onClick={(e) => this.showDetail(e, false, null)}>Back</button>
                         {
                             source === 'ADMISSION_PAGE' ?
                                 <React.Fragment>
@@ -863,14 +869,20 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
                                     </div> */}
                                     </div>
                                 </React.Fragment>
-                                : <AdmissionEnquiryPage onSaveUpdate={this.updateEnquiryList} user={user} operationType={"EDIT"} enquiryObject={enquiryObj} origin={source} sourceOfApplication={sourceOfApplication}></AdmissionEnquiryPage>
+                            : 
+                            this.state.enqObjForEdit !== null ?    
+                                <AdmissionEnquiryPage onSaveUpdate={this.updateEnquiryList} operationType={"EDIT"} enquiryObject={this.state.enqObjForEdit} origin={source} sourceOfApplication={sourceOfApplication}></AdmissionEnquiryPage>
+                            : console.log("this.state.enqObjForEdit is null")
+                            
                         }
-                        {
-                            source !== 'ADMISSION_PAGE' ?
-                                <div className="text-center" style={{ marginLeft: '222px', marginTop: '-34px' }}>
+                        
 
-                                </div>
-                                : null
+                        {
+                            // source !== 'ADMISSION_PAGE' ?
+                            //     <div className="text-center" style={{ marginLeft: '222px', marginTop: '-34px' }}>
+
+                            //     </div>
+                            //     : null
                         }
                     </React.Fragment>
                 }

@@ -20,7 +20,7 @@ type AdmissionEnquiryState = {
     origin: any,
     sourceOfApplication: any
     departmentId: any;
-    user: any;
+    // user: any;
     stateData: any;
     isStateExists: any;
 };
@@ -43,11 +43,11 @@ export interface NewAdmissionEnquiryProps extends React.HTMLAttributes<HTMLEleme
     branchId?: any;
     academicYearId?: any;
     departmentId?: any;
-    user?: any;
+    // user?: any;
     onSaveUpdate?: any;
 }
 
-class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, AdmissionEnquiryState>{
+class AdmissionEnquiryPage<T = { [data: string]: any }> extends React.Component<NewAdmissionEnquiryProps, AdmissionEnquiryState>{
     
     constructor(props: NewAdmissionEnquiryProps) {
         super(props);
@@ -56,7 +56,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
             origin: this.props.origin,
             enquiryObject: this.props.enquiryObject,
             operationType: this.props.operationType,
-            user: this.props.user,
+            // user: this.props.user,
             dob: "",
             branchId: null,
             academicYearId: null,
@@ -87,6 +87,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
     async componentDidMount(){
         await this.registerSocket();
         await this.ssmStatesExists();
+        console.log("this.state.enquiryObject -------------->>>>>>>>>>> ",this.state.enquiryObject);
         if(this.state.isStateExists === false){
             console.log("Admission enquiry states not exists. Creating states");
             await this.initStateMachineStates();
@@ -456,6 +457,7 @@ class AdmissionEnquiryPage extends React.Component<NewAdmissionEnquiryProps, Adm
 
     render() {
         const {operationType, admissionEnquiryData, enquiryObject, dob, origin, sourceOfApplication} = this.state;
+        console.log("enquiryObject :::::::::: ",enquiryObject)
         return (
             <main>
                 {

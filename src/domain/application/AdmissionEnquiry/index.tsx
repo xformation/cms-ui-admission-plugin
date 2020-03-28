@@ -19,7 +19,7 @@ class AdmissionEnquiry<T = {[data: string]: any}> extends React.Component< Admis
     super(props);
     this.state = {
       permissions: this.props.permissions,
-      activeTab: -1,
+      activeTab: 0,
       enquiryList: null,
       branchId: null,
       academicYearId: null,
@@ -220,7 +220,7 @@ class AdmissionEnquiry<T = {[data: string]: any}> extends React.Component< Admis
                 {
                   activeTab === 1 ?
                   (enquiryList !== null && (
-                    <EnquiryGrid type="Total Received" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                    <EnquiryGrid source="INDEX_PAGE" type="Total Received" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
                   )) 
                   : null
                 }
@@ -230,7 +230,7 @@ class AdmissionEnquiry<T = {[data: string]: any}> extends React.Component< Admis
                 {
                   activeTab === 1 ?
                   (enquiryList !== null && (
-                    <EnquiryGrid type="Total Received" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                    <EnquiryGrid source="INDEX_PAGE" type="Total Received" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
                   )) 
                   : null
                 }
@@ -245,7 +245,7 @@ class AdmissionEnquiry<T = {[data: string]: any}> extends React.Component< Admis
               {
                 activeTab === 2 ?
                 (enquiryList !== null && (
-                    <EnquiryGrid type="Total Follow Up" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                    <EnquiryGrid source="INDEX_PAGE" type="Total Follow Up" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
                 ))
                 : null
               }
@@ -255,7 +255,7 @@ class AdmissionEnquiry<T = {[data: string]: any}> extends React.Component< Admis
               {
                 activeTab === 2 ?
                 (enquiryList !== null && (
-                    <EnquiryGrid type="Total Follow Up" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                    <EnquiryGrid source="INDEX_PAGE" type="Total Follow Up" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
                 ))
                 : null
               }
@@ -269,7 +269,7 @@ class AdmissionEnquiry<T = {[data: string]: any}> extends React.Component< Admis
                 {
                   activeTab === 3 ?
                   (enquiryList !== null && (
-                    <EnquiryGrid type="Total Declined" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                    <EnquiryGrid source="INDEX_PAGE" type="Total Declined" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
                   ))
                 : null
                 }
@@ -279,7 +279,7 @@ class AdmissionEnquiry<T = {[data: string]: any}> extends React.Component< Admis
                   {
                     activeTab === 3 ?
                     (enquiryList !== null && (
-                      <EnquiryGrid type="Total Declined" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                      <EnquiryGrid source="INDEX_PAGE" type="Total Declined" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
                     ))
                     : null
                   }
@@ -293,7 +293,7 @@ class AdmissionEnquiry<T = {[data: string]: any}> extends React.Component< Admis
                 {
                   activeTab === 4 ?
                   (enquiryList !== null && (
-                    <EnquiryGrid type="Total Admission Granted" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                    <EnquiryGrid source="INDEX_PAGE" type="Total Admission Granted" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
                   ))
                   : null
                 }
@@ -303,7 +303,7 @@ class AdmissionEnquiry<T = {[data: string]: any}> extends React.Component< Admis
                   {
                     activeTab === 4 ?
                     (enquiryList !== null && (
-                      <EnquiryGrid type="Total Admission Granted" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                      <EnquiryGrid source="INDEX_PAGE" type="Total Admission Granted" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
                     ))
                     : null
                   }
@@ -319,7 +319,7 @@ class AdmissionEnquiry<T = {[data: string]: any}> extends React.Component< Admis
                 {
                   activeTab === 5 ?
                   (enquiryList !== null && (
-                    <EnquiryGrid type="Total Enquiries" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                    <EnquiryGrid source="INDEX_PAGE" type="Total Enquiries" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
                   )) 
                   :null
                 }
@@ -329,7 +329,7 @@ class AdmissionEnquiry<T = {[data: string]: any}> extends React.Component< Admis
                 {
                   activeTab === 5 ?
                   (enquiryList !== null && (
-                    <EnquiryGrid type="Total Enquiries" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
+                    <EnquiryGrid source="INDEX_PAGE" type="Total Enquiries" totalRecords={enquiryList.getAdmissionEnquiryList.length} data={enquiryList.getAdmissionEnquiryList} ></EnquiryGrid>
                   )) 
                   :null
                 }
