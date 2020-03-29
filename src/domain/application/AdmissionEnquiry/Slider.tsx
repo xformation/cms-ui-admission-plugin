@@ -6,6 +6,7 @@ import {Utils} from '../_utilites/Utils';
 export interface SliderProps extends React.HTMLAttributes<HTMLElement>{
 	data?: any,
 	entity?: any,
+	clickHandler?: any,
 }
 
 export default class Slider extends React.Component<SliderProps, any> {
@@ -19,7 +20,7 @@ export default class Slider extends React.Component<SliderProps, any> {
 		}
 
 		this.createCol = this.createCol.bind(this);
-		// this.clickHandler = this.clickHandler.bind(this);
+		this.clickHandler = this.clickHandler.bind(this);
 	}
 
 	createCol(item: any) {
@@ -27,9 +28,9 @@ export default class Slider extends React.Component<SliderProps, any> {
 			<td key={item.id}>
 				{
 					item.status === 'Y' ?
-						<img className="iconImg" src="public/plugins/ems-admission/img/tick.jpg" alt="Done"/> 
+						<img onClick={e => this.clickHandler(e, item)} className="iconImg" src="public/plugins/ems-admission/img/tick.jpg" alt="Done"/> 
 						:
-						<img className="iconImg" src="public/plugins/ems-admission/img/cross.jpg" alt="Pending"/>
+						<img onClick={e => this.clickHandler(e, item)} className="iconImg" src="public/plugins/ems-admission/img/cross.jpg" alt="Pending"/>
 				} 
 				{/* <br/> */}
 				{item.name} <br/>
@@ -39,13 +40,14 @@ export default class Slider extends React.Component<SliderProps, any> {
 		);
 	}
 
-	// clickHandler(e) {
-	// 	const item = Utils.getObjectById(this.state.data, e.target.id);
-	// 	if (this.props.clickHandler) {
-	// 		this.props.clickHandler(item);
-	// 		return;
-	// 	}
-	// }
+	clickHandler(e: any, item: any) {
+		// const item = Utils.getObjectById(this.state.data, e.target.id);
+		if (this.props.clickHandler) {
+			console.log("clicke handler from slider :::::::::::::: ");
+			this.props.clickHandler(e, item);
+			return;
+		}
+	}
 
 	render() {
 		return (

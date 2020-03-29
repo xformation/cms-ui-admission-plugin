@@ -117,6 +117,9 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
             documentUploadStatus: [],
             newStudentId: null,
             enqObjForEdit: null,
+            isPersonalInfoDone: false,
+            isAcademicInfoDone: false,
+            isDocumentsDone: false,
         };
         this.createRows = this.createRows.bind(this);
         this.updateEnquiryList = this.updateEnquiryList.bind(this);
@@ -143,6 +146,7 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
         this.loginToMsAccount = this.loginToMsAccount.bind(this);
         this.saveTempObjectInDb = this.saveTempObjectInDb.bind(this);
         this.initFromDb = this.initFromDb.bind(this);
+        this.onClickSsmState = this.onClickSsmState.bind(this);
     }
 
     async componentDidMount() {
@@ -320,7 +324,7 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
             this.setState({
                 currentPageNo: this.surveyModel.currentPageValue.visibleIndex,
             });
-
+            
         }
     }
 
@@ -924,6 +928,17 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
         }
     }
 
+    onClickSsmState(e: any, item: any){
+        this.surveyModel.pages.forEach((element: any) => {
+            if(item.name === element.name){
+                // console.log("ITEM FROM GRID ::: ", element);
+                // this.setState({
+                //     currentPageNo: element.visibleIndex,
+                // });    
+            }
+        });
+    }
+
     render() {
         // const { data } = this.props
         const { list, totalRecords, type, isDetailOpen, enquiryObj, source, sourceOfApplication, user, currentState, isLoading } = this.state;
@@ -938,7 +953,7 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
                                 <React.Fragment>
                                     <div className="xform-container">
                                         <div className="text-center  m-b-1" >
-                                            <Slider data={this.state.uniqueStateData} />
+                                            <Slider clickHandler={this.onClickSsmState} data={this.state.uniqueStateData} />
                                         </div>
                                         <div className="custom-style">
                                             {/* {this.state.survey ? this.getModel(this.state.survey) : null} */}
