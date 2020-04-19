@@ -648,7 +648,9 @@ class EnquiryGrid<T = { [data: string]: any }> extends React.Component<Admission
         genderQuestion.value = enquiryObj.gender;
 
         // ----------------
-
+        if(!this.state.tempObj){
+            return;
+        }
         this.surveyModel.getQuestionByName('fatherName').questionValue = this.state.tempObj.fatherName; 						
         this.surveyModel.getQuestionByName('fatherMiddleName').questionValue = this.state.tempObj.fatherMiddleName; 					
         this.surveyModel.getQuestionByName('fatherLastName').questionValue = this.state.tempObj.fatherLastName; 					
